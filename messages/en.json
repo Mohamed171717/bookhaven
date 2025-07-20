@@ -1,0 +1,22 @@
+
+{
+  "HomePage": {
+    "title": "Hello world!",
+    "shop": "Go to the shop page"
+  },
+  "LoginPage": {
+    "login": "Login",
+    "register": "Register",
+    "reader": "Reader",
+    "library": "Library",
+    "name": "Name",
+    "nameReq": "Name is required",
+    "email": "Email",
+    "emailReq": "Email is required",
+    "password": "Password",
+    "passwordReq": "Password must be at least 6 characters",
+    "submit": "Submit",
+    "dontHave": "Don’t have an account?",
+    "iHave": "Already have an account?"
+  }
+}

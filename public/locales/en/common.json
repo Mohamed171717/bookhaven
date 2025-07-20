@@ -1,0 +1,13 @@
+
+
+
+{
+  "greeting": "Welcome to Bookie!",
+  "login": "Login",
+  "register": "Register",
+  "welcome": "Welcome to a platform for buy, sell books",
+  "description": "Buy, Sell and Trade books",
+  "email": "Email",
+  "password": "Password",
+  "submit": "Login"
+}
