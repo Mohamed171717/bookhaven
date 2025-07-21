@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
 import { collection, getDocs, query, where } from 'firebase/firestore'
 import { db } from '@/lib/firebase'
+import { FaRegStar, FaStar } from 'react-icons/fa';
 import { BookType } from '@/types/BookType'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
@@ -13,7 +14,6 @@ import Image from 'next/image'
 export default function BookDetailsPage() {
   const { id } = useParams()
   const [book, setBook] = useState<BookType | null>(null)
-  const [quantity, setQuantity] = useState(1)
 
   useEffect(() => {
     const fetchBook = async () => {
@@ -34,68 +34,59 @@ export default function BookDetailsPage() {
   return (
     <>
       <Header />
-      <div className="container mx-auto px-4 py-12">
-        <div className="flex flex-col lg:flex-row gap-8">
-          {/* Book Image */}
-          <div className="w-full lg:w-1/2">
-            <div className="border rounded-2xl overflow-hidden">
-              <Image
-                src={book.coverImage || '/book-placeholder.jpg'}
-                alt={book.title}
-                width={500}
-                height={600}
-                className="w-full h-auto object-cover"
-              />
-            </div>
+      <div className="flex flex-col lg:flex-row gap-10 py-16 container mx-auto px-20">
+        {/* Left Section - Images */}
+        <div className="flex flex-row gap-4">
+          <div className="flex flex-col gap-2 overflow-y-auto">
+            {[...Array(4)].map((_, i) => (
+              <Image width={500} height={500} key={i} src={book.coverImage} alt="" className="w-24 h-24 object-cover rounded-md border" />
+            ))}
           </div>
+          <div className="w-full">
+            <Image width={500} height={500} src={book.coverImage} alt="" className="w-full h-full object-cover rounded-xl" />
+          </div>
+        </div>
 
-          {/* Book Details */}
-          <div className="w-full lg:w-1/2 flex flex-col gap-4">
-            <h1 className="text-3xl font-semibold">{book.title}</h1>
-            <p className="text-lg text-gray-600">by {book.author}</p>
-            <p className="text-sm text-gray-500">Genre: {book.genre}</p>
-            <p className="text-sm text-gray-500">Condition: {book.condition}</p>
-            <p className="text-gray-700 mt-2">{book.description}</p>
+        {/* Right Section - Product Info */}
+        <div className="flex flex-col gap-4 lg:w-1/2">
+          <h2 className="text-2xl font-semibold">{book.title}</h2>
+          <p className="text-sm text-gray-500 font-semibold">Author: {book.author}</p>
+          <p className="text-sm text-gray-500 font-semibold">Genre: {book.genre}</p>
 
-            {book.availableFor.includes('sell') && (
-              <p className="text-2xl font-bold text-green-600">${book.price?.toFixed(2)}</p>
-            )}
-
-            {/* Quantity Selector */}
-            {book.availableFor.includes('sell') && (
-              <div className="flex items-center gap-2 mt-4">
-                <button
-                  onClick={() => setQuantity(prev => Math.max(1, prev - 1))}
-                  className="w-8 h-8 border rounded"
-                >
-                  −
-                </button>
-                <span className="text-lg">{quantity}</span>
-                <button
-                  onClick={() => setQuantity(prev => prev + 1)}
-                  className="w-8 h-8 border rounded"
-                >
-                  +
-                </button>
+          <div className="flex items-center gap-1">
+            {book.averageRating !== undefined && (
+              <div className="flex items-center text-[#B17457] mb-1 gap-0.5 text-base">
+                {Array.from({ length: 5 }, (_, i) =>
+                  i < Math.round(book.averageRating!) ? (<FaStar key={i} />) : (<FaRegStar key={i} />)
+                )}
+                <span className="ml-2  text-[#4A4947]">{book.averageRating.toFixed(1)}</span>
               </div>
             )}
+          </div>
 
-            {/* Action Buttons */}
-            <div className="flex flex-wrap gap-3 mt-6">
-              {book.availableFor.includes('sell') && (
-                <button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-xl">
-                  Add to Cart
-                </button>
-              )}
-              {book.availableFor.includes('swap') && (
-                <button className="bg-yellow-500 hover:bg-yellow-600 text-white px-6 py-2 rounded-xl">
-                  Request Swap
-                </button>
-              )}
-              <button className="bg-gray-200 hover:bg-gray-300 text-gray-700 px-6 py-2 rounded-xl">
-                Add to Wishlist
-              </button>
+          {book.availableFor.includes('sell') && (
+            <div className="flex items-center gap-4">
+                {/* <p className="text-lg line-through font-bold text-gray-500">${book.price?.toFixed(2)}</p> */}
+                <p className="text-2xl font-bold text-green-600">${book.price?.toFixed(2)}</p>
             </div>
+          )}
+
+          <p className="text-sm text-gray-700 leading-relaxed">{book.description}</p>
+
+          <div className="flex flex-wrap gap-3 mt-6">
+            {book.availableFor.includes('sell') && (
+              <button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-xl">
+                Add to Cart
+              </button>
+            )}
+            {book.availableFor.includes('swap') && (
+              <button className="bg-yellow-500 hover:bg-yellow-600 text-white px-6 py-2 rounded-xl">
+                Request Swap
+              </button>
+            )}
+            <button className="bg-gray-200 hover:bg-gray-300 text-gray-700 px-6 py-2 rounded-xl">
+              Add to Wishlist
+            </button>
           </div>
         </div>
       </div>
@@ -103,3 +94,6 @@ export default function BookDetailsPage() {
     </>
   )
 }
+
+
+

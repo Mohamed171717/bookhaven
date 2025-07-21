@@ -61,16 +61,29 @@ export const signInWithGoogle = async () => {
   const userSnap = await getDoc(userRef);
 
   if (!userSnap.exists()) {
+    const now = new Date();
     await setDoc(userRef, {
       uid: user.uid,
       name: user.displayName,
       email: user.email,
-      image: user.photoURL,
-      role: 'user',
+      bio: "",
+      role: "reader",
+      photoUrl: user.photoURL,
+      averageRating: 0,
+      totalRatings: 0,
       verified: user.emailVerified,
-      active: true,
       isBanned: false,
-      createdAt: new Date(),
+      profileIncomplete: true,
+      genres: [],
+      address: "",
+      website: "",
+      bookIds: [],
+      transactionIds: [],
+      chatIds: [],
+      blogPostIds: [],
+      notificationIds: [],
+      createdAt: now,
+      updatedAt: now,
     });
   }
 
@@ -88,16 +101,29 @@ export const signInWithFacebook = async () => {
   const userSnap = await getDoc(userRef);
 
   if (!userSnap.exists()) {
+    const now = Date.now();
     await setDoc(userRef, {
       uid: user.uid,
       name: user.displayName,
       email: user.email,
-      image: user.photoURL,
-      role: 'user',
+      bio: "",
+      role: "reader",
+      photoUrl: user.photoURL,
+      averageRating: 0,
+      totalRatings: 0,
       verified: user.emailVerified,
-      active: true,
       isBanned: false,
-      createdAt: new Date(),
+      profileIncomplete: true,
+      genres: [],
+      address: "",
+      website: "",
+      bookIds: [],
+      transactionIds: [],
+      chatIds: [],
+      blogPostIds: [],
+      notificationIds: [],
+      createdAt: now,
+      updatedAt: now,
     });
   }
 
