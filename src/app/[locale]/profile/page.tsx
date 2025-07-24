@@ -1,28 +1,21 @@
 "use client";
 
-import Image from "next/image";
-import Footer from "@/components/layout/Footer";
-import Header from "@/components/layout/Header";
-import { FaBell } from "react-icons/fa";
-import { FiEdit, FiTrash } from "react-icons/fi";
-import { useAuth } from "@/context/AuthContext";
-import { useEffect, useState } from "react";
-import EditProfileModal from "@/components/EditProfileModal";
-import { logoutUser } from "@/lib/authService";
-import toast from "react-hot-toast";
-import { useRouter } from "next/navigation";
-import AddBookModal from "@/components/AddBookForm";
-import {
-  collection,
-  doc,
-  getDocs,
-  query,
-  updateDoc,
-  where,
-} from "firebase/firestore";
-import { db } from "@/lib/firebase";
-import { BookType } from "@/types/BookType";
-import EditBookModal from "@/components/EditBookModal";
+import Image from 'next/image';
+import Footer from '@/components/layout/Footer'
+import Header from '@/components/layout/Header'
+import { FaBell, FaRegStar, FaStar } from 'react-icons/fa';
+import { FiEdit, FiTrash } from 'react-icons/fi';
+import { useAuth } from '@/context/AuthContext';
+import { useEffect, useState } from 'react';
+import EditProfileModal from '@/components/EditProfileModal';
+import { logoutUser } from '@/lib/authService';
+import toast from 'react-hot-toast';
+import { useRouter } from 'next/navigation';
+import AddBookModal from '@/components/AddBookForm';
+import { collection, doc, getDocs, query, updateDoc, where } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
+import { BookType } from '@/types/BookType';
+import EditBookModal from '@/components/EditBookModal';
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -49,6 +42,7 @@ export default function ProfilePage() {
   // fetch books
   useEffect(() => {
     if (!user?.uid) return;
+    console.log(user);
 
     const fetchBooks = async () => {
       try {
@@ -70,8 +64,8 @@ export default function ProfilePage() {
     };
 
     fetchBooks();
-  }, [user?.uid]);
-
+  }, [user]);
+  
   // handle delete book
   const handleDeleteBook = async (bookId: string) => {
     const confirmDelete = window.confirm(
@@ -116,26 +110,29 @@ export default function ProfilePage() {
 
   return (
     <>
-      <Header />
-      <div className="max-w-7xl mx-auto p-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Left Sidebar */}
-        <div className="col-span-1 space-y-6">
-          {/* Profile Card */}
-          <div className="bg-white p-6 rounded-lg shadow-md text-center">
-            <Image
-              width={120}
-              height={120}
-              src={user.photoUrl || "/user-default.jpg"}
-              alt="profile"
-              className="rounded-full mx-auto mb-3"
-            />
-            <h2 className="text-xl font-semibold">{user.name}</h2>
-            <p className="text-sm text-gray-500">{user.email}</p>
-            <p className="mt-3 text-sm text-gray-600">{user.bio}</p>
-            <button
-              className="mt-4 px-4 py-2 mr-3 rounded-full bg-[#a8775a] text-white hover:bg-[#946a52]"
-              onClick={() => setOpenEdit(true)}
-            >
+    <Header/>
+    <div className="max-w-7xl mx-auto p-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
+      {/* Left Sidebar */}
+      <div className="col-span-1 space-y-6">
+        {/* Profile Card */}
+        <div className="bg-white p-6 rounded-lg shadow-md text-center">
+          <Image width={120} height={120} src={ user.photoUrl || '/user-default.jpg'} alt="profile" className="rounded-full mx-auto mb-3" />
+          <h2 className="text-xl font-semibold">{user.name}</h2>
+          <p className="text-sm text-gray-500">{user.email}</p>
+          <div className="flex w-[90px] m-auto my-3 items-center gap-1">
+            {user.averageRating !== undefined && (
+              <div className="flex items-center text-yellow-500 mb-1 gap-0.5 text-base">
+                {Array.from({ length: 5 }, (_, i) =>
+                  i < Math.round(user.averageRating!) ? (<FaStar key={i} />) : (<FaRegStar key={i} />)
+                )}
+              </div>
+            )}
+          </div>
+          <p className="mt-3 text-sm text-gray-600">{user.bio}</p>
+          <button 
+            className="mt-4 px-4 py-2 mr-3 rounded-full bg-[#a8775a] text-white hover:bg-[#946a52]"
+            onClick={() => setOpenEdit(true)}
+          >  
               Edit Profile
             </button>
             <button

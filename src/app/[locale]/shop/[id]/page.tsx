@@ -1,21 +1,23 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
-import { collection, getDocs, query, where } from "firebase/firestore";
-import { db } from "@/lib/firebase";
-import { FaRegStar, FaStar } from "react-icons/fa";
-import { BookType } from "@/types/BookType";
-import Header from "@/components/layout/Header";
-import Footer from "@/components/layout/Footer";
-import Image from "next/image";
-import StartChatButton from "@/components/chat/StartChatButton";
-import { useAuth } from "@/context/AuthContext";
+import { useEffect, useState } from 'react'
+import { useParams } from 'next/navigation'
+import { collection, getDocs, query, where } from 'firebase/firestore'
+import { db } from '@/lib/firebase'
+import { FaRegStar, FaStar } from 'react-icons/fa';
+import { BookType } from '@/types/BookType'
+import { useCart } from '@/context/CartContext'
+import Header from '@/components/layout/Header'
+import Footer from '@/components/layout/Footer'
+import Image from 'next/image'
+import ReviewSection from '@/components/ReviewSection'
+import { useAuth } from '@/context/AuthContext'
 
 export default function BookDetailsPage() {
   const { id } = useParams();
-  const [book, setBook] = useState<BookType | null>(null);
   const { user } = useAuth();
+  const [book, setBook] = useState<BookType | null>(null) ;
+  const { addToCart } = useCart();
 
   useEffect(() => {
     const fetchBook = async () => {
@@ -63,18 +65,15 @@ export default function BookDetailsPage() {
         </div>
 
         {/* Right Section - Product Info */}
-        <div className="flex flex-col gap-4 lg:w-1/2">
+        <div className="flex flex-col gap-2 lg:w-1/2">
           <h2 className="text-2xl font-semibold">{book.title}</h2>
-          <p className="text-sm text-gray-500 font-semibold">
-            Author: {book.author}
-          </p>
-          <p className="text-sm text-gray-500 font-semibold">
-            Genre: {book.genre}
-          </p>
+          <p className="text-sm text-gray-500 font-semibold">Author: {book.author}</p>
+          <p className="text-sm text-gray-500 font-semibold">Genre: {book.genre}</p>
+          <p className="text-sm text-gray-500 font-semibold">Condition: {book.condition}</p>
 
           <div className="flex items-center gap-1">
             {book.averageRating !== undefined && (
-              <div className="flex items-center text-[#B17457] mb-1 gap-0.5 text-base">
+              <div className="flex items-center text-yellow-500 mb-1 gap-0.5 text-base">
                 {Array.from({ length: 5 }, (_, i) =>
                   i < Math.round(book.averageRating!) ? (
                     <FaStar key={i} />
@@ -89,13 +88,8 @@ export default function BookDetailsPage() {
             )}
           </div>
 
-          {book.availableFor.includes("sell") && (
-            <div className="flex items-center gap-4">
-              {/* <p className="text-lg line-through font-bold text-gray-500">${book.price?.toFixed(2)}</p> */}
-              <p className="text-2xl font-bold text-green-600">
-                ${book.price?.toFixed(2)}
-              </p>
-            </div>
+          {book.availableFor.includes('sell') && (
+            <p className="text-2xl font-bold text-[#a8775a]">${book.price?.toFixed(2)}</p>
           )}
 
           <p className="text-sm text-gray-700 leading-relaxed">
@@ -103,25 +97,31 @@ export default function BookDetailsPage() {
           </p>
 
           <div className="flex flex-wrap gap-3 mt-6">
-            {book.availableFor.includes("sell") && (
-              <button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-xl">
+            {book.availableFor.includes('sell') && (
+              <button 
+                onClick={() => addToCart({
+                  bookId: book.id,
+                  title: book.title,
+                  author: book.author,
+                  coverImage: book.coverImage,
+                  price: book.price!,
+                  quantity: 1
+                })} 
+                className="bg-btn-color text-[15px] hover:bg-[#a16950] text-gray-50 py-2 px-4 rounded-full transition duration-300">
                 Add to Cart
               </button>
             )}
-            {book.availableFor.includes("swap") && (
-              <button className="bg-yellow-500 hover:bg-yellow-600 text-white px-6 py-2 rounded-xl">
-                Request Swap
+            {book.availableFor.includes('swap') && (
+              <button className="bg-btn-color text-[15px] hover:bg-[#a16950] text-gray-50 py-2 px-4 rounded-full transition duration-300">
+                Exchange request
               </button>
             )}
-            <button className="bg-gray-200 hover:bg-gray-300 text-gray-700 px-6 py-2 rounded-xl">
-              Add to Wishlist
-            </button>
-            <StartChatButton
-              currentUserId={user!.uid}
-              otherUserId={book.ownerId}
-            />
           </div>
         </div>
+      </div>
+      <div className='flex flex-col lg:flex-row gap-10 pb-16 container mx-auto px-20'>
+        <ReviewSection targetId={book.id} currentUserId={user!.uid} type="book"/>
+        <ReviewSection targetId={book.ownerId} currentUserId={user!.uid} type="user"/>
       </div>
       <Footer />
     </>

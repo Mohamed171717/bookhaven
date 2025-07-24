@@ -5,10 +5,12 @@ import { CiSearch } from "react-icons/ci";
 import LanguageSwitcher from "./languageSwitcher";
 import { FaShoppingCart } from "react-icons/fa";
 import Image from "next/image";
-import { ChatIcon } from "../chat/ChatIcon";
+import { useCart } from "@/context/CartContext";
+
 
 export default function Header() {
   const { user, loading } = useAuth();
+  const { cart } = useCart();
 
   if (loading) return null;
 
@@ -58,9 +60,7 @@ export default function Header() {
             <div className="flex items-center gap-4">
               <Link href="/cart" className="relative">
                 <FaShoppingCart className="text-xl color-primary hover:text-[#3d3c3b] cursor-pointer" />
-                <span className="absolute -top-1 -right-2 text-xs bg-red-500 text-white rounded-full px-1">
-                  4
-                </span>
+                { cart && <span className="w-4 h-4 absolute -top-1 -right-2 text-xs bg-red-500 text-white rounded-full px-1">{cart.length}</span> }
               </Link>
               <ChatIcon />
               <Link href="/profile">

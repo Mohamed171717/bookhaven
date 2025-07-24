@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@imagekit/next": "^2.1.2",
+    "clsx": "^2.1.1",
     "firebase": "^11.10.0",
     "imagekit": "^6.0.0",
     "imagekit-javascript": "^4.0.1",

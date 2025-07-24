@@ -6,6 +6,8 @@ export interface UserType {
   email: string;
   bio: string;
   role: 'reader' | 'library';
+  averageRating: number,
+  totalRatings: number,
   photoUrl: string;
   genres: string[];
   verified: boolean;
