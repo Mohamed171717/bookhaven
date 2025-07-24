@@ -5,6 +5,7 @@ import type { Metadata } from "next";
 import {setRequestLocale} from 'next-intl/server';
 import { AuthProvider } from '@/context/AuthContext';
 import { BooksProvider } from "@/context/BooksContext";
+import { CartProvider } from '@/context/CartContext';
 import { Changa, Inter } from 'next/font/google';
 import { Toaster } from 'react-hot-toast';
 import {notFound} from 'next/navigation';
@@ -50,7 +51,9 @@ export default async function LocaleLayout({ children, params }: { children: Rea
         <Toaster position="top-right" reverseOrder={false} />
           <AuthProvider>
           <BooksProvider>
-            {children}
+            <CartProvider>
+              {children}
+            </CartProvider>
           </BooksProvider>
           </AuthProvider>
         </NextIntlClientProvider>

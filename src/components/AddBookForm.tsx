@@ -4,7 +4,7 @@
 
 import { useState } from 'react';
 import { db } from '@/lib/firebase';
-import { addDoc, collection } from 'firebase/firestore';
+import { setDoc, doc } from 'firebase/firestore';
 import { uploadImageToImageKit } from "@/app/[locale]/utils/imagekitUpload";
 import { v4 as uuid } from 'uuid';
 import { useAuth } from '@/context/AuthContext';
@@ -29,7 +29,6 @@ export default function AddBookModal({ onClose, onAdd }: AddBookModalProps ) {
   const [condition, setCondition] = useState<'new' | 'used'>('new');
   const [description, setDescription] = useState('');
   const [file, setFile] = useState<File | null>(null);
-  // const [coverImageUrl, setCoverImageUrl] = useState('');
   const [availableFor, setAvailableFor] = useState<BookType['availableFor']>([]);
   const [price, setPrice] = useState<number | ''>('');
   const [loading, setLoading] = useState(false);
@@ -49,13 +48,13 @@ export default function AddBookModal({ onClose, onAdd }: AddBookModalProps ) {
     }
     setLoading(true);
 
-  const imageUrl = await uploadImageToImageKit(file);
-  if (!imageUrl) return alert("Failed to upload image");
-  // setCoverImageUrl(imageUrl);
+    const imageUrl = await uploadImageToImageKit(file);
+    if (!imageUrl) return alert("Failed to upload image");
 
+    const generatedId = uuid();
     try {
       const bookData: BookType = {
-        id: uuid(),
+        id: generatedId,
         ownerId: user.uid,
         ownerType: user.role,
         title,
@@ -79,7 +78,7 @@ export default function AddBookModal({ onClose, onAdd }: AddBookModalProps ) {
       };
       
 
-      await addDoc(collection(db, 'books'), bookData);
+      await setDoc(doc(db, 'books', generatedId), bookData);
       toast.success('Book added successfully!');
       onAdd(bookData);
       onClose();

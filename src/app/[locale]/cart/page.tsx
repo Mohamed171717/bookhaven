@@ -4,45 +4,14 @@
 
 import Footer from '@/components/layout/Footer';
 import Header from '@/components/layout/Header';
+import { useCart } from '@/context/CartContext';
+import { FaTrash } from "react-icons/fa";
 import Image from 'next/image';
 
-const cartItems = [
-  {
-    id: 1,
-    name: 'Wooden Sofa Chair',
-    color: 'Gray',
-    price: 80,
-    quantity: 4,
-    image: '/images/books1.jpeg',
-  },
-  {
-    id: 2,
-    name: 'Red Gaming Chair',
-    color: 'Black',
-    price: 90,
-    quantity: 2,
-    image: '/images/books2.jpeg',
-  },
-  {
-    id: 3,
-    name: 'Swivel Chair',
-    color: 'Light Brown',
-    price: 60,
-    quantity: 1,
-    image: '/images/books3.jpeg',
-  },
-  {
-    id: 4,
-    name: 'Circular Sofa Chair',
-    color: 'Brown',
-    price: 90,
-    quantity: 2,
-    image: '/images/books4.jpeg',
-  },
-];
 
 const CartPage = () => {
-  const subTotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const { cart, removeFromCart, updateQuantity, clearCart } = useCart();
+  const subTotal = cart.reduce((sum, item) => sum + item.price! * item.quantity, 0);
   const discount = 100;
   const total = subTotal - discount;
 
@@ -57,48 +26,65 @@ const CartPage = () => {
         {/* Cart Items */}
         <div className="lg:col-span-2">
           <table className="w-full border rounded-lg overflow-hidden text-left">
-            <thead className="bg-gray-800 text-white text-sm">
+            <thead className="bg-primary-color text-white text-sm">
               <tr>
                 <th className="p-4">Product</th>
                 <th className="p-4">Price</th>
                 <th className="p-4">Quantity</th>
                 <th className="p-4">Subtotal</th>
+                <th className="p-4 text-center">Remove</th>
               </tr>
             </thead>
             <tbody className="bg-white">
-              {cartItems.map((item) => (
-                <tr key={item.id} className="border-b">
+              {cart.map((item) => (
+                <tr key={item.bookId} className="border-b">
                   <td className="p-4 flex gap-4 items-center">
-                    <Image src={item.image} alt={item.name} width={60} height={60} className="rounded-md" />
+                    <Image src={item.coverImage} alt={item.title} width={60} height={60} className="rounded-md" />
                     <div>
-                      <div className="font-medium">{item.name}</div>
-                      <div className="text-sm text-gray-500">Color: {item.color}</div>
+                      <div className="font-medium text-lg">{item.title}</div>
+                      <div className="text-sm text-gray-500">Author: {item.author}</div>
                     </div>
                   </td>
-                  <td className="p-4">${item.price.toFixed(2)}</td>
+                  <td className="p-4">${item.price!.toFixed(2)}</td>
                   <td className="p-4">
                     <div className="flex items-center gap-2">
-                      <button className="px-2 bg-gray-200 rounded">−</button>
+                      <button
+                        className="px-2 bg-gray-200 rounded text-lg"
+                        onClick={() => updateQuantity(item.bookId, item.quantity - 1)}
+                        disabled={item.quantity <= 1}
+                      >
+                        −
+                      </button>
                       <span>{item.quantity}</span>
-                      <button className="px-2 bg-gray-200 rounded">+</button>
+                      <button
+                        className="px-2 bg-gray-200 rounded text-lg"
+                        onClick={() => updateQuantity(item.bookId, item.quantity + 1)}
+                      >
+                        +
+                      </button>
                     </div>
                   </td>
-                  <td className="p-4 font-medium">${(item.price * item.quantity).toFixed(2)}</td>
+                  <td className="p-4 font-medium">${(item.price! * item.quantity).toFixed(2)}</td>
+                  <td className="p-4 text-center">
+                    <button onClick={() => removeFromCart(item.bookId)}>
+                      <FaTrash className="w-4 h-4 text-red-700 hover:text-red-600" />
+                    </button>
+                  </td>
                 </tr>
               ))}
             </tbody>
           </table>
-
-          {/* Coupon */}
-          <div className="mt-4 flex items-center gap-4">
-            <input
-              type="text"
-              placeholder="Coupon Code"
-              className="border px-4 py-2 rounded w-1/3"
-            />
-            <button className="bg-gray-800 text-white px-4 py-2 rounded">Apply Coupon</button>
-            <button className="text-gray-600 hover:text-red-500">Clear Shopping Cart</button>
-          </div>
+          {/* Clear All Button */}
+          {cart.length > 0 && (
+            <div className="flex justify-end mt-4">
+              <button
+                onClick={clearCart}
+                className="text-white text-sm py-2 px-3 font-semibold rounded transition bg-primary-color hover:bg-red-600"
+              >
+                Clear All
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Order Summary */}
@@ -106,7 +92,7 @@ const CartPage = () => {
           <h3 className="text-lg font-semibold mb-4">Order Summary</h3>
           <div className="flex justify-between py-2">
             <span>Items</span>
-            <span>{cartItems.reduce((sum, item) => sum + item.quantity, 0)}</span>
+            <span>{cart.reduce((sum, item) => sum + item.quantity, 0)}</span>
           </div>
           <div className="flex justify-between py-2">
             <span>Sub Total</span>
@@ -128,7 +114,7 @@ const CartPage = () => {
             <span>Total</span>
             <span>${total.toFixed(2)}</span>
           </div>
-          <button className="w-full bg-gray-800 text-white py-2 rounded">Proceed to Checkout</button>
+          <button className="w-full bg-primary-color text-white py-2 rounded">Proceed to Checkout</button>
         </div>
       </div>
     </div>
