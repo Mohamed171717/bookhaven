@@ -1,4 +1,3 @@
-
 "use client";
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
@@ -6,10 +5,9 @@ import { CiSearch } from "react-icons/ci";
 import LanguageSwitcher from "./languageSwitcher";
 import { FaShoppingCart } from "react-icons/fa";
 import Image from "next/image";
-
+import { ChatIcon } from "../chat/ChatIcon";
 
 export default function Header() {
-  
   const { user, loading } = useAuth();
 
   if (loading) return null;
@@ -23,12 +21,22 @@ export default function Header() {
             BookHaven
           </Link>
           <nav className="hidden md:flex gap-5 items-baseline font-medium text-gray-700">
-            <Link href="/" className="hover:text-gray-900">Home</Link>
-            <Link href="/shop" className="hover:text-gray-900">Shop</Link>
-            <Link href="/trade" className="hover:text-gray-900">Trade</Link>
-            <Link href="/swap" className="hover:text-gray-900">Swap</Link>
-            <Link href="/about" className="hover:text-gray-900">About</Link>
-            <LanguageSwitcher/>
+            <Link href="/" className="hover:text-gray-900">
+              Home
+            </Link>
+            <Link href="/shop" className="hover:text-gray-900">
+              Shop
+            </Link>
+            <Link href="/trade" className="hover:text-gray-900">
+              Trade
+            </Link>
+            <Link href="/swap" className="hover:text-gray-900">
+              Swap
+            </Link>
+            <Link href="/about" className="hover:text-gray-900">
+              About
+            </Link>
+            <LanguageSwitcher />
           </nav>
         </div>
 
@@ -50,15 +58,18 @@ export default function Header() {
             <div className="flex items-center gap-4">
               <Link href="/cart" className="relative">
                 <FaShoppingCart className="text-xl color-primary hover:text-[#3d3c3b] cursor-pointer" />
-                <span className="absolute -top-1 -right-2 text-xs bg-red-500 text-white rounded-full px-1">4</span>
+                <span className="absolute -top-1 -right-2 text-xs bg-red-500 text-white rounded-full px-1">
+                  4
+                </span>
               </Link>
+              <ChatIcon />
               <Link href="/profile">
                 <Image
                   width={35}
                   height={35}
-                  src={ user.photoUrl || "/user-default.jpg"}
+                  src={user.photoUrl || "/user-default.jpg"}
                   alt="User Avatar"
-                  style={{border: "1px solid gray"}}
+                  style={{ border: "1px solid gray" }}
                   className="rounded-full"
                 />
               </Link>
