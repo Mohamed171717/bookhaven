@@ -6,6 +6,7 @@ import LanguageSwitcher from "./languageSwitcher";
 import { FaShoppingCart } from "react-icons/fa";
 import Image from "next/image";
 import { useCart } from "@/context/CartContext";
+import { ChatIcon } from "../chat/ChatIcon";
 
 
 export default function Header() {

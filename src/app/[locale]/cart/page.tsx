@@ -18,7 +18,7 @@ const CartPage = () => {
   return (
     <>
     <Header/>
-    <div className="p-6 max-w-7xl mx-auto">
+    <div className="p-6 fix-height max-w-7xl mx-auto">
       <h2 className="text-2xl font-semibold text-center">Shopping Cart</h2>
       <p className="text-sm text-gray-500 text-center mb-6">Home / Shopping Cart</p>
 
