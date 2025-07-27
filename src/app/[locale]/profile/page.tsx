@@ -27,17 +27,18 @@ export default function ProfilePage() {
   const [showEditModal, setShowEditModal] = useState(false);
 
   const handleLogout = async () => {
-    const confirmLogout = window.confirm("Are you sure you want to log out?");
-    if (!confirmLogout) return;
+    const confirmLogout = window.confirm("Are you sure you want to log out?")
+    if (!confirmLogout) return
+
     try {
-      await logoutUser();
-      toast.success("Logged out successfully");
-      router.push("/");
+      await logoutUser()
+      toast.success("Logged out successfully")
+      router.push("/")
     } catch (error) {
-      console.error(error);
-      toast.error("Failed to logout");
+      console.error(error)
+      toast.error("Failed to logout")
     }
-  };
+  }
 
   // fetch books
   useEffect(() => {
@@ -237,7 +238,7 @@ export default function ProfilePage() {
                     </div>
                     <div className="flex justify-between items-center text-gray-600 text-sm">
                       <span className="bg-gray-100 px-2 py-1 rounded text-xs">
-                        {book.status}
+                        {book.approval}
                       </span>
                       <div className="flex gap-2 text-lg">
                         <FiEdit

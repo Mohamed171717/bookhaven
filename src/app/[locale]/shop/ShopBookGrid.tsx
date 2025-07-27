@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useBooks } from '@/context/BooksContext';
@@ -28,7 +27,7 @@ export default function ShopBookGrid({ selectedGenres, selectedPriceRanges, curr
     return <p className="text-center py-10">Loading books...</p>;
   }
 
-  const filteredBooks = books.filter(book => {
+  const filteredBooks = books.filter(book => book.approval === 'approved').filter(book => {
     const genreMatch =
       selectedGenres.length === 0 || selectedGenres.includes(book.genre);
 
@@ -47,7 +46,7 @@ export default function ShopBookGrid({ selectedGenres, selectedPriceRanges, curr
   return (
     <>
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-      {paginatedBooks.map((book) => (
+      { paginatedBooks.map((book) => (
         <Link
           key={book.id}
           href={`/shop/${book.id}`}

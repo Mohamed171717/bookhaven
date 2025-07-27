@@ -12,24 +12,38 @@ import Footer from '@/components/layout/Footer'
 import Image from 'next/image'
 import ReviewSection from '@/components/ReviewSection'
 import { useAuth } from '@/context/AuthContext'
+import { UserType } from '@/types/UserType';
 
 export default function BookDetailsPage() {
   const { id } = useParams();
   const { user } = useAuth();
-  const [book, setBook] = useState<BookType | null>(null) ;
+  const [book, setBook] = useState<BookType | null>(null);
+  const [bookOwner, setBookOwner] = useState<UserType>();
   const { addToCart } = useCart();
 
+  // get the book
   useEffect(() => {
-    const fetchBook = async () => {
+    const fetchBookAndOwner = async () => {
       const q = query(collection(db, "books"), where("id", "==", id));
       const querySnapshot = await getDocs(q);
+      
       if (!querySnapshot.empty) {
         const doc = querySnapshot.docs[0];
-        setBook(doc.data() as BookType);
+        const bookData = doc.data() as BookType;
+        setBook(bookData);
+
+        // Fetch owner
+        const userQ = query(collection(db, "users"), where("uid", "==", bookData.ownerId));
+        const userSnapshot = await getDocs(userQ);
+        if (!userSnapshot.empty) {
+          setBookOwner(userSnapshot.docs[0].data() as UserType);
+        }
       }
     };
-    if (id) fetchBook();
+
+    if (id) fetchBookAndOwner();
   }, [id]);
+
 
   if (!book) {
     return <div className="text-center py-20">Loading book details...</div>;
@@ -81,7 +95,7 @@ export default function BookDetailsPage() {
                     <FaRegStar key={i} />
                   )
                 )}
-                <span className="ml-2  text-[#4A4947]">
+                <span className="ml-2 font-semibold text-[#4A4947]">
                   {book.averageRating.toFixed(1)}
                 </span>
               </div>
@@ -121,7 +135,7 @@ export default function BookDetailsPage() {
       </div>
       <div className='flex flex-col lg:flex-row gap-10 pb-16 container mx-auto px-20'>
         <ReviewSection targetId={book.id} currentUserId={user!.uid} type="book"/>
-        <ReviewSection targetId={book.ownerId} currentUserId={user!.uid} type="user"/>
+        <ReviewSection targetId={book.ownerId} targetUser={bookOwner} currentUserId={user!.uid} type="user"/>
       </div>
       <Footer />
     </>

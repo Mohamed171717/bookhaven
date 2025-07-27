@@ -64,7 +64,8 @@ export default function Header() {
                 { cart && <span className="w-4 h-4 absolute -top-1 -right-2 text-xs bg-red-500 text-white rounded-full px-1">{cart.length}</span> }
               </Link>
               <ChatIcon />
-              <Link href="/profile">
+              {/* if user==="reader" ? /profile : "/library" */}
+              <Link href="/profile">  
                 <Image
                   width={35}
                   height={35}

@@ -7,6 +7,7 @@ import Header from '@/components/layout/Header';
 import { useCart } from '@/context/CartContext';
 import { FaTrash } from "react-icons/fa";
 import Image from 'next/image';
+import Link from 'next/link';
 
 
 const CartPage = () => {
@@ -114,7 +115,9 @@ const CartPage = () => {
             <span>Total</span>
             <span>${total.toFixed(2)}</span>
           </div>
-          <button className="w-full bg-primary-color text-white py-2 rounded">Proceed to Checkout</button>
+          <Link href='/checkout'>
+            <button className="w-full bg-primary-color text-white py-2 rounded">Proceed to Checkout</button>
+          </Link>
         </div>
       </div>
     </div>
