@@ -3,7 +3,6 @@
 import Footer from '@/components/layout/Footer'
 import Header from '@/components/layout/Header'
 import { useCart } from '@/context/CartContext';
-// import { FaTrash } from "react-icons/fa";
 import Image from 'next/image';
 import toast from 'react-hot-toast';
 import { useState } from 'react';
@@ -24,8 +23,8 @@ const Checkout = () => {
   });
 
   const subTotal = cart.reduce((sum, item) => sum + item.price! * item.quantity, 0);
-  const discount = 100;
-  const total = subTotal - discount;
+  const shiping = 5.00; // Fixed shipping cost
+  const total = subTotal + shiping;
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -148,7 +147,7 @@ const Checkout = () => {
                 />
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {/* <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     City *
@@ -157,19 +156,6 @@ const Checkout = () => {
                     type="text"
                     name="city"
                     value={formData.city}
-                    onChange={handleInputChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-color focus:border-transparent"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Postal Code *
-                  </label>
-                  <input
-                    type="text"
-                    name="postalCode"
-                    value={formData.postalCode}
                     onChange={handleInputChange}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-color focus:border-transparent"
                     required
@@ -188,14 +174,14 @@ const Checkout = () => {
                     required
                   />
                 </div>
-              </div>
+              </div> */}
 
               <div className="pt-4">
                 <button
                   type="submit"
                   className="w-full bg-primary-color text-white py-3 px-4 rounded-md font-semibold hover:bg-primary-color/90 transition duration-200"
                 >
-                  Confirm Order
+                  Pay Order
                 </button>
               </div>
             </form>
@@ -238,15 +224,11 @@ const Checkout = () => {
             </div>
             <div className="flex justify-between">
               <span>Shipping</span>
-              <span>$0.00</span>
+              <span>$5.00</span>
             </div>
             <div className="flex justify-between">
               <span>Taxes</span>
               <span>$0.00</span>
-            </div>
-            <div className="flex justify-between text-green-600">
-              <span>Coupon Discount</span>
-              <span>- ${discount.toFixed(2)}</span>
             </div>
             <div className="flex justify-between font-semibold text-lg border-t pt-2">
               <span>Total</span>

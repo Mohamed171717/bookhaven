@@ -13,8 +13,8 @@ import Link from 'next/link';
 const CartPage = () => {
   const { cart, removeFromCart, updateQuantity, clearCart } = useCart();
   const subTotal = cart.reduce((sum, item) => sum + item.price! * item.quantity, 0);
-  const discount = 100;
-  const total = subTotal - discount;
+  const shiping = 5.00; // Fixed shipping cost
+  const total = subTotal + shiping;
 
   return (
     <>
@@ -101,15 +101,11 @@ const CartPage = () => {
           </div>
           <div className="flex justify-between py-2">
             <span>Shipping</span>
-            <span>$0.00</span>
+            <span>$5.00</span>
           </div>
           <div className="flex justify-between py-2">
             <span>Taxes</span>
             <span>$0.00</span>
-          </div>
-          <div className="flex justify-between py-2 text-green-600">
-            <span>Coupon Discount</span>
-            <span>- ${discount.toFixed(2)}</span>
           </div>
           <div className="flex justify-between py-4 font-semibold text-lg border-t mt-4">
             <span>Total</span>

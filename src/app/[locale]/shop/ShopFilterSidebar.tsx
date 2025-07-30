@@ -35,7 +35,6 @@ export default function ShopFilterSidebar({ selectedGenres, setSelectedGenres, s
   
   return (
     <div className="bg-white p-4 rounded-2xl shadow">
-      <h3 className="text-lg font-semibold mb-4 text-center">Filters</h3>
       <div className="space-y-6">
         {/* Genre Filter */}
         <div>

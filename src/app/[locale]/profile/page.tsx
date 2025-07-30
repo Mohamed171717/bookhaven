@@ -114,7 +114,7 @@ export default function ProfilePage() {
     <Header/>
     <div className="max-w-7xl mx-auto p-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
       {/* Left Sidebar */}
-      <div className="col-span-1 space-y-6">
+      <div className="col-span-1 mt-14 space-y-6">
         {/* Profile Card */}
         <div className="bg-white p-6 rounded-lg shadow-md text-center">
           <Image width={120} height={120} src={ user.photoUrl || '/user-default.jpg'} alt="profile" className="rounded-full mx-auto mb-3" />
@@ -227,17 +227,17 @@ export default function ProfilePage() {
                     className="rounded-t w-full h-[250px] mb-3"
                   />
                   <div className="p-4">
-                    <h4 className="font-semibold text-gray-800 text-sm mb-1">
+                    <h4 className="font-semibold text-gray-800 text-sm mb-1 overflow-hidden">
                       {book.title.length >= 25
                         ? `${book.title.slice(0, 25)}...`
                         : `${book.title}`}
                     </h4>
-                    <p className="text-xs text-gray-500 mb-2">{book.author}</p>
-                    <div className="text-[#a8775a] text-sm font-semibold mb-2">
+                    <p className="text-xs text-gray-500 mb-2 overflow-hidden">{book.author}</p>
+                    <div className="text-[#a8775a] text-sm font-semibold overflow-hidden mb-2">
                       ${book.price}
                     </div>
                     <div className="flex justify-between items-center text-gray-600 text-sm">
-                      <span className="bg-gray-100 px-2 py-1 rounded text-xs">
+                      <span className={`${book.approval === 'approved' ? 'bg-green-100' : book.approval === 'rejected' ? 'bg-red-100' : 'bg-orange-100'} px-2 py-1 rounded text-xs`}>
                         {book.approval}
                       </span>
                       <div className="flex gap-2 text-lg">
@@ -333,7 +333,7 @@ export default function ProfilePage() {
           </div>
         </div>
       </div>
-      <Footer />
+    <Footer />
     </>
   );
 }

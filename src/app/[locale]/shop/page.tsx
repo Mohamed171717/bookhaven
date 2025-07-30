@@ -21,8 +21,9 @@ export default function ShopPage() {
     <>
       <Header />
       <div className="min-h-screen py-16 container mx-auto px-20">
-        <div className="flex gap-4 p-4 ">
-          <aside className="w-1/4">
+        <div className="flex gap-4 p-4">
+          <aside className="w-1/4 flex flex-col gap-4">
+            <h2 className="text-2xl font-semibold">Filters</h2>
             <ShopFilterSidebar 
               selectedGenres={selectedGenres}
               setSelectedGenres={setSelectedGenres}
@@ -31,10 +32,7 @@ export default function ShopPage() {
             />
           </aside>
           <main className="w-3/4 flex flex-col gap-4">
-            <div className="flex justify-between items-center">
-              <h2 className="text-2xl font-semibold">Shop Books</h2>
-              {/* <SortDropdown /> */}
-            </div>
+            <h2 className="text-2xl font-semibold">Shop Books</h2>
             <ShopBookGrid
               selectedGenres={selectedGenres}
               selectedPriceRanges={selectedPriceRanges}

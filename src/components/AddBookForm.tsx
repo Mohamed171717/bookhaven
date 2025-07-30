@@ -37,7 +37,7 @@ export default function AddBookModal({ onClose, onAdd }: AddBookModalProps ) {
   };
 
   const handleAddBook = async () => {
-    if (!user?.uid || !title || !author || !genre || !file) {
+    if (!user?.uid || !title || !author || !genre || !file || availableFor.length === 0) {
       toast.error('Please fill in all required fields');
       return;
     }

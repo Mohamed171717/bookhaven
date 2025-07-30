@@ -53,7 +53,7 @@
 //   sellerId: string;      // or lenderId
 //   bookId: string;
 //   swapWithBookId?: string;  // Only for swap
-//   type: 'sell' | 'borrow' | 'swap';
+//   type: 'sell' | 'swap';
 //   status: 'pending' | 'completed' | 'cancelled';
 //   dueDate?: Date;       // Only for borrow
 //   createdAt: Date;
