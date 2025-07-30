@@ -70,7 +70,8 @@ export default function Header() {
                 )}
               </Link>
               <ChatIcon />
-              <Link href="/profile">
+              {/* if user==="reader" ? /profile : "/library" */}
+              <Link href="/profile">  
                 <Image
                   width={35}
                   height={35}

@@ -5,35 +5,23 @@ import { useState } from "react";
 import { db } from "@/lib/firebase";
 import { setDoc, doc } from "firebase/firestore";
 import { uploadImageToImageKit } from "@/app/[locale]/utils/imagekitUpload";
-import { v4 as uuid } from "uuid";
-import { useAuth } from "@/context/AuthContext";
-import toast from "react-hot-toast";
-import { BookType } from "@/types/BookType";
+import { v4 as uuid } from 'uuid';
+import { useAuth } from '@/context/AuthContext';
+import toast from 'react-hot-toast';
+import { BookType, Genre } from '@/types/BookType';
 
 interface AddBookModalProps {
   onClose: () => void;
   onAdd: (addedBook: BookType) => void;
 }
 
-type genre =
-  | "Fiction"
-  | "Fantasy"
-  | "Science Fiction"
-  | "Mystery & Thriller"
-  | "Romance"
-  | "Historical"
-  | "Young Adult"
-  | "Horror"
-  | "Biography"
-  | "Personal Growth";
-
-export default function AddBookModal({ onClose, onAdd }: AddBookModalProps) {
+export default function AddBookModal({ onClose, onAdd }: AddBookModalProps ) {
   const { user } = useAuth();
-  const [title, setTitle] = useState("");
-  const [author, setAuthor] = useState("");
-  const [genre, setGenre] = useState<genre>("Fiction");
-  const [condition, setCondition] = useState<"new" | "used">("new");
-  const [description, setDescription] = useState("");
+  const [title, setTitle] = useState('');
+  const [author, setAuthor] = useState('');
+  const [genre, setGenre] = useState<Genre>('fiction');
+  const [condition, setCondition] = useState<'new' | 'used'>('new');
+  const [description, setDescription] = useState('');
   const [file, setFile] = useState<File | null>(null);
   const [availableFor, setAvailableFor] = useState<BookType["availableFor"]>(
     []
@@ -50,8 +38,8 @@ export default function AddBookModal({ onClose, onAdd }: AddBookModalProps) {
   };
 
   const handleAddBook = async () => {
-    if (!user?.uid || !title || !author || !genre || !file) {
-      toast.error("Please fill in all required fields");
+    if (!user?.uid || !title || !author || !genre || !file || availableFor.length === 0) {
+      toast.error('Please fill in all required fields');
       return;
     }
     setLoading(true);
@@ -136,29 +124,18 @@ export default function AddBookModal({ onClose, onAdd }: AddBookModalProps) {
           onChange={(e) => setAuthor(e.target.value)}
         />
         {/* genre */}
-        <label
-          htmlFor="genre"
-          className="block text-sm font-medium text-gray-700 mb-1"
-        >
-          Genre
-        </label>
-        <select
-          title="select genre"
-          name="genre"
-          className="w-full mb-2 p-2 border rounded"
-          value={genre}
-          onChange={(e) => setGenre(e.target.value as genre)}
-        >
-          <option value="Fiction">Fiction</option>
-          <option value="Fantasy">Fantasy</option>
-          <option value="Science Fiction">Science Fiction</option>
-          <option value="Mystery & Thriller">Mystery & Thriller</option>
-          <option value="Romance">Romance</option>
-          <option value="Historical">Historical</option>
-          <option value="Young Adult">Young Adult</option>
-          <option value="Horror">Horror</option>
-          <option value="Biography">Biography</option>
-          <option value="Personal Growth">Personal Growth</option>
+        <label htmlFor="genre" className="block text-sm font-medium text-gray-700 mb-1">Genre</label>
+        <select name='genre' className="w-full mb-2 p-2 border rounded" value={genre} onChange={(e) => setGenre(e.target.value as Genre)}>
+          <option value="fiction">Fiction</option>
+          <option value="fantasy">Fantasy</option>
+          <option value="science fiction">Science Fiction</option>
+          <option value="mystery & thriller">Mystery & Thriller</option>
+          <option value="romance">Romance</option>
+          <option value="historical">Historical</option>
+          <option value="young adult">Young Adult</option>
+          <option value="horror">Horror</option>
+          <option value="biography">Biography</option>
+          <option value="personal growth">Personal Growth</option>
         </select>
 
         {/* condition */}

@@ -52,7 +52,7 @@ export const registerUser = async (email: string, password: string, name: string
 export const loginUser = (email: string, password: string) => signInWithEmailAndPassword(auth, email, password);
 export const logoutUser = () => signOut(auth);
 
-export const signInWithGoogle = async () => {
+export const signInWithGoogle = async (role: 'reader' | 'library') => {
   const result = await signInWithPopup(auth, googleProvider);
   const user = result.user;
 
@@ -67,7 +67,7 @@ export const signInWithGoogle = async () => {
       name: user.displayName,
       email: user.email,
       bio: "",
-      role: "reader",
+      role,
       photoUrl: user.photoURL,
       averageRating: 0,
       totalRatings: 0,
@@ -90,7 +90,7 @@ export const signInWithGoogle = async () => {
   return user;
 };
 
-export const signInWithFacebook = async () => {
+export const signInWithFacebook = async (role: 'reader' | 'library') => {
 
   facebookProvider.addScope('public_profile');
   facebookProvider.addScope('email');
@@ -107,7 +107,7 @@ export const signInWithFacebook = async () => {
       name: user.displayName,
       email: user.email,
       bio: "",
-      role: "reader",
+      role,
       photoUrl: user.photoURL,
       averageRating: 0,
       totalRatings: 0,

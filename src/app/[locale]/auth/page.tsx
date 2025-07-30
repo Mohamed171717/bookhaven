@@ -4,12 +4,16 @@
 import { useTranslations } from "next-intl";
 import { loginUser, registerUser, signInWithGoogle, signInWithFacebook } from '@/lib/authService';
 import { FirebaseError } from 'firebase/app';
-import { updateProfile } from 'firebase/auth';
+import { signOut, updateProfile } from 'firebase/auth';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
 import { useState } from "react";
 import { FaFacebookF } from "react-icons/fa";
 import { FaGoogle } from "react-icons/fa";
+import SelectRoleModal from "@/components/SelectRoleModal";
+import { auth, db } from "@/lib/firebase";
+import { doc, getDoc } from "firebase/firestore";
+import { UserType } from "@/types/UserType";
 
 type Role = "reader" | "library";
 type Error = {
@@ -17,7 +21,6 @@ type Error = {
   email?: string;
   password?: string;
 };
-
 
 export default function AuthPage() {
   const t = useTranslations('LoginPage');
@@ -28,6 +31,8 @@ export default function AuthPage() {
   const [name, setName] = useState('');
   const [role, setRole] = useState<Role>('reader');
   const [errors, setErrors] = useState<Error>({});
+  const [showRoleModal, setShowRoleModal] = useState(false);
+  const [loginProvider, setLoginProvider] = useState<"google" | "facebook" | null>(null);
 
   // validation
   const registerValidate = () => {
@@ -51,9 +56,26 @@ export default function AuthPage() {
   const handleLogin = async () => {
     if (!loginValidate()) return;
     try {
-      await loginUser(email, password);
-      toast.success('Logged in successfully!!');
-      router.push(`/`);
+      const userCredential = await loginUser(email, password); // loginUser should return userCredential
+      const uid = userCredential.user.uid;
+
+      const userDocRef = doc(db, 'users', uid);
+      const userSnap = await getDoc(userDocRef);
+
+      if (userSnap.exists()) {
+        const userData = userSnap.data() as UserType;
+
+        if (userData.isBanned) {
+          await signOut(auth);
+          toast.error('Your account has been banned.');
+          return; // Stop further execution
+        }
+
+        toast.success('Logged in successfully!!');
+        router.push(`/`);
+      } else {
+        toast.error("User document not found.");
+      }
     } catch (err: unknown) {
       if (err instanceof FirebaseError) {
         console.error("Firebase error code:", err.code);
@@ -86,39 +108,28 @@ export default function AuthPage() {
     }
   };
 
-  // login with google
-  const handleGoogleLogin = async () => {
-    try {
-      const user = await signInWithGoogle();
-      console.log("Google user:", user);
-      toast.success(`Welcome ${user.displayName}`);
-      router.push(`/`);
-    } catch (err: unknown) {
-      if (err instanceof FirebaseError) {
-        console.error("Firebase error code:", err.code);
-        toast.error(err.message);
-      } else {
-        console.error("Unknown error:", err);
-        toast.error("An unknown error occurred.");
-      }
-    }
+  const openRoleModal = (provider: "google" | "facebook") => {
+    setLoginProvider(provider);
+    setShowRoleModal(true);
   };
 
-  // login with facebook
-  const handleFacebookLogin = async () => {
+  const handleRoleSelect = async (role: 'reader' | 'library') => {
+    setShowRoleModal(false);
     try {
-      const user = await signInWithFacebook();
-      console.log("Facebook user:", user);
-      toast.success(`Welcome ${user.displayName}`);
-      router.push(`/`);
+      if (loginProvider === 'google') {
+        const user = await signInWithGoogle(role);
+        toast.success(`Welcome ${user.displayName}`);
+        router.push(`/`);
+      } else if (loginProvider === 'facebook') {
+        await signInWithFacebook(role);
+      }
     } catch (err: unknown) {
       if (err instanceof FirebaseError) {
-        console.error("Firebase error code:", err.code);
+        console.error(`${loginProvider} login failed`, err);
         toast.error(err.message);
-      } else {
-        console.error("Unknown error:", err);
-        toast.error("An unknown error occurred.");
       }
+    } finally {
+      setLoginProvider(null);
     }
   };
 
@@ -157,10 +168,10 @@ export default function AuthPage() {
                 {t('dontHave')}
               </p>
               <div className="flex justify-center mt-8 items-center gap-6">
-                <div onClick={handleFacebookLogin} className="w-[40px] h-[40px] flex items-center justify-center rounded-full bg-primary-color cursor-pointer">
+                <div onClick={() => openRoleModal('facebook')} className="w-[40px] h-[40px] flex items-center justify-center rounded-full bg-primary-color cursor-pointer">
                   <FaFacebookF className="text-xl text-white" />
                 </div>
-                <div onClick={handleGoogleLogin} className="w-[40px] h-[40px] flex items-center justify-center rounded-full bg-primary-color cursor-pointer">
+                <div onClick={() => openRoleModal('google')} className="w-[40px] h-[40px] flex items-center justify-center rounded-full bg-primary-color cursor-pointer">
                   <FaGoogle className="text-xl text-white" />
                 </div>
               </div>
@@ -226,6 +237,13 @@ export default function AuthPage() {
           </div>
         </div>
       </div>
+      {/* login modal */}
+          {showRoleModal && (
+            <SelectRoleModal
+              onSelect={handleRoleSelect}
+              onClose={() => setShowRoleModal(false)}
+            />
+          )}
     </div>
   );
 }

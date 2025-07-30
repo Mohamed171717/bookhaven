@@ -35,16 +35,16 @@ export default function ShopFilterSidebar({ selectedGenres, setSelectedGenres, s
   
   return (
     <div className="bg-white p-4 rounded-2xl shadow">
-      <h3 className="text-lg font-semibold mb-4 text-center">Filters</h3>
       <div className="space-y-6">
         {/* Genre Filter */}
         <div>
           <h4 className="font-semibold mb-2">Genres</h4>
           {genreOptions.map((genre) => (
-            <label key={genre} className="block text-sm">
+            <label key={genre} className="block text-sm mb-1">
               <input
                 type="checkbox"
-                className="mr-2"
+                // className="mr-2"
+                className='appearance-none mr-2 mb-[-2px] w-4 h-4 border-2 border-gray-300 rounded-sm checked:bg-[#4A4947] checked:border-[#4A4947] focus:outline-none'
                 checked={selectedGenres.includes(genre)}
                 onChange={() => handleGenreChange(genre)}
               />
@@ -57,10 +57,11 @@ export default function ShopFilterSidebar({ selectedGenres, setSelectedGenres, s
         <div>
           <h4 className="font-semibold mb-2">Price Range</h4>
           {priceOptions.map(({ label, value }) => (
-            <label key={value} className="block text-sm">
+            <label key={value} className="block text-sm mb-1">
               <input
                 type="checkbox"
-                className="mr-2"
+                // className="mr-2"
+                className='appearance-none mr-2 mb-[-2px] w-4 h-4 border-2 border-gray-300 rounded-sm checked:bg-[#4A4947] checked:border-[#4A4947] focus:outline-none'
                 checked={selectedPriceRanges.includes(value)}
                 onChange={() => handlePriceChange(value)}
               />

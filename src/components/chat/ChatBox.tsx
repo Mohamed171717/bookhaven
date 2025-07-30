@@ -11,10 +11,13 @@ import {
   updateDoc,
   Timestamp,
   getDoc,
+  where,
+  getDocs,
 } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { UserType } from "@/types/UserType";
 import Image from "next/image";
+import { Transaction } from "@/types/TransactionType";
 
 interface ChatBoxProps {
   chatId: string;
@@ -31,16 +34,13 @@ interface Message {
   type: string;
 }
 
-export function ChatBox({
-  chatId,
-  currentUserId,
-  otherUserId,
-  onClose,
-}: ChatBoxProps) {
+export function ChatBox({ chatId, currentUserId, otherUserId, onClose }: ChatBoxProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [otherUser, setOtherUser] = useState<UserType>();
+  const [transaction, setTransaction] = useState<Transaction>();
+
 
   useEffect(() => {
     const q = query(
@@ -48,6 +48,7 @@ export function ChatBox({
       orderBy("timestamp", "asc")
     );
 
+    // Fetch other user info
     const fetchOtherUser = async () => {
       try {
         otherUserId = otherUserId || "";
@@ -64,6 +65,25 @@ export function ChatBox({
       }
     };
     fetchOtherUser();
+    // Fetch Transaction messages
+    const fetchTransaction = async () => {
+      try {
+        const transactionsRef = collection(db, "transactions");
+        const q = query(
+          transactionsRef,
+          where("chatId", "==", chatId)
+        );
+        const snap = await getDocs(q);
+
+        if (!snap.empty) {
+          const docSnap = snap.docs[0];
+          setTransaction({ ...docSnap.data(), transactionId: docSnap.id } as Transaction);
+        }
+      } catch (err) {
+        console.error("Error fetching transaction:", err); 
+      }
+    };
+    fetchTransaction();
 
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const msgs: Message[] = [];
@@ -76,6 +96,61 @@ export function ChatBox({
 
     return () => unsubscribe();
   }, [chatId, otherUserId]);
+
+  const isRequester = transaction?.buyerId === currentUserId;
+  const isResponder = transaction?.sellerId === currentUserId;
+
+  // Handle confirmation
+  const handleConfirm = async () => {
+    if (!transaction) return;
+
+    const transactionRef = doc(db, "transactions", transaction.transactionId); // ← make sure you stored the `id`
+    const updateField = isRequester ? "requesterConfirmed" : "responderConfirmed";
+
+    await updateDoc(transactionRef, {
+      [updateField]: true,
+      status:
+        transaction.requesterConfirmed && transaction.responderConfirmed
+          ? "confirmed"
+          : transaction.status, // Only update if both confirmed
+    });
+
+    // Re-fetch or optimistically update state
+    setTransaction((prev) => {
+      if (!prev) return undefined; // safety check
+
+      const updatedTransaction: Transaction = {
+        ...prev,
+        [updateField]: true,
+        status:
+          (updateField === "requesterConfirmed" && prev.responderConfirmed) ||
+          (updateField === "responderConfirmed" && prev.requesterConfirmed)
+            ? "confirmed"
+            : prev.status,
+      };
+
+      return updatedTransaction;
+    });
+
+  };
+
+  const handleCancel = async () => {
+    if (!transaction || !transaction.transactionId) return;
+
+    const transactionRef = doc(db, "transactions", transaction.transactionId);
+
+    await updateDoc(transactionRef, {
+      status: "cancelled",
+    });
+
+    setTransaction((prev) => {
+      if (!prev) return prev;
+      return {
+        ...prev,
+        status: "cancelled",
+      };
+    });
+  };
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -121,6 +196,39 @@ export function ChatBox({
           ✕
         </button>
       </div>
+
+      {/* transaction */}
+      {transaction && (
+        <div className="bg-[#FFF3E6] text-[#4A4947] px-3 py-2 text-xs border-b border-[#D8D2C2]">
+          <p className="text-sm mb-2"><strong>Swap request</strong></p>
+          {/* <p>You offered book<code>{transaction.swapWithBookId}</code></p>
+          <p>In exchange for book<code>{transaction.bookId}</code></p> */}
+          <p><strong>Status:</strong> <span className="capitalize">{transaction.status}</span></p>
+          {(isRequester || isResponder) && (
+            <div className="mt-2 flex gap-2">
+              {!transaction[isRequester ? 'requesterConfirmed' : 'responderConfirmed'] && (
+                <>
+                  <button
+                    onClick={handleConfirm}
+                    className="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 text-sm"
+                  >
+                    Confirm Swap
+                  </button>
+                  <button
+                    onClick={handleCancel}
+                    className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 text-sm"
+                  >
+                    Cancel
+                  </button>
+                </>
+              )}
+              {transaction[isRequester ? 'requesterConfirmed' : 'responderConfirmed'] && (
+                <p className="text-green-700 font-semibold text-sm">You’ve confirmed</p>
+              )}
+            </div>
+          )}
+        </div>
+      )}
 
       <div className="flex-1 overflow-y-auto px-3 py-2 space-y-2 max-h-72">
         {messages.map((msg) => (
