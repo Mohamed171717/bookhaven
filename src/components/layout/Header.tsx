@@ -8,7 +8,6 @@ import Image from "next/image";
 import { useCart } from "@/context/CartContext";
 import { ChatIcon } from "../chat/ChatIcon";
 
-
 export default function Header() {
   const { user, loading } = useAuth();
   const { cart } = useCart();
@@ -16,7 +15,7 @@ export default function Header() {
   if (loading) return null;
 
   return (
-    <header className="bg-[#fdfaf3] px-6 py-6 shadow-sm">
+    <header className="bg-[#fdfaf3] px-4 py-4 2xl:py-8 shadow-sm">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         {/* Left: Logo + Nav */}
         <div className="flex items-baseline gap-16">
@@ -35,6 +34,9 @@ export default function Header() {
             </Link>
             <Link href="/swap" className="hover:text-gray-900">
               Swap
+            </Link>
+            <Link href="/community" className="hover:text-gray-900">
+              Community
             </Link>
             <Link href="/about" className="hover:text-gray-900">
               About
@@ -61,7 +63,11 @@ export default function Header() {
             <div className="flex items-center gap-4">
               <Link href="/cart" className="relative">
                 <FaShoppingCart className="text-xl color-primary hover:text-[#3d3c3b] cursor-pointer" />
-                { cart && <span className="w-4 h-4 absolute -top-1 -right-2 text-xs bg-red-500 text-white rounded-full px-1">{cart.length}</span> }
+                {cart && (
+                  <span className="w-4 h-4 absolute -top-1 -right-2 text-xs bg-red-500 text-white rounded-full px-1">
+                    {cart.length}
+                  </span>
+                )}
               </Link>
               <ChatIcon />
               <Link href="/profile">

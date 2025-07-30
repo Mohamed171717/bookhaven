@@ -1,39 +1,47 @@
-
 // components/AddBookModal.tsx
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { db } from '@/lib/firebase';
-import { setDoc, doc } from 'firebase/firestore';
+import { useState } from "react";
+import { db } from "@/lib/firebase";
+import { setDoc, doc } from "firebase/firestore";
 import { uploadImageToImageKit } from "@/app/[locale]/utils/imagekitUpload";
-import { v4 as uuid } from 'uuid';
-import { useAuth } from '@/context/AuthContext';
-import toast from 'react-hot-toast';
-import { BookType } from '@/types/BookType';
+import { v4 as uuid } from "uuid";
+import { useAuth } from "@/context/AuthContext";
+import toast from "react-hot-toast";
+import { BookType } from "@/types/BookType";
 
 interface AddBookModalProps {
   onClose: () => void;
   onAdd: (addedBook: BookType) => void;
 }
 
-type genre = 
-    "Fiction"| "Fantasy"| "Science Fiction"| "Mystery & Thriller"|
-    "Romance"| "Historical"| "Young Adult"| "Horror"|
-    "Biography"| "Personal Growth";
+type genre =
+  | "Fiction"
+  | "Fantasy"
+  | "Science Fiction"
+  | "Mystery & Thriller"
+  | "Romance"
+  | "Historical"
+  | "Young Adult"
+  | "Horror"
+  | "Biography"
+  | "Personal Growth";
 
-export default function AddBookModal({ onClose, onAdd }: AddBookModalProps ) {
+export default function AddBookModal({ onClose, onAdd }: AddBookModalProps) {
   const { user } = useAuth();
-  const [title, setTitle] = useState('');
-  const [author, setAuthor] = useState('');
-  const [genre, setGenre] = useState<genre>('Fiction');
-  const [condition, setCondition] = useState<'new' | 'used'>('new');
-  const [description, setDescription] = useState('');
+  const [title, setTitle] = useState("");
+  const [author, setAuthor] = useState("");
+  const [genre, setGenre] = useState<genre>("Fiction");
+  const [condition, setCondition] = useState<"new" | "used">("new");
+  const [description, setDescription] = useState("");
   const [file, setFile] = useState<File | null>(null);
-  const [availableFor, setAvailableFor] = useState<BookType['availableFor']>([]);
-  const [price, setPrice] = useState<number | ''>('');
+  const [availableFor, setAvailableFor] = useState<BookType["availableFor"]>(
+    []
+  );
+  const [price, setPrice] = useState<number | "">("");
   const [loading, setLoading] = useState(false);
 
-  const handleCheckboxChange = (option: 'sell' | 'swap', checked: boolean) => {
+  const handleCheckboxChange = (option: "sell" | "swap", checked: boolean) => {
     if (checked) {
       setAvailableFor([...availableFor, option]);
     } else {
@@ -43,7 +51,7 @@ export default function AddBookModal({ onClose, onAdd }: AddBookModalProps ) {
 
   const handleAddBook = async () => {
     if (!user?.uid || !title || !author || !genre || !file) {
-      toast.error('Please fill in all required fields');
+      toast.error("Please fill in all required fields");
       return;
     }
     setLoading(true);
@@ -59,32 +67,31 @@ export default function AddBookModal({ onClose, onAdd }: AddBookModalProps ) {
         ownerType: user.role,
         title,
         author,
-        isbn: '',
+        isbn: "",
         genre,
         quantity: 1,
         averageRating: 0,
         totalRatings: 0,
         description,
         condition,
-        price: availableFor.includes('sell') ? Number(price) || 0 : 0,
+        price: availableFor.includes("sell") ? Number(price) || 0 : 0,
         availableFor,
-        approval: 'pending',
+        approval: "pending",
         isDeleted: false,
-        status: 'available',
+        status: "available",
         coverImage: imageUrl,
         images: [],
         createdAt: new Date(),
-        updatedAt: new Date()
+        updatedAt: new Date(),
       };
-      
 
-      await setDoc(doc(db, 'books', generatedId), bookData);
-      toast.success('Book added successfully!');
+      await setDoc(doc(db, "books", generatedId), bookData);
+      toast.success("Book added successfully!");
       onAdd(bookData);
       onClose();
     } catch (err) {
       console.error(err);
-      toast.error('Failed to add book');
+      toast.error("Failed to add book");
     } finally {
       setLoading(false);
     }
@@ -93,17 +100,55 @@ export default function AddBookModal({ onClose, onAdd }: AddBookModalProps ) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
       <div className="bg-white p-6 rounded-lg max-w-2xl w-full shadow-md relative">
-        <button onClick={onClose} className="absolute top-2 right-3 text-gray-500 hover:text-[#b63333] text-3xl transition">×</button>
+        <button
+          onClick={onClose}
+          className="absolute top-2 right-3 text-gray-500 hover:text-[#b63333] text-3xl transition"
+        >
+          ×
+        </button>
         <h2 className="text-lg font-bold mb-4">Add New Book</h2>
         {/* title */}
-        <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">Title</label>
-        <input name='title' className="w-full mb-2 p-2 border rounded" placeholder="ex: The Laws of Human Nature" value={title} onChange={(e) => setTitle(e.target.value)} />
+        <label
+          htmlFor="title"
+          className="block text-sm font-medium text-gray-700 mb-1"
+        >
+          Title
+        </label>
+        <input
+          name="title"
+          className="w-full mb-2 p-2 border rounded"
+          placeholder="ex: The Laws of Human Nature"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+        />
         {/* author */}
-        <label htmlFor="author" className="block text-sm font-medium text-gray-700 mb-1">Author</label>
-        <input name="author" className="w-full mb-2 p-2 border rounded" placeholder="ex: Robert Greene" value={author} onChange={(e) => setAuthor(e.target.value)} />
+        <label
+          htmlFor="author"
+          className="block text-sm font-medium text-gray-700 mb-1"
+        >
+          Author
+        </label>
+        <input
+          name="author"
+          className="w-full mb-2 p-2 border rounded"
+          placeholder="ex: Robert Greene"
+          value={author}
+          onChange={(e) => setAuthor(e.target.value)}
+        />
         {/* genre */}
-        <label htmlFor="genre" className="block text-sm font-medium text-gray-700 mb-1">Genre</label>
-        <select name='genre' className="w-full mb-2 p-2 border rounded" value={genre} onChange={(e) => setGenre(e.target.value as genre)}>
+        <label
+          htmlFor="genre"
+          className="block text-sm font-medium text-gray-700 mb-1"
+        >
+          Genre
+        </label>
+        <select
+          title="select genre"
+          name="genre"
+          className="w-full mb-2 p-2 border rounded"
+          value={genre}
+          onChange={(e) => setGenre(e.target.value as genre)}
+        >
           <option value="Fiction">Fiction</option>
           <option value="Fantasy">Fantasy</option>
           <option value="Science Fiction">Science Fiction</option>
@@ -115,19 +160,43 @@ export default function AddBookModal({ onClose, onAdd }: AddBookModalProps ) {
           <option value="Biography">Biography</option>
           <option value="Personal Growth">Personal Growth</option>
         </select>
-        
+
         {/* condition */}
-        <label htmlFor="condition" className="block text-sm font-medium text-gray-700 mb-1">Condition</label>
-        <select name='condition' className="w-full mb-2 p-2 border rounded" value={condition} onChange={(e) => setCondition(e.target.value as 'new' | 'used')}>
+        <label
+          htmlFor="condition"
+          className="block text-sm font-medium text-gray-700 mb-1"
+        >
+          Condition
+        </label>
+        <select
+          title="type condition"
+          name="condition"
+          className="w-full mb-2 p-2 border rounded"
+          value={condition}
+          onChange={(e) => setCondition(e.target.value as "new" | "used")}
+        >
           <option value="new">New</option>
           <option value="used">Used</option>
         </select>
         {/* description */}
-        <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">Description</label>
-        <textarea name='description' className="w-full mb-2 p-2 border rounded" placeholder="Brief description..." value={description} onChange={(e) => setDescription(e.target.value)} />
+        <label
+          htmlFor="description"
+          className="block text-sm font-medium text-gray-700 mb-1"
+        >
+          Description
+        </label>
+        <textarea
+          name="description"
+          className="w-full mb-2 p-2 border rounded"
+          placeholder="Brief description..."
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+        />
         {/* available for */}
-        <label className="block text-sm font-medium text-gray-700 mb-1">Available For</label>
-        <div className='flex items-center space-x-2 mt-1 mb-2'>
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          Available For
+        </label>
+        <div className="flex items-center space-x-2 mt-1 mb-2">
           <div className="flex items-center space-x-2">
             <input
               type="checkbox"
@@ -136,7 +205,9 @@ export default function AddBookModal({ onClose, onAdd }: AddBookModalProps ) {
               checked={availableFor.includes("sell")}
               onChange={(e) => handleCheckboxChange("sell", e.target.checked)}
             />
-            <label htmlFor="sell" className="text-sm font-medium text-gray-700">Sell</label>
+            <label htmlFor="sell" className="text-sm font-medium text-gray-700">
+              Sell
+            </label>
           </div>
           <div className="flex items-center space-x-2">
             <input
@@ -146,16 +217,30 @@ export default function AddBookModal({ onClose, onAdd }: AddBookModalProps ) {
               checked={availableFor.includes("swap")}
               onChange={(e) => handleCheckboxChange("swap", e.target.checked)}
             />
-            <label htmlFor="swap" className="text-sm font-medium text-gray-700">Exchange</label>
+            <label htmlFor="swap" className="text-sm font-medium text-gray-700">
+              Exchange
+            </label>
           </div>
         </div>
-        
-        {availableFor.includes('sell') && (
-          <input type="number" className="w-full mb-2 p-2 border rounded" placeholder="Price" value={price} onChange={(e) => setPrice(Number(e.target.value))} />
+
+        {availableFor.includes("sell") && (
+          <input
+            type="number"
+            className="w-full mb-2 p-2 border rounded"
+            placeholder="Price"
+            value={price}
+            onChange={(e) => setPrice(Number(e.target.value))}
+          />
         )}
         {/* upload image */}
-        <label htmlFor="file" className="block text-sm font-medium text-gray-700 mb-1">Upload Cover Image</label>
+        <label
+          htmlFor="file"
+          className="block text-sm font-medium text-gray-700 mb-1"
+        >
+          Upload Cover Image
+        </label>
         <input
+          title="upload the book image"
           type="file"
           accept="image/*"
           className="w-full mb-3 p-2 border rounded"
@@ -172,14 +257,9 @@ export default function AddBookModal({ onClose, onAdd }: AddBookModalProps ) {
           className="bg-[#a8775a] text-white w-full py-2 rounded hover:bg-[#946a52]"
           disabled={loading}
         >
-          {loading ? 'Adding...' : 'Add Book'}
+          {loading ? "Adding..." : "Add Book"}
         </button>
       </div>
     </div>
   );
 }
-
-
-
-
-
