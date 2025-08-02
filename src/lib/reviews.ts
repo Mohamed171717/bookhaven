@@ -4,7 +4,7 @@ import { doc, getDoc, updateDoc, addDoc, Timestamp, collection } from 'firebase/
 
 export interface Review {
   reviewId: string;
-  reviewerId: string;
+  reviewerId: string | undefined;
   targetId: string;
   rating: number;
   comment?: string;

@@ -9,7 +9,6 @@ import { auth, db } from '../lib/firebase';
 import { UserType } from '@/types/UserType';
 
 
-
 interface AuthContextProps {
   user: UserType | null;
   setUser: (user: UserType) => void;
@@ -29,7 +28,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         const docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {
-          setUser(docSnap.data() as UserType);
+          const userData = docSnap.data() as UserType;
+          setUser(userData);
         }
       } else {
         setUser(null);

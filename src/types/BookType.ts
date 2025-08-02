@@ -24,3 +24,8 @@ export interface BookType {
   createdAt: Date;
   updatedAt: Date;
 }
+
+export type Genre = 
+    "Fiction"| "Fantasy"| "Science Fiction"| "Mystery & Thriller"|
+    "Romance"| "Historical"| "Young Adult"| "Horror"|
+    "Biography"| "Personal Growth";

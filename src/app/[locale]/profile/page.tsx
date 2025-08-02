@@ -16,6 +16,10 @@ import { collection, doc, getDocs, query, updateDoc, where } from 'firebase/fire
 import { db } from '@/lib/firebase';
 import { BookType } from '@/types/BookType';
 import EditBookModal from '@/components/EditBookModal';
+import { useTransactionContext } from '@/context/TransactionContext';
+import TransactionTabs from '@/components/TransactionTab';
+import LanguageSwitcher from '@/components/layout/languageSwitcher';
+// import { Transaction } from '@/types/TransactionType';
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -25,25 +29,11 @@ export default function ProfilePage() {
   const [books, setBooks] = useState<BookType[]>([]);
   const [selectedBook, setSelectedBook] = useState<BookType | null>(null);
   const [showEditModal, setShowEditModal] = useState(false);
+  const { transactions } = useTransactionContext();
 
-  const handleLogout = async () => {
-    const confirmLogout = window.confirm("Are you sure you want to log out?");
-    if (!confirmLogout) return;
-    try {
-      await logoutUser();
-      toast.success("Logged out successfully");
-      router.push("/");
-    } catch (error) {
-      console.error(error);
-      toast.error("Failed to logout");
-    }
-  };
-
-  // fetch books
   useEffect(() => {
     if (!user?.uid) return;
-    console.log(user);
-
+    // fetch books
     const fetchBooks = async () => {
       try {
         const q = query(
@@ -62,7 +52,6 @@ export default function ProfilePage() {
         console.error("Error fetching books:", error);
       }
     };
-
     fetchBooks();
   }, [user]);
   
@@ -106,16 +95,32 @@ export default function ProfilePage() {
     { id: 4, message: "Trade completed with Emma", time: "2 days ago" },
   ];
 
+  // handle logout
+  const handleLogout = async () => {
+    const confirmLogout = window.confirm("Are you sure you want to log out?")
+    if (!confirmLogout) return
+
+    try {
+      await logoutUser()
+      toast.success("Logged out successfully")
+      router.push("/")
+    } catch (error) {
+      console.error(error)
+      toast.error("Failed to logout")
+    }
+  }
+
   if (loading || !user) return null;
 
   return (
     <>
     <Header/>
-    <div className="max-w-7xl mx-auto p-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <LanguageSwitcher />
+    <div className="max-w-7xl px-6 pb-6 pt-[155px] mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6">
       {/* Left Sidebar */}
-      <div className="col-span-1 space-y-6">
+      <div className="col-span-1 mt-14 space-y-6">
         {/* Profile Card */}
-        <div className="bg-white p-6 rounded-lg shadow-md text-center">
+        <div className="bg-gray-100 p-6 rounded-lg shadow-md text-center">
           <Image width={120} height={120} src={ user.photoUrl || '/user-default.jpg'} alt="profile" className="rounded-full mx-auto mb-3" />
           <h2 className="text-xl font-semibold">{user.name}</h2>
           <p className="text-sm text-gray-500">{user.email}</p>
@@ -155,7 +160,7 @@ export default function ProfilePage() {
           )}
 
           {/* Favorite Genres */}
-          <div className="bg-white p-6 rounded-lg shadow-md">
+          <div className="bg-gray-100 p-6 rounded-lg shadow-md">
             <h3 className="font-semibold text-gray-800 mb-4">
               Favorite Genres
             </h3>
@@ -172,7 +177,7 @@ export default function ProfilePage() {
           </div>
 
           {/* Notifications */}
-          <div className="bg-white p-6 rounded-lg shadow-md">
+          <div className="bg-gray-100 p-6 rounded-lg shadow-md">
             <div className="flex justify-between items-center mb-3">
               <h3 className="font-semibold text-gray-800">
                 Recent Notifications
@@ -217,7 +222,7 @@ export default function ProfilePage() {
             )}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {books.map((book) => (
-                <div key={book.id} className="bg-white rounded-lg shadow-md">
+                <div key={book.id} className="bg-gray-100 rounded-lg shadow-md">
                   <Image
                     src={book.coverImage}
                     width={600}
@@ -226,18 +231,20 @@ export default function ProfilePage() {
                     className="rounded-t w-full h-[250px] mb-3"
                   />
                   <div className="p-4">
-                    <h4 className="font-semibold text-gray-800 text-sm mb-1">
+                    <h4 className="font-semibold text-gray-800 text-sm mb-1 overflow-hidden">
                       {book.title.length >= 25
                         ? `${book.title.slice(0, 25)}...`
                         : `${book.title}`}
                     </h4>
-                    <p className="text-xs text-gray-500 mb-2">{book.author}</p>
-                    <div className="text-[#a8775a] text-sm font-semibold mb-2">
-                      ${book.price}
-                    </div>
+                    <p className="text-xs text-gray-500 mb-2 overflow-hidden">{book.author}</p>
+                    {book.availableFor.includes('sell') ? (
+                      <div className="text-[#a8775a] text-sm font-semibold overflow-hidden mb-2">
+                        ${book.price}
+                      </div>
+                    ) : (<p className="mt-1 text-lg pt-7 font-semibold text-[#a8775a]"></p>)}
                     <div className="flex justify-between items-center text-gray-600 text-sm">
-                      <span className="bg-gray-100 px-2 py-1 rounded text-xs">
-                        {book.status}
+                      <span className={`${book.approval === 'approved' ? 'bg-green-100' : book.approval === 'rejected' ? 'bg-red-100' : 'bg-orange-100'} px-2 py-1 rounded text-xs`}>
+                        {book.approval}
                       </span>
                       <div className="flex gap-2 text-lg">
                         <FiEdit
@@ -278,61 +285,15 @@ export default function ProfilePage() {
           </div>
 
           {/* Transaction History */}
-          <div className="bg-white p-6 rounded-lg shadow-md">
+          <div className="bg-gray-100 p-6 rounded-lg shadow-md">
             <h3 className="text-lg font-semibold mb-4 text-gray-800">
               Transaction History
             </h3>
-            <div className="flex gap-4 mb-4 text-sm">
-              <button className="px-3 py-1 bg-[#a8775a] text-white rounded">
-                All
-              </button>
-              <button className="px-3 py-1 border rounded text-gray-700">
-                Sales
-              </button>
-              <button className="px-3 py-1 border rounded text-gray-700">
-                Purchases
-              </button>
-              <button className="px-3 py-1 border rounded text-gray-700">
-                Trades
-              </button>
-            </div>
-            <ul className="space-y-4">
-              <li className="flex justify-between items-center border-b pb-2">
-                <div>
-                  <p className="text-sm font-medium">The Great Gatsby</p>
-                  <span className="text-xs text-gray-500">
-                    Sold — Jan 15, 2024
-                  </span>
-                </div>
-                <span className="text-sm font-semibold text-[#a8775a]">
-                  $15.00
-                </span>
-              </li>
-              <li className="flex justify-between items-center border-b pb-2">
-                <div>
-                  <p className="text-sm font-medium">To Kill a Mockingbird</p>
-                  <span className="text-xs text-gray-500">
-                    Traded — Jan 12, 2024
-                  </span>
-                </div>
-                <span className="text-sm text-[#a8775a]">Traded for 1984</span>
-              </li>
-              <li className="flex justify-between items-center">
-                <div>
-                  <p className="text-sm font-medium">Pride and Prejudice</p>
-                  <span className="text-xs text-gray-500">
-                    Bought — Jan 10, 2024
-                  </span>
-                </div>
-                <span className="text-sm font-semibold text-[#a8775a]">
-                  $20.00
-                </span>
-              </li>
-            </ul>
+            <TransactionTabs transactions={transactions} />
           </div>
         </div>
       </div>
-      <Footer />
+    <Footer />
     </>
   );
 }

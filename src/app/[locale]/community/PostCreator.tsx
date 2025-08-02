@@ -71,10 +71,10 @@ const PostCreator = () => {
   return (
     <>
       {/* Trigger Box */}
-      <div className="bg-[#D8D2C2] rounded-xl shadow p-4 mb-6">
+      <div className="bg-[#FAF7F0] rounded-xl p-4 mb-6">
         <div
           onClick={() => setIsOpen(true)}
-          className="cursor-pointer text-[#4A4947] bg-[#FAF7F0] px-4 py-3 rounded-full w-full text-left hover:bg-[#eeeae2] transition"
+          className="cursor-pointer text-[#4A4947] bg-[#D8D2C2] px-4 py-3 rounded-full w-full text-left hover:bg-white transition"
         >
           What book are you thinking about?
         </div>

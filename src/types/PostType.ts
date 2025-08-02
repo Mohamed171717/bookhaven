@@ -21,3 +21,4 @@ export interface CommentType {
   userName: string;
   userPhotoUrl: string;
 }
+

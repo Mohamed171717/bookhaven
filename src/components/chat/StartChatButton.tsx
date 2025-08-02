@@ -11,9 +11,10 @@ import {
 } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { ChatBox } from "./ChatBox";
+import toast from "react-hot-toast";
 
 interface StartChatButtonProps {
-  currentUserId: string;
+  currentUserId: string | undefined;
   otherUserId: string;
 }
 
@@ -25,6 +26,7 @@ export default function StartChatButton({
   const [isChatOpen, setIsChatOpen] = useState(false);
 
   const handleStartChat = async () => {
+    if (!currentUserId) return toast.error("Please login to start a chat.");
     const q = query(
       collection(db, "chats"),
       where("participants", "array-contains", currentUserId)
@@ -60,7 +62,7 @@ export default function StartChatButton({
     <>
       <button
         onClick={() => handleStartChat()}
-        className="bg-[#B17457] text-white px-4 py-2 rounded-lg text-sm hover:bg-[#4A4947]"
+        className="bg-btn-color text-[15px] hover:bg-[#a16950] text-gray-50 ml-1 py-2 px-4 rounded-full transition duration-300"
       >
         Message
       </button>

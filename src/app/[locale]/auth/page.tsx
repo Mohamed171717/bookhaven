@@ -1,15 +1,19 @@
 
-
 "use client";
 import { useTranslations } from "next-intl";
-import { loginUser, registerUser, signInWithGoogle, signInWithFacebook } from '@/lib/authService';
+import { loginUser, registerUser, signInWithFacebookPopup, signInWithGooglePopup } from '@/lib/authService';
 import { FirebaseError } from 'firebase/app';
-import { updateProfile } from 'firebase/auth';
+import { signOut, updateProfile, User } from 'firebase/auth';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
 import { useState } from "react";
 import { FaFacebookF } from "react-icons/fa";
 import { FaGoogle } from "react-icons/fa";
+import SelectRoleModal from "@/components/SelectRoleModal";
+import { auth, db } from "@/lib/firebase";
+import { doc, getDoc, serverTimestamp, setDoc } from "firebase/firestore";
+import { UserType } from "@/types/UserType";
+import LanguageSwitcher from "@/components/layout/languageSwitcher";
 
 type Role = "reader" | "library";
 type Error = {
@@ -17,7 +21,6 @@ type Error = {
   email?: string;
   password?: string;
 };
-
 
 export default function AuthPage() {
   const t = useTranslations('LoginPage');
@@ -28,6 +31,9 @@ export default function AuthPage() {
   const [name, setName] = useState('');
   const [role, setRole] = useState<Role>('reader');
   const [errors, setErrors] = useState<Error>({});
+  const [showRoleModal, setShowRoleModal] = useState(false);
+  // const [loginProvider, setLoginProvider] = useState<"google" | "facebook" | null>(null);
+  const [tempUser, setTempUser] = useState<User | null>(null);
 
   // validation
   const registerValidate = () => {
@@ -51,9 +57,26 @@ export default function AuthPage() {
   const handleLogin = async () => {
     if (!loginValidate()) return;
     try {
-      await loginUser(email, password);
-      toast.success('Logged in successfully!!');
-      router.push(`/`);
+      const userCredential = await loginUser(email, password);
+      const uid = userCredential.user.uid;
+
+      const userDocRef = doc(db, 'users', uid);
+      const userSnap = await getDoc(userDocRef);
+
+      if (userSnap.exists()) {
+        const userData = userSnap.data() as UserType;
+
+        if (userData.isBanned) {
+          await signOut(auth);
+          toast.error('Your account has been banned.');
+          return; // Stop further execution
+        }
+
+        toast.success('Logged in successfully!!');
+        router.push(`/`);
+      } else {
+        toast.error("User document not found.");
+      }
     } catch (err: unknown) {
       if (err instanceof FirebaseError) {
         console.error("Firebase error code:", err.code);
@@ -86,44 +109,94 @@ export default function AuthPage() {
     }
   };
 
-  // login with google
-  const handleGoogleLogin = async () => {
+  const openRoleModal = async (gf: 'google' | 'facebook') => {
     try {
-      const user = await signInWithGoogle();
-      console.log("Google user:", user);
-      toast.success(`Welcome ${user.displayName}`);
-      router.push(`/`);
-    } catch (err: unknown) {
+      if (gf === 'google') {
+        const firebaseUser = await signInWithGooglePopup();
+        const userRef = doc(db, "users", firebaseUser.uid);
+        const userSnap = await getDoc(userRef);
+
+        if (userSnap.exists()) {
+          // User already exists, just log in and redirect
+          toast.success(`Welcome back ${firebaseUser.displayName}`);
+          router.push(`/`);
+        } else {
+          // New user, show role modal and store UID to use later
+          setTempUser(firebaseUser); // 👈 store user temporarily
+          setShowRoleModal(true);
+        }
+      } else if (gf === 'facebook') {
+        const firebaseUser = await signInWithFacebookPopup();
+        const userRef = doc(db, "users", firebaseUser.uid);
+        const userSnap = await getDoc(userRef);
+
+        if (userSnap.exists()) {
+          // User already exists, just log in and redirect
+          toast.success(`Welcome back ${firebaseUser.displayName}`);
+          router.push(`/`);
+        } else {
+          // New user, show role modal and store UID to use later
+          setTempUser(firebaseUser); // 👈 store user temporarily
+          setShowRoleModal(true);
+        }
+      }
+
+    
+    } catch (err) {
       if (err instanceof FirebaseError) {
-        console.error("Firebase error code:", err.code);
         toast.error(err.message);
       } else {
-        console.error("Unknown error:", err);
-        toast.error("An unknown error occurred.");
+        console.error("Unknown error during Google login:", err);
       }
     }
   };
 
-  // login with facebook
-  const handleFacebookLogin = async () => {
+  const handleRoleSelect = async (role: 'reader' | 'library') => {
+    setShowRoleModal(false);
     try {
-      const user = await signInWithFacebook();
-      console.log("Facebook user:", user);
-      toast.success(`Welcome ${user.displayName}`);
+      if (!tempUser) return;
+      const userData = {
+        uid: tempUser.uid,
+        name: tempUser.displayName || "",
+        email: tempUser.email || "",
+        photoUrl: tempUser.photoURL || "",
+        role,
+        createdAt: serverTimestamp(),
+        bio: "",
+        averageRating: 0,
+        totalRatings: 0,
+        verified: tempUser.emailVerified,
+        isBanned: false,
+        profileIncomplete: true,
+        genres: [],
+        address: "",
+        website: "",
+        bookIds: [],
+        transactionIds: [],
+        chatIds: [],
+        blogPostIds: [],
+        notificationIds: [],
+        updatedAt: serverTimestamp(),
+      };
+
+      await setDoc(doc(db, "users", tempUser.uid), userData);
+      toast.success(`Welcome ${tempUser.displayName}`);
       router.push(`/`);
-    } catch (err: unknown) {
+    } catch (err) {
       if (err instanceof FirebaseError) {
-        console.error("Firebase error code:", err.code);
         toast.error(err.message);
       } else {
-        console.error("Unknown error:", err);
-        toast.error("An unknown error occurred.");
+        console.error("Error saving user:", err);
       }
+    } finally {
+      setTempUser(null);
     }
   };
+
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-[#9b654d] via-[#D8D2C2] to-[#794f3c] px-4">
+      <LanguageSwitcher />
       <div className="relative w-full max-w-5xl h-[500px] overflow-hidden rounded-xl shadow-xl">
         {/* Sliding Container */}
         <div
@@ -157,10 +230,10 @@ export default function AuthPage() {
                 {t('dontHave')}
               </p>
               <div className="flex justify-center mt-8 items-center gap-6">
-                <div onClick={handleFacebookLogin} className="w-[40px] h-[40px] flex items-center justify-center rounded-full bg-primary-color cursor-pointer">
+                <div onClick={() => openRoleModal('facebook')} className="w-[40px] h-[40px] flex items-center justify-center rounded-full bg-primary-color cursor-pointer">
                   <FaFacebookF className="text-xl text-white" />
                 </div>
-                <div onClick={handleGoogleLogin} className="w-[40px] h-[40px] flex items-center justify-center rounded-full bg-primary-color cursor-pointer">
+                <div onClick={() => openRoleModal('google')} className="w-[40px] h-[40px] flex items-center justify-center rounded-full bg-primary-color cursor-pointer">
                   <FaGoogle className="text-xl text-white" />
                 </div>
               </div>
@@ -226,6 +299,13 @@ export default function AuthPage() {
           </div>
         </div>
       </div>
+      {/* login modal */}
+          {showRoleModal && (
+            <SelectRoleModal
+              onSelect={handleRoleSelect}
+              onClose={() => setShowRoleModal(false)}
+            />
+          )}
     </div>
   );
 }
