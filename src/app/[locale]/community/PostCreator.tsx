@@ -47,7 +47,7 @@ const PostCreator = () => {
       const newPost = {
         userId: user?.uid,
         content,
-        imageURL: imageUrl || undefined,
+        imageURL: imageUrl || "",
         createdAt: serverTimestamp(),
         userPhotoUrl: user?.photoUrl,
         userName: user?.name,

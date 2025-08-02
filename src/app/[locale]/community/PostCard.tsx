@@ -205,7 +205,7 @@ export default function PostCard({ post, showComment }: props) {
       </div>
 
       {/* Image */}
-      {livePost.imageURL && (
+      {livePost.imageURL && livePost.imageURL !== "" && (
         <div
           className={`rounded-xl overflow-hidden mb-3 ${
             showComment && `max-h-[400px]`
