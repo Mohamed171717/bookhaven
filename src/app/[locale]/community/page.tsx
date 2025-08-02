@@ -7,6 +7,7 @@ import { PostType } from "@/types/PostType";
 import { useEffect, useState } from "react";
 import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
 import { db } from "@/lib/firebase";
+import LanguageSwitcher from "@/components/layout/languageSwitcher";
 
 export default function BlogPage() {
   const [posts, setPosts] = useState<PostType[]>([]);
@@ -31,7 +32,8 @@ export default function BlogPage() {
   return (
     <>
       <Header />
-      <div className="min-h-screen px-4 py-4">
+      <LanguageSwitcher />
+      <div className="min-h-screen px-6 pb-6 pt-[155px]">
         <div className="max-w-2xl mx-auto">
           <PostCreator />
           <div className="mt-4 space-y-4">

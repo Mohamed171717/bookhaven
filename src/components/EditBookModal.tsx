@@ -20,17 +20,13 @@ const genres = [
   'Biography', 'Personal Growth',
 ];
 
-const conditions: BookType['condition'][] = ['new', 'used'];
-
 export default function EditBookModal({ book, onClose, onUpdate }: EditBookModalProps) {
 
   const [title, setTitle] = useState(book.title);
   const [author, setAuthor] = useState(book.author);
   const [genre, setGenre] = useState(book.genre);
   const [file, setFile] = useState<File | null>(null);
-  const [condition, setCondition] = useState(book.condition || '');
   const [description, setDescription] = useState(book.description || '');
-  const [price, setPrice] = useState(book.price);
 
   
   const handleSave = async () => {
@@ -47,10 +43,8 @@ export default function EditBookModal({ book, onClose, onUpdate }: EditBookModal
         title,
         author,
         genre,
-        condition,
         description,
         coverImage: imageUrl,
-        price: price,
         updatedAt: new Date(),
       };
 
@@ -82,18 +76,9 @@ export default function EditBookModal({ book, onClose, onUpdate }: EditBookModal
           <select value={genre} onChange={(e) => setGenre(e.target.value)} className="w-full p-2 border rounded">
             {genres.map((g) => <option key={g} value={g}>{g}</option>)}
           </select>
-          {/* condition */}
-          <label htmlFor="condition" className="block text-sm font-medium text-gray-700">Condition</label>
-          <select value={condition} onChange={(e) => setCondition(e.target.value as BookType['condition'])} className="w-full p-2 border rounded">
-            <option disabled value="">Select Condition</option>
-            {conditions.map((c) => <option key={c} value={c}>{c}</option>)}
-          </select>
           {/* description */}
           <label htmlFor="description" className="block text-sm font-medium text-gray-700">Description</label>
           <textarea value={description} onChange={(e) => setDescription(e.target.value)} className="w-full p-2 border rounded resize-none" rows={3} placeholder="Description" />
-          {/* price */}
-          <label htmlFor="price" className="block text-sm font-medium text-gray-700">Price</label>
-          <input type="number" value={price} onChange={(e) => setPrice(Number(e.target.value))} className="w-full p-2 border rounded" placeholder="Price" />
           {/* uploud file */}
           <label htmlFor="file" className="block text-sm font-medium text-gray-700 mb-1">Upload Cover Image</label>
           <input

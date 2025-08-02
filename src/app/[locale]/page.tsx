@@ -5,9 +5,35 @@ import Footer from "@/components/layout/Footer";
 import Header from "@/components/layout/Header";
 import Hero from "@/components/layout/Hero";
 import { useBooks } from "@/context/BooksContext";
+import { db } from "@/lib/firebase";
+import { PostType } from "@/types/PostType";
+import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
+import { useEffect, useState } from "react";
+import PostCard from "./community/PostCard";
+import Link from "next/link";
+import { FadeBoxCard, FadeBoxCardWithFlex, FadePostCard } from "@/components/animations/FadeInWrapper";
+import LanguageSwitcher from "@/components/layout/languageSwitcher";
+
+  
 
 export default function HomePage() {
   const { books, loading } = useBooks();
+  const [posts, setPosts] = useState<PostType[]>([]);
+
+  useEffect(() => {
+    const q = query(collection(db, "posts"), orderBy("createdAt", "desc"));
+
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const data = snapshot.docs.map((doc) => ({
+        ...doc.data(),
+        postId: doc.id,
+      })) as PostType[];
+
+      setPosts(data);
+    });
+
+    return () => unsubscribe(); // Clean up the listener on unmount
+  }, []);
 
   if (!loading) {
     console.log(books);
@@ -35,70 +61,83 @@ export default function HomePage() {
   return (
     <>
       <Header />
-      <main className="min-h-screen">
+      <LanguageSwitcher />
+      <main className="min-h-screen pt-[76px]">
         {/* Hero Section */}
         <Hero />
         {/* Best Selling Books */}
         <section className="py-16 container mx-auto px-20">
           <h2 className="text-3xl font-bold primary-color mb-8">
-            Top Rated Books
+            Best Selling
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {TOP_RATED_BOOKS.slice(0, 4).map((book) => (
-              <BookCard
-                key={book.id}
-                title={book.title}
-                description={book.description}
-                author={book.author}
-                price={book.price}
-              />
-            ))}
-          </div>
-        </section>
-
-        {/* Trending in Books */}
-        <section className="py-16 bg-secondary-color">
-          <div className="container mx-auto px-20">
-            <h2 className="text-3xl font-bold text-gray-800 mb-8">
-              Recent Books
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-              {newestBooks.slice(0, 4).map((book) => (
+            {TOP_RATED_BOOKS.slice(0, 4).map((book, index) => (
+              <FadeBoxCard key={book.id} delay={index * 0.5}>
                 <BookCard
-                  key={book.id}
+                  id={book.id}
+                  availableFor={book.availableFor}
+                  bookImg={book.coverImage}
                   title={book.title}
                   description={book.description}
                   author={book.author}
                   price={book.price}
                 />
-              ))}
+              </FadeBoxCard>
+            ))}
+          </div>
+        </section>
+
+        {/* our community */}
+        <section className="py-16 bg-card-color">
+          <div className="container mx-auto px-20">
+            <h2 className="text-3xl font-bold text-gray-800 mb-8">
+              Join Our Community
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+              {posts && posts.slice(0, 4).map((post, index) => {
+                if (post.content == "") return;
+                return (
+                  <FadePostCard key={post.postId} delay={index * 0.5} direction={"right"}>
+                    <PostCard post={post} showComment={true} />
+                  </FadePostCard>
+                );
+              })}
+            </div>
+            <div className="text-center mt-8">
+              <Link
+                href="/community"
+                className="bg-primary-color hover:bg-[#a16950] text-white font-semibold py-3 px-6 rounded-full transition duration-300"
+              >
+                View All Posts
+              </Link>
             </div>
           </div>
         </section>
 
-        {/* Fresh Off the Press */}
+        {/* New arrivals */}
         <section className="py-16 container mx-auto px-20">
           <h2 className="text-3xl font-bold text-gray-800 mb-8">
-            Fresh Off the Press
+            New arrivals
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <BookCardWithFlex
-              title="The Library Book"
-              author="Susan Orlean"
-              description="A fascinating journey through the history of libraries"
-              price="$25.99"
-            />
-            <BookCardWithFlex
-              title="The Midnight Library"
-              author="Matt Haig"
-              description="A story about infinite possibilities in the universe that are impossible"
-              price="$23.99"
-            />
+            {newestBooks.slice(0, 2).map((book) => (
+              <FadeBoxCardWithFlex key={book.id} delay={0.5} direction={"down"}>
+                <BookCardWithFlex
+                  id={book.id}
+                  availableFor={book.availableFor}
+                  bookImg={book.coverImage}
+                  title={book.title}
+                  description={book.description}
+                  author={book.author}
+                  price={book.price}
+                />
+              </FadeBoxCardWithFlex>
+            ))}
           </div>
         </section>
 
         {/* Newsletter Section */}
-        <section className="py-16 bg-secondary-color text-gray-50">
+        <section className="py-16 bg-card-color text-gray-50">
           <div className="container mx-auto px-20 text-center">
             <h2 className="text-3xl primary-color font-bold mb-4">
               Join Our Newsletter

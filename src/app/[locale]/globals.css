@@ -1,27 +1,25 @@
 
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-
 :root {
-  --background: #FAF7F0;
+  /* --background: #FAF7F0; */
+  --background: white;
+  --card-background: #e7ded6;
   --foreground: #171717;
   --primary-color: #4A4947; 
-  --secondary-color: #D8D2C2;
+  --milk-color: #e6e0cd;
+  /* --secondary-color: #D8D2C2; */
   --third-color: #706a5f;
   --btn-color: #B17457;
   --border-color: #171717;
   --text-color: #f1f1f1;
-}
-
+} 
 
 body {
   background: var(--background);
   color: var(--primary-color);
-  /* font-family: "Changa", sans-serif; */
-  font-family: "Inter", sans-serif;
 }
 
 * {
@@ -36,11 +34,17 @@ body {
 .bg-primary-color {
   background-color: var(--primary-color);
 }
-.secondary-color {
-  color: var(--secondary-color);
+.card-color {
+  color: var(--card-background);
 }
-.bg-secondary-color {
-  background-color: var(--secondary-color);
+.bg-card-color {
+  background-color: var(--card-background);
+}
+.milk-color- {
+  color: var(--milk-color);
+}
+.bg-milk-color {
+  background-color: var(--milk-color);
 }
 .btn-color {
   color: var(--btn-color);
@@ -51,4 +55,26 @@ body {
 
 .fix-height {
   min-height: calc(100vh - 335px);
+}
+
+
+
+.brown {
+  color: #B17457;
+}
+
+.milk {
+  color: #c4a484;
+}
+
+.back {
+  background-color: #faf6ed;
+}
+
+.oil {
+  background-color: #d8d2c2;
+}
+
+.orange {
+  color: #ffab57;
 }

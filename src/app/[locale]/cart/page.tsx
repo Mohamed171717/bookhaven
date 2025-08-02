@@ -8,6 +8,7 @@ import { useCart } from '@/context/CartContext';
 import { FaTrash } from "react-icons/fa";
 import Image from 'next/image';
 import Link from 'next/link';
+import LanguageSwitcher from '@/components/layout/languageSwitcher';
 
 
 const CartPage = () => {
@@ -19,7 +20,8 @@ const CartPage = () => {
   return (
     <>
     <Header/>
-    <div className="p-6 fix-height max-w-7xl mx-auto">
+    <LanguageSwitcher />
+    <div className="px-6 pb-[43px] pt-[155px] fix-height max-w-7xl mx-auto">
       <h2 className="text-2xl font-semibold text-center">Shopping Cart</h2>
       <p className="text-sm text-gray-500 text-center mb-6">Home / Shopping Cart</p>
 
@@ -36,7 +38,7 @@ const CartPage = () => {
                 <th className="p-4 text-center">Remove</th>
               </tr>
             </thead>
-            <tbody className="bg-white">
+            <tbody className="bg-gray-100 shadow-lg">
               {cart.map((item) => (
                 <tr key={item.bookId} className="border-b">
                   <td className="p-4 flex gap-4 items-center">
@@ -89,7 +91,7 @@ const CartPage = () => {
         </div>
 
         {/* Order Summary */}
-        <div className="border p-6 rounded-lg bg-white shadow-sm h-fit">
+        <div className="border p-6 rounded-lg bg-gray-100 shadow-sm h-fit">
           <h3 className="text-lg font-semibold mb-4">Order Summary</h3>
           <div className="flex justify-between py-2">
             <span>Items</span>
@@ -112,7 +114,7 @@ const CartPage = () => {
             <span>${total.toFixed(2)}</span>
           </div>
           <Link href='/checkout'>
-            <button className="w-full bg-primary-color text-white py-2 rounded">Proceed to Checkout</button>
+            <button className="w-full bg-primary-color hover:bg-[#B17457] transition text-white py-2 rounded">Proceed to Checkout</button>
           </Link>
         </div>
       </div>

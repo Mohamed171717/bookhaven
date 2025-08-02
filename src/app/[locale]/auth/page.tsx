@@ -1,10 +1,9 @@
 
-
 "use client";
 import { useTranslations } from "next-intl";
-import { loginUser, registerUser, signInWithGoogle, signInWithFacebook } from '@/lib/authService';
+import { loginUser, registerUser, signInWithFacebookPopup, signInWithGooglePopup } from '@/lib/authService';
 import { FirebaseError } from 'firebase/app';
-import { signOut, updateProfile } from 'firebase/auth';
+import { signOut, updateProfile, User } from 'firebase/auth';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
 import { useState } from "react";
@@ -12,8 +11,9 @@ import { FaFacebookF } from "react-icons/fa";
 import { FaGoogle } from "react-icons/fa";
 import SelectRoleModal from "@/components/SelectRoleModal";
 import { auth, db } from "@/lib/firebase";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, serverTimestamp, setDoc } from "firebase/firestore";
 import { UserType } from "@/types/UserType";
+import LanguageSwitcher from "@/components/layout/languageSwitcher";
 
 type Role = "reader" | "library";
 type Error = {
@@ -32,7 +32,8 @@ export default function AuthPage() {
   const [role, setRole] = useState<Role>('reader');
   const [errors, setErrors] = useState<Error>({});
   const [showRoleModal, setShowRoleModal] = useState(false);
-  const [loginProvider, setLoginProvider] = useState<"google" | "facebook" | null>(null);
+  // const [loginProvider, setLoginProvider] = useState<"google" | "facebook" | null>(null);
+  const [tempUser, setTempUser] = useState<User | null>(null);
 
   // validation
   const registerValidate = () => {
@@ -56,7 +57,7 @@ export default function AuthPage() {
   const handleLogin = async () => {
     if (!loginValidate()) return;
     try {
-      const userCredential = await loginUser(email, password); // loginUser should return userCredential
+      const userCredential = await loginUser(email, password);
       const uid = userCredential.user.uid;
 
       const userDocRef = doc(db, 'users', uid);
@@ -108,33 +109,94 @@ export default function AuthPage() {
     }
   };
 
-  const openRoleModal = (provider: "google" | "facebook") => {
-    setLoginProvider(provider);
-    setShowRoleModal(true);
+  const openRoleModal = async (gf: 'google' | 'facebook') => {
+    try {
+      if (gf === 'google') {
+        const firebaseUser = await signInWithGooglePopup();
+        const userRef = doc(db, "users", firebaseUser.uid);
+        const userSnap = await getDoc(userRef);
+
+        if (userSnap.exists()) {
+          // User already exists, just log in and redirect
+          toast.success(`Welcome back ${firebaseUser.displayName}`);
+          router.push(`/`);
+        } else {
+          // New user, show role modal and store UID to use later
+          setTempUser(firebaseUser); // 👈 store user temporarily
+          setShowRoleModal(true);
+        }
+      } else if (gf === 'facebook') {
+        const firebaseUser = await signInWithFacebookPopup();
+        const userRef = doc(db, "users", firebaseUser.uid);
+        const userSnap = await getDoc(userRef);
+
+        if (userSnap.exists()) {
+          // User already exists, just log in and redirect
+          toast.success(`Welcome back ${firebaseUser.displayName}`);
+          router.push(`/`);
+        } else {
+          // New user, show role modal and store UID to use later
+          setTempUser(firebaseUser); // 👈 store user temporarily
+          setShowRoleModal(true);
+        }
+      }
+
+    
+    } catch (err) {
+      if (err instanceof FirebaseError) {
+        toast.error(err.message);
+      } else {
+        console.error("Unknown error during Google login:", err);
+      }
+    }
   };
 
   const handleRoleSelect = async (role: 'reader' | 'library') => {
     setShowRoleModal(false);
     try {
-      if (loginProvider === 'google') {
-        const user = await signInWithGoogle(role);
-        toast.success(`Welcome ${user.displayName}`);
-        router.push(`/`);
-      } else if (loginProvider === 'facebook') {
-        await signInWithFacebook(role);
-      }
-    } catch (err: unknown) {
+      if (!tempUser) return;
+      const userData = {
+        uid: tempUser.uid,
+        name: tempUser.displayName || "",
+        email: tempUser.email || "",
+        photoUrl: tempUser.photoURL || "",
+        role,
+        createdAt: serverTimestamp(),
+        bio: "",
+        averageRating: 0,
+        totalRatings: 0,
+        verified: tempUser.emailVerified,
+        isBanned: false,
+        profileIncomplete: true,
+        genres: [],
+        address: "",
+        website: "",
+        bookIds: [],
+        transactionIds: [],
+        chatIds: [],
+        blogPostIds: [],
+        notificationIds: [],
+        updatedAt: serverTimestamp(),
+      };
+
+      await setDoc(doc(db, "users", tempUser.uid), userData);
+      toast.success(`Welcome ${tempUser.displayName}`);
+      router.push(`/`);
+    } catch (err) {
       if (err instanceof FirebaseError) {
-        console.error(`${loginProvider} login failed`, err);
         toast.error(err.message);
+      } else {
+        console.error("Error saving user:", err);
       }
     } finally {
-      setLoginProvider(null);
+      setTempUser(null);
     }
   };
 
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-[#9b654d] via-[#D8D2C2] to-[#794f3c] px-4">
+      <LanguageSwitcher />
       <div className="relative w-full max-w-5xl h-[500px] overflow-hidden rounded-xl shadow-xl">
         {/* Sliding Container */}
         <div

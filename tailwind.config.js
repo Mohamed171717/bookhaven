@@ -8,8 +8,14 @@ module.exports = {
     "./src/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        // TODO: Uncomment when font files are added
+        // 'playwrite-magyar': ['var(--font-playwrite-magyar)', 'Playwrite Magyarország', 'sans-serif'],
+      },
+    },
   },
   plugins: [],
 }
+
 

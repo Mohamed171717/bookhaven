@@ -2,7 +2,6 @@
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
 import { CiSearch } from "react-icons/ci";
-import LanguageSwitcher from "./languageSwitcher";
 import { FaShoppingCart } from "react-icons/fa";
 import Image from "next/image";
 import { useCart } from "@/context/CartContext";
@@ -15,25 +14,19 @@ export default function Header() {
   if (loading) return null;
 
   return (
-    <header className="bg-[#fdfaf3] px-4 py-4 2xl:py-8 shadow-sm">
+    <header style={{width: '100%', position: 'fixed'}} className="bg-white z-30 px-4 py-4 2xl:py-8 shadow-lg">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         {/* Left: Logo + Nav */}
         <div className="flex items-baseline gap-16">
-          <Link href="/" className="text-2xl font-bold primary-color">
+          <Link href="/" className="text-3xl font-bold primary-color">
             BookHaven
           </Link>
-          <nav className="hidden md:flex gap-5 items-baseline font-medium text-gray-700">
+          <nav className="hidden md:flex gap-5 items-baseline text-xl font-medium text-gray-700">
             <Link href="/" className="hover:text-gray-900">
               Home
             </Link>
             <Link href="/shop" className="hover:text-gray-900">
               Shop
-            </Link>
-            <Link href="/trade" className="hover:text-gray-900">
-              Trade
-            </Link>
-            <Link href="/swap" className="hover:text-gray-900">
-              Swap
             </Link>
             <Link href="/community" className="hover:text-gray-900">
               Community
@@ -41,7 +34,9 @@ export default function Header() {
             <Link href="/about" className="hover:text-gray-900">
               About
             </Link>
-            <LanguageSwitcher />
+            <Link href="/support" className="hover:text-gray-900">
+              Support
+            </Link>
           </nav>
         </div>
 
@@ -52,9 +47,9 @@ export default function Header() {
             <input
               type="text"
               placeholder="Search books..."
-              className="pl-4 pr-10 py-3 rounded-full bg-[#dad3c1] placeholder-gray-600 text-sm text-gray-800 outline-none w-48 sm:w-80"
+              className="pl-4 pr-10 py-3 rounded-full bg-gray-100 placeholder-gray-600 text-lg text-gray-800 outline-none w-48 sm:w-80"
             />
-            <span className="absolute right-4 top-3.5 text-lg text-gray-700">
+            <span className="absolute right-4 top-4 text-lg text-gray-700">
               <CiSearch />
             </span>
           </div>
@@ -62,7 +57,7 @@ export default function Header() {
           {user ? (
             <div className="flex items-center gap-4">
               <Link href="/cart" className="relative">
-                <FaShoppingCart className="text-xl color-primary hover:text-[#3d3c3b] cursor-pointer" />
+                <FaShoppingCart className="text-2xl color-primary hover:text-[#3d3c3b] cursor-pointer" />
                 {cart && (
                   <span className="w-4 h-4 absolute -top-1 -right-2 text-xs bg-red-500 text-white rounded-full px-1">
                     {cart.length}
@@ -73,8 +68,8 @@ export default function Header() {
               {/* if user==="reader" ? /profile : "/library" */}
               <Link href="/profile">  
                 <Image
-                  width={35}
-                  height={35}
+                  width={40}
+                  height={40}
                   src={user.photoUrl || "/user-default.jpg"}
                   alt="User Avatar"
                   style={{ border: "1px solid gray" }}

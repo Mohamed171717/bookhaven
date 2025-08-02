@@ -19,7 +19,7 @@ export default function AddBookModal({ onClose, onAdd }: AddBookModalProps ) {
   const { user } = useAuth();
   const [title, setTitle] = useState('');
   const [author, setAuthor] = useState('');
-  const [genre, setGenre] = useState<Genre>('fiction');
+  const [genre, setGenre] = useState<Genre>('Fiction');
   const [condition, setCondition] = useState<'new' | 'used'>('new');
   const [description, setDescription] = useState('');
   const [file, setFile] = useState<File | null>(null);

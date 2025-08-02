@@ -137,7 +137,7 @@ export default function BookDetailsPage() {
   return (
     <>
       <Header />
-      <div className="flex flex-col lg:flex-row gap-10 py-16 container mx-auto px-20">
+      <div className="flex flex-col lg:flex-row gap-10 pt-[155px] pb-16 container mx-auto px-20">
         {/* Left Section - Images */}
         <div className="flex flex-row gap-4">
           <div className="flex flex-col gap-2 overflow-y-auto">
@@ -219,8 +219,8 @@ export default function BookDetailsPage() {
         </div>
       </div>
       <div className='flex flex-col lg:flex-row gap-10 pb-16 container mx-auto px-20'>
-        <ReviewSection targetId={book.id} currentUserId={user!.uid} type="book"/>
-        <ReviewSection targetId={book.ownerId} targetUser={bookOwner} currentUserId={user!.uid} type="user"/>
+        <ReviewSection targetId={book.id} currentUserId={user?.uid} type="book"/>
+        <ReviewSection targetId={book.ownerId} targetUser={bookOwner} currentUserId={user?.uid} type="user"/>
       </div>
       {/* dialog request swap */}
       <SwapRequestModal

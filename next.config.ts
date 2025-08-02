@@ -6,10 +6,7 @@ const nextConfig: NextConfig = {
     domains: [ 
       'lh3.googleusercontent.com', 
       'graph.facebook.com', 
-      // 'media.istockphoto.com', 
-      // 'funfandomblog.wordpress.com', 
-      // 'encrypted-tbn0.gstatic.com', 
-      // 'img.freepik.com', 
+      // 'media.istockphoto.com',
       "ik.imagekit.io"
     ],
   },

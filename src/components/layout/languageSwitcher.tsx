@@ -24,18 +24,18 @@ export default function LanguageSwitcher() {
   };
 
   return (
-    <div className="flex ml-10">
+    <div style={{position: 'fixed', left: '20px', top: '35px', zIndex: '50'}} className="flex ml-10">
       <div className="flex gap-[2px] justify-center items-center">
         <div dir='ltr'>
           <div onClick={() => changeLanguage('en')} 
-            className={`py-1.5 px-4 flex items-center hover:bg-[#4A4947] transition justify-center rounded-s-lg ${currentLocale === 'en' ? 'bg-[#4A4947]' : 'bg-btn-color'} cursor-pointer`}>
-            <p className="text-white text-sm font-medium">EN</p>
+            className={`py-1.5 px-4 flex items-center hover:bg-[#efc004ea] transition justify-center rounded-s-lg ${currentLocale === 'en' ? 'bg-[#efc004ea]' : 'bg-primary-color'} cursor-pointer`}>
+            <p className="text-gray-100 text-sm font-medium">EN</p>
           </div>
         </div>
         <div dir='rtl'>
           <div onClick={() => changeLanguage('ar')} 
-            className={`py-1.5 px-4 flex items-center hover:bg-[#4A4947] transition justify-center rounded-s-lg ${currentLocale === 'ar' ? 'bg-[#4A4947]' : 'bg-btn-color'} cursor-pointer`}>
-            <p className="text-white text-sm font-medium">AR</p>
+            className={`py-1.5 px-4 flex items-center hover:bg-[#efc004ea] transition justify-center rounded-s-lg ${currentLocale === 'ar' ? 'bg-[#efc004ea]' : 'bg-primary-color'} cursor-pointer`}>
+            <p className="text-gray-100 text-sm font-medium">AR</p>
           </div>
         </div>
       </div>

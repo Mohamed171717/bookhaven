@@ -26,6 +26,6 @@ export interface BookType {
 }
 
 export type Genre = 
-    "fiction"| "fantasy"| "science fiction"| "mystery & thriller"|
-    "romance"| "historical"| "young adult"| "horror"|
-    "biography"| "personal growth";
+    "Fiction"| "Fantasy"| "Science Fiction"| "Mystery & Thriller"|
+    "Romance"| "Historical"| "Young Adult"| "Horror"|
+    "Biography"| "Personal Growth";

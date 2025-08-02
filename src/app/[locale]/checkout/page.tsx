@@ -7,6 +7,7 @@ import Image from 'next/image';
 import toast from 'react-hot-toast';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import LanguageSwitcher from '@/components/layout/languageSwitcher';
 
 const Checkout = () => {
   const { cart, clearCart } = useCart();
@@ -65,14 +66,15 @@ const Checkout = () => {
   return (
     <>
     <Header/>
-    <div className="p-6 fix-height max-w-7xl mx-auto">
+    <LanguageSwitcher />
+    <div className="px-6 pb-6 fix-height pt-[155px] max-w-7xl mx-auto">
       <h2 className="text-2xl font-semibold text-center">Checkout</h2>
       <p className="text-sm text-gray-500 text-center mb-6">Home / Cart / Checkout</p>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Checkout Form */}
         <div className="lg:col-span-2">
-          <div className="bg-white border rounded-lg p-6 shadow-sm">
+          <div className="bg-gray-100 border rounded-lg p-6 shadow-sm">
             <h3 className="text-lg font-semibold mb-4">Shipping Information</h3>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -189,7 +191,7 @@ const Checkout = () => {
         </div>
 
         {/* Order Summary */}
-        <div className="border p-6 rounded-lg bg-white shadow-sm h-fit">
+        <div className="border p-6 rounded-lg bg-gray-100 shadow-sm h-fit">
           <h3 className="text-lg font-semibold mb-4">Order Summary</h3>
           
           {/* Cart Items */}

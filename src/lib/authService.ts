@@ -1,5 +1,5 @@
 
-import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { doc, setDoc } from 'firebase/firestore';
 import { auth, db } from './firebase';
 import { 
   createUserWithEmailAndPassword, 
@@ -52,80 +52,14 @@ export const registerUser = async (email: string, password: string, name: string
 export const loginUser = (email: string, password: string) => signInWithEmailAndPassword(auth, email, password);
 export const logoutUser = () => signOut(auth);
 
-export const signInWithGoogle = async (role: 'reader' | 'library') => {
+export const signInWithGooglePopup = async () => {
   const result = await signInWithPopup(auth, googleProvider);
-  const user = result.user;
-
-  // Check if user exists in Firestore
-  const userRef = doc(db, 'users', user.uid);
-  const userSnap = await getDoc(userRef);
-
-  if (!userSnap.exists()) {
-    const now = new Date();
-    await setDoc(userRef, {
-      uid: user.uid,
-      name: user.displayName,
-      email: user.email,
-      bio: "",
-      role,
-      photoUrl: user.photoURL,
-      averageRating: 0,
-      totalRatings: 0,
-      verified: user.emailVerified,
-      isBanned: false,
-      profileIncomplete: true,
-      genres: [],
-      address: "",
-      website: "",
-      bookIds: [],
-      transactionIds: [],
-      chatIds: [],
-      blogPostIds: [],
-      notificationIds: [],
-      createdAt: now,
-      updatedAt: now,
-    });
-  }
-
-  return user;
+  return result.user;
 };
 
-export const signInWithFacebook = async (role: 'reader' | 'library') => {
-
+export const signInWithFacebookPopup = async () => {
   facebookProvider.addScope('public_profile');
   facebookProvider.addScope('email');
   const result = await signInWithPopup(auth, facebookProvider);
-  const user = result.user;
-
-  const userRef = doc(db, 'users', user.uid);
-  const userSnap = await getDoc(userRef);
-
-  if (!userSnap.exists()) {
-    const now = Date.now();
-    await setDoc(userRef, {
-      uid: user.uid,
-      name: user.displayName,
-      email: user.email,
-      bio: "",
-      role,
-      photoUrl: user.photoURL,
-      averageRating: 0,
-      totalRatings: 0,
-      verified: user.emailVerified,
-      isBanned: false,
-      profileIncomplete: true,
-      genres: [],
-      address: "",
-      website: "",
-      bookIds: [],
-      transactionIds: [],
-      chatIds: [],
-      blogPostIds: [],
-      notificationIds: [],
-      createdAt: now,
-      updatedAt: now,
-    });
-  }
-
-  return user;
+  return result.user;
 };

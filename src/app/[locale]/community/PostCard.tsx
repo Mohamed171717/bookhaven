@@ -96,7 +96,7 @@ export default function PostCard({ post, showComment }: props) {
   };
 
   return (
-    <div className="bg-[#D8D2C2] rounded-xl shadow p-4 mb-6">
+    <div className="bg-[#FAF7F0] rounded-xl shadow p-4 mb-6">
       {/* Header */}
       <div className="flex items-center gap-2 mb-2">
         <Image
@@ -207,7 +207,7 @@ export default function PostCard({ post, showComment }: props) {
       {/* Image */}
       {livePost.imageURL && (
         <div
-          className={`rounded-xl overflow-hidden mb-3 ${
+          className={`rounded-xl  overflow-hidden mb-3 ${
             showComment && `max-h-[400px]`
           }`}
         >
@@ -215,7 +215,7 @@ export default function PostCard({ post, showComment }: props) {
             src={livePost.imageURL}
             alt="post"
             width={600}
-            height={400}
+            height={600}
             className="rounded w-full object-cover"
           />
         </div>

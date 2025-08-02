@@ -56,7 +56,7 @@ const Hero = () => {
     setCurrentIndex((prev) => (prev - 1 + slides.length) % slides.length);
 
   return (
-    <section className="relative h-[555px] 2xl:h-[600px] overflow-hidden">
+    <section className="relative h-[93vh] overflow-hidden">
       {/* Slides container */}
       <div
         className="flex transition-transform duration-700 ease-in-out h-full"

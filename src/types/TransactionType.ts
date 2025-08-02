@@ -1,3 +1,4 @@
+import { Timestamp } from "firebase/firestore";
 
 
 export interface Transaction {
@@ -11,8 +12,8 @@ export interface Transaction {
   status: 'pending' | 'confirmed' | 'completed' | 'cancelled';
   requesterConfirmed: false,
   responderConfirmed: false,
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt:  Date | Timestamp;
+  updatedAt: Date | Timestamp;
 };
 
 // export interface SwapRequest {

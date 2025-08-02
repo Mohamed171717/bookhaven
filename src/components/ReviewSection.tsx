@@ -16,7 +16,7 @@ import StartChatButton from './chat/StartChatButton';
 
 interface ReviewSectionProps {
   targetId: string;            // Book or user ID being reviewed
-  currentUserId: string;       // Reviewer ID (current logged in user)
+  currentUserId: string | undefined;       // Reviewer ID (current logged in user)
   type: 'book' | 'user'; 
   targetUser?: UserType      // Optional label
 }
@@ -41,6 +41,7 @@ export default function ReviewSection({ targetId, currentUserId, type, targetUse
   }, [targetId, currentUserId]);
   
   const handleSubmit = async () => {
+    if (!currentUserId) return toast.error("Please login to submit a review.");
     if (rating === 0 || hasReviewed) return;
     const reviewId = uuid();
     
@@ -71,7 +72,7 @@ export default function ReviewSection({ targetId, currentUserId, type, targetUse
     ? reviews.reduce((acc, r) => acc + r.rating, 0) / reviews.length : 0;
 
   return (
-    <div className={`bg-white ${ type === 'book' ? 'flex-1' : 'flex-2'} p-4 mt-6 rounded-2xl shadow space-y-4`}>
+    <div className={`bg-gray-100 ${ type === 'book' ? 'flex-1' : 'flex-2'} p-4 mt-6 rounded-2xl shadow space-y-4`}>
       {type === 'user' && targetUser && (
       <div className="space-y-6">
         {/* User Info */}
@@ -86,7 +87,7 @@ export default function ReviewSection({ targetId, currentUserId, type, targetUse
               />
             <div>
               <p className="font-semibold">{targetUser.name}</p>
-              <p className="font-medium text-sm text-gray-400">{targetUser.bio}</p>
+              <p className="font-medium text-sm text-gray-500">{targetUser.bio}</p>
             </div>
           </div>
           <div className='flex flex-col justify-center items-center gap-2'>
@@ -116,7 +117,7 @@ export default function ReviewSection({ targetId, currentUserId, type, targetUse
                     'w-5 h-5 cursor-pointer transition',
                     i <= (hoveredStar || rating)
                       ? 'fill-yellow-400 text-yellow-500'
-                      : 'text-gray-400'
+                      : 'text-gray-500'
                   )}
                   onClick={() => setRating(i)}
                   onMouseEnter={() => setHoveredStar(i)}
@@ -161,7 +162,7 @@ export default function ReviewSection({ targetId, currentUserId, type, targetUse
                       'w-6 h-6 cursor-pointer transition',
                       i <= (hoveredStar || rating)
                         ? 'fill-yellow-400 text-yellow-500'
-                        : 'text-gray-400'
+                        : 'text-gray-500'
                     )}
                     onClick={() => setRating(i)}
                     onMouseEnter={() => setHoveredStar(i)}
@@ -195,7 +196,7 @@ export default function ReviewSection({ targetId, currentUserId, type, targetUse
           {/* Review List */}
           <div className="mt-4 space-y-4">
             {reviews.map((r) => (
-              <div key={r.reviewId} className="border p-3 rounded-md">
+              <div key={r.reviewId} className="border border-gray-500 p-3 rounded-md">
                 <div className="flex items-center gap-2">
                   {[1, 2, 3, 4, 5].map((i) => (
                     <Star
@@ -204,13 +205,13 @@ export default function ReviewSection({ targetId, currentUserId, type, targetUse
                         'w-4 h-4',
                         i <= r.rating
                           ? 'fill-yellow-400 text-yellow-500'
-                          : 'text-gray-300'
+                          : 'text-gray-500'
                       )}
                     />
                   ))}
                 </div>
                 {r.comment && <p className="mt-1 text-sm text-gray-700">{r.comment}</p>}
-                <p className="text-xs text-gray-400 mt-1">{r.createdAt.toDate().toLocaleString()}</p>
+                <p className="text-xs text-gray-500 mt-1">{r.createdAt.toDate().toLocaleString()}</p>
               </div>
             ))}
           </div>
