@@ -28,10 +28,12 @@ export default function CommentSection({ postId }: { postId: string }) {
   }, [postId]);
 
   return (
-    <div className="space-y-4">
-      {comments.map((comment) => (
-        <CommentCard key={comment.id} comment={comment} postId={postId} />
-      ))}
+    <div className="space-y-4 max-h-[540px] overflow-hidden">
+      <div className="max-h-[380px] overflow-auto">
+        {comments.map((comment) => (
+          <CommentCard key={comment.id} comment={comment} postId={postId} />
+        ))}
+      </div>
       <CommentInput postId={postId} />
     </div>
   );

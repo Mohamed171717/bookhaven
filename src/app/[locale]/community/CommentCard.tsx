@@ -59,9 +59,9 @@ export default function CommentCard({
   };
 
   return (
-    <div className="flex items-start gap-3 border border-[#D8D2C2] rounded-xl p-3 bg-white relative">
+    <div className="flex items-start gap-3 border border-[#D8D2C2] rounded-xl p-3 mb-3 bg-white relative">
       <Image
-        src={comment.userPhotoUrl || "/user.png"}
+        src={comment.userPhotoUrl || "/user-default.jpg"}
         alt="user"
         width={32}
         height={32}
@@ -112,7 +112,9 @@ export default function CommentCard({
             </div>
           </div>
         ) : (
-          <p className="text-sm mt-1 whitespace-pre-wrap">{comment.content}</p>
+          <p className="text-sm mt-1 whitespace-pre-wrap overflow-hidden break-all break-words">
+            {comment.content}
+          </p>
         )}
       </div>
 

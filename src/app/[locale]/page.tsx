@@ -11,10 +11,12 @@ import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import PostCard from "./community/PostCard";
 import Link from "next/link";
-import { FadeBoxCard, FadeBoxCardWithFlex, FadePostCard } from "@/components/animations/FadeInWrapper";
+import {
+  FadeBoxCard,
+  FadeBoxCardWithFlex,
+  FadePostCard,
+} from "@/components/animations/FadeInWrapper";
 import LanguageSwitcher from "@/components/layout/languageSwitcher";
-
-  
 
 export default function HomePage() {
   const { books, loading } = useBooks();
@@ -62,7 +64,7 @@ export default function HomePage() {
     <>
       <Header />
       <LanguageSwitcher />
-      <main className="min-h-screen pt-[76px]">
+      <main className="min-h-screen pt-[60px]">
         {/* Hero Section */}
         <Hero />
         {/* Best Selling Books */}
@@ -94,14 +96,19 @@ export default function HomePage() {
               Join Our Community
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-              {posts && posts.slice(0, 4).map((post, index) => {
-                if (post.content == "") return;
-                return (
-                  <FadePostCard key={post.postId} delay={index * 0.5} direction={"right"}>
-                    <PostCard post={post} showComment={true} />
-                  </FadePostCard>
-                );
-              })}
+              {posts &&
+                posts.slice(0, 4).map((post, index) => {
+                  if (post.content == "") return;
+                  return (
+                    <FadePostCard
+                      key={post.postId}
+                      delay={index * 0.5}
+                      direction={"right"}
+                    >
+                      <PostCard post={post} showComment={true} />
+                    </FadePostCard>
+                  );
+                })}
             </div>
             <div className="text-center mt-8">
               <Link

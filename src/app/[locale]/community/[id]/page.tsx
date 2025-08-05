@@ -26,7 +26,7 @@ export default async function PostPage({ params }: Props) {
     <>
       <Header />
       <div className="bg-secondary-color h-[100vh]">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-secondary-color max-w-6xl mx-auto px-6 pb-6 pt-[155px] text-[#4A4947]">
+        <div className="grid grid-cols-1 items-start md:grid-cols-2 gap-6 bg-secondary-color max-w-6xl mx-auto px-6 pb-6 pt-[100px] text-[#4A4947]">
           {/* Left side: post details */}
           {/* <PostContentLeft post={post} /> */}
           <PostCard post={post} showComment={false} />

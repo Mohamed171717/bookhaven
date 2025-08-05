@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -8,14 +7,14 @@
   --background: white;
   --card-background: #e7ded6;
   --foreground: #171717;
-  --primary-color: #4A4947; 
+  --primary-color: #4a4947;
   --milk-color: #e6e0cd;
   /* --secondary-color: #D8D2C2; */
   --third-color: #706a5f;
-  --btn-color: #B17457;
+  --btn-color: #b17457;
   --border-color: #171717;
   --text-color: #f1f1f1;
-} 
+}
 
 body {
   background: var(--background);
@@ -57,10 +56,8 @@ body {
   min-height: calc(100vh - 335px);
 }
 
-
-
 .brown {
-  color: #B17457;
+  color: #b17457;
 }
 
 .milk {
@@ -77,4 +74,126 @@ body {
 
 .orange {
   color: #ffab57;
+}
+
+.my-masonry-grid {
+  display: -webkit-box; /* Not needed if you use grid instead */
+  display: -ms-flexbox;
+  display: flex;
+  margin-left: -32px; /* gutter size offset */
+  width: auto;
+}
+.my-masonry-grid_column {
+  padding-left: 32px; /* gutter size */
+  background-clip: padding-box;
+}
+
+.my-masonry-grid_column > div {
+  margin-bottom: 16px;
+}
+
+/* ============================ */
+.animated-border-card {
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s ease;
+  z-index: 2;
+}
+
+.animated-border-card:hover {
+  transform: scale(1.02);
+}
+
+.animated-border-card::after,
+.animated-border-card::before {
+  content: "";
+  position: absolute;
+  /* background: #b17457; */
+  height: 20%;
+  width: 15%;
+  bottom: 50%;
+  pointer-events: none;
+  transform: translate(-50%, 0%);
+  z-index: -1;
+  background: #4a4947;
+}
+
+/* Left Half Stroke */
+.animated-border-card::before {
+  left: 50%;
+  transform-origin: left bottom;
+}
+
+.animated-border-card::after {
+  left: 50%;
+  transform-origin: left bottom;
+  transform: rotate(180deg);
+}
+
+/* Hover Animation Trigger */
+.animated-border-card:hover::before {
+  animation: borderRightTrace1 2s linear;
+  animation-iteration-count: infinite;
+}
+
+.animated-border-card:hover::after {
+  animation: borderRightTrace 2s linear;
+  animation-iteration-count: infinite;
+}
+
+/* Right Border Stroke Animation */
+@keyframes borderRightTrace {
+  0% {
+    transform: rotate(180deg);
+    /* width: 10%; */
+    height: 200%;
+  }
+  25% {
+    height: 200%;
+    /* width: 150%; */
+    transform: rotate(270deg);
+  }
+  50% {
+    height: 200%;
+    /* width: 150%; */
+    transform: rotate(360deg);
+  }
+  75% {
+    height: 200%;
+    /* width: 150%; */
+    transform: rotate(450deg);
+  }
+  100% {
+    height: 200%;
+    /* width: 150%; */
+    transform: rotate(540deg);
+  }
+}
+
+@keyframes borderRightTrace1 {
+  0% {
+    transform: rotate(0deg);
+    /* width: 10%; */
+    height: 400%;
+  }
+  25% {
+    height: 400%;
+    /* width: 150%; */
+    transform: rotate(90deg);
+  }
+  50% {
+    height: 400%;
+    /* width: 150%; */
+    transform: rotate(180deg);
+  }
+  75% {
+    height: 400%;
+    /* width: 150%; */
+    transform: rotate(270deg);
+  }
+  100% {
+    height: 400%;
+    /* width: 150%; */
+    transform: rotate(360deg);
+  }
 }
