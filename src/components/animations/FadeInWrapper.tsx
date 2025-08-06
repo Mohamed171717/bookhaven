@@ -32,7 +32,7 @@ export function FadeBoxCard({
 
   return (
     <motion.div
-      className="bg-card-color rounded-lg shadow-md overflow-hidden hover:shadow-lg"
+      className="bg-card-bg border rounded-lg shadow-md overflow-hidden hover:shadow-lg"
       initial={getInitial()}
       whileHover={{ scale: 1.02 }}
       whileInView={{ opacity: 1, x: 0, y: 0 }}
@@ -69,7 +69,7 @@ export function FadeBoxCardWithFlex({
 
   return (
     <motion.div
-      className="bg-card-color rounded-lg flex shadow-md overflow-hidden hover:shadow-lg"
+      className="rounded-lg flex shadow-md overflow-hidden hover:shadow-lg"
       initial={getInitial()}
       whileHover={{ scale: 1.02 }}
       whileInView={{ opacity: 1, x: 0, y: 0 }}

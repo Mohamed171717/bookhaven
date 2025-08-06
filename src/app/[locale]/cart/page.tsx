@@ -1,5 +1,4 @@
 
-// app/cart/page.tsx or app/cart/CartPage.tsx
 'use client';
 
 import Footer from '@/components/layout/Footer';
@@ -9,80 +8,129 @@ import { FaTrash } from "react-icons/fa";
 import Image from 'next/image';
 import Link from 'next/link';
 import LanguageSwitcher from '@/components/layout/languageSwitcher';
+// import { useBooks } from '@/context/BooksContext';
 
 
 const CartPage = () => {
   const { cart, removeFromCart, updateQuantity, clearCart } = useCart();
+  // const { books } = useBooks();
   const subTotal = cart.reduce((sum, item) => sum + item.price! * item.quantity, 0);
   const shiping = 5.00; // Fixed shipping cost
   const total = subTotal + shiping;
+  
 
   return (
     <>
     <Header/>
     <LanguageSwitcher />
-    <div className="px-6 pb-[43px] pt-[155px] fix-height max-w-7xl mx-auto">
-      <h2 className="text-2xl font-semibold text-center">Shopping Cart</h2>
-      <p className="text-sm text-gray-500 text-center mb-6">Home / Shopping Cart</p>
+    <div className="px-4 md:px-6 pb-[43px] pt-[80px] md:pt-[96px] 2xl:pt-[155px] fix-height max-w-7xl mx-auto">
+      <h2 className="text-xl md:text-2xl font-semibold text-center">Shopping Cart</h2>
+      <p className="text-xs md:text-sm text-gray-500 text-center mb-4 md:mb-6">Home / Shopping Cart</p>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
         {/* Cart Items */}
         <div className="lg:col-span-2">
-          <table className="w-full border rounded-lg overflow-hidden text-left">
-            <thead className="bg-primary-color text-white text-sm">
-              <tr>
-                <th className="p-4">Product</th>
-                <th className="p-4">Price</th>
-                <th className="p-4">Quantity</th>
-                <th className="p-4">Subtotal</th>
-                <th className="p-4 text-center">Remove</th>
-              </tr>
-            </thead>
-            <tbody className="bg-gray-100 shadow-lg">
-              {cart.map((item) => (
-                <tr key={item.bookId} className="border-b">
-                  <td className="p-4 flex gap-4 items-center">
-                    <Image src={item.coverImage} alt={item.title} width={60} height={60} className="rounded-md" />
-                    <div>
-                      <div className="font-medium text-lg">{item.title}</div>
-                      <div className="text-sm text-gray-500">Author: {item.author}</div>
-                    </div>
-                  </td>
-                  <td className="p-4">${item.price!.toFixed(2)}</td>
-                  <td className="p-4">
-                    <div className="flex items-center gap-2">
-                      <button
-                        className="px-2 bg-gray-200 rounded text-lg"
-                        onClick={() => updateQuantity(item.bookId, item.quantity - 1)}
-                        disabled={item.quantity <= 1}
-                      >
-                        −
-                      </button>
-                      <span>{item.quantity}</span>
-                      <button
-                        className="px-2 bg-gray-200 rounded text-lg"
-                        onClick={() => updateQuantity(item.bookId, item.quantity + 1)}
-                      >
-                        +
-                      </button>
-                    </div>
-                  </td>
-                  <td className="p-4 font-medium">${(item.price! * item.quantity).toFixed(2)}</td>
-                  <td className="p-4 text-center">
-                    <button onClick={() => removeFromCart(item.bookId)}>
-                      <FaTrash className="w-4 h-4 text-red-700 hover:text-red-600" />
-                    </button>
-                  </td>
+          {/* Desktop Table */}
+          <div className="hidden md:block">
+            <table className="w-full border rounded-lg overflow-hidden text-left">
+              <thead className="bg-primary-color text-white text-sm">
+                <tr>
+                  <th className="p-4">Product</th>
+                  <th className="p-4">Price</th>
+                  <th className="p-4">Quantity</th>
+                  <th className="p-4">Subtotal</th>
+                  <th className="p-4 text-center">Remove</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="bg-gray-100 shadow-lg">
+                {cart.map((item) => (
+                  <tr key={item.bookId} className="border-b">
+                    <td className="p-4 flex gap-4 items-center">
+                      <Image src={item.coverImage} alt={item.title} width={60} height={60} className="rounded-md" />
+                      <div>
+                        <div className="font-medium text-lg">{item.title}</div>
+                        <div className="text-sm text-gray-500">Author: {item.author}</div>
+                      </div>
+                    </td>
+                    <td className="p-4">E£{item.price!.toFixed(2)}</td>
+                    <td className="p-4">
+                      <div className="flex items-center gap-2">
+                        <button
+                          className="px-2 bg-gray-200 rounded text-lg"
+                          onClick={() => updateQuantity(item.bookId, item.quantity - 1)}
+                          disabled={item.quantity <= 1}
+                        >
+                          −
+                        </button>
+                        <span>{item.quantity}</span>
+                        <button
+                          className="px-2 bg-gray-200 rounded text-lg"
+                          onClick={() => updateQuantity(item.bookId, item.quantity + 1)}
+                        >
+                          +
+                        </button>
+                      </div>
+                    </td>
+                    <td className="p-4 font-medium">E£{(item.price! * item.quantity).toFixed(2)}</td>
+                    <td className="p-4 text-center">
+                      <button onClick={() => removeFromCart(item.bookId)}>
+                        <FaTrash className="w-4 h-4 text-red-700 hover:text-red-600" />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Mobile Cart Items */}
+          <div className="md:hidden space-y-4">
+            {cart.map((item) => (
+              <div key={item.bookId} className="bg-gray-100 rounded-lg p-4 shadow-md">
+                <div className="flex gap-3 items-start">
+                  <Image src={item.coverImage} alt={item.title} width={60} height={60} className="rounded-md flex-shrink-0" />
+                  <div className="flex-1">
+                    <div className="font-medium text-sm md:text-base">{item.title}</div>
+                    <div className="text-xs text-gray-500">Author: {item.author}</div>
+                    <div className="text-sm font-medium mt-1">E£{item.price!.toFixed(2)}</div>
+                    
+                    <div className="flex items-center justify-between mt-3">
+                      <div className="flex items-center gap-2">
+                        <button
+                          className="px-2 bg-gray-200 rounded text-sm"
+                          onClick={() => updateQuantity(item.bookId, item.quantity - 1)}
+                          disabled={item.quantity <= 1}
+                        >
+                          −
+                        </button>
+                        <span className="text-sm">{item.quantity}</span>
+                        <button
+                          className="px-2 bg-gray-200 rounded text-sm"
+                          // disabled={item.quantity >= book.quantity}
+                          onClick={() => updateQuantity(item.bookId, item.quantity + 1)}
+                        >
+                          +
+                        </button>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm font-medium">E£{(item.price! * item.quantity).toFixed(2)}</span>
+                        <button onClick={() => removeFromCart(item.bookId)}>
+                          <FaTrash className="w-4 h-4 text-red-700 hover:text-red-600" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
           {/* Clear All Button */}
           {cart.length > 0 && (
             <div className="flex justify-end mt-4">
               <button
                 onClick={clearCart}
-                className="text-white text-sm py-2 px-3 font-semibold rounded transition bg-primary-color hover:bg-red-600"
+                className="text-white text-xs md:text-sm py-2 px-3 font-semibold rounded transition bg-primary-color hover:bg-red-600"
               >
                 Clear All
               </button>
@@ -91,30 +139,30 @@ const CartPage = () => {
         </div>
 
         {/* Order Summary */}
-        <div className="border p-6 rounded-lg bg-gray-100 shadow-sm h-fit">
-          <h3 className="text-lg font-semibold mb-4">Order Summary</h3>
-          <div className="flex justify-between py-2">
+        <div className="border p-4 md:p-6 rounded-lg bg-gray-100 shadow-sm h-fit">
+          <h3 className="text-base md:text-lg font-semibold mb-4">Order Summary</h3>
+          <div className="flex justify-between py-2 text-sm">
             <span>Items</span>
             <span>{cart.reduce((sum, item) => sum + item.quantity, 0)}</span>
           </div>
-          <div className="flex justify-between py-2">
+          <div className="flex justify-between py-2 text-sm">
             <span>Sub Total</span>
-            <span>${subTotal.toFixed(2)}</span>
+            <span>E£{subTotal.toFixed(2)}</span>
           </div>
-          <div className="flex justify-between py-2">
+          <div className="flex justify-between py-2 text-sm">
             <span>Shipping</span>
-            <span>$5.00</span>
+            <span>E£5.00</span>
           </div>
-          <div className="flex justify-between py-2">
+          <div className="flex justify-between py-2 text-sm">
             <span>Taxes</span>
-            <span>$0.00</span>
+            <span>E£0.00</span>
           </div>
-          <div className="flex justify-between py-4 font-semibold text-lg border-t mt-4">
+          <div className="flex justify-between py-4 font-semibold text-base md:text-lg border-t mt-4">
             <span>Total</span>
-            <span>${total.toFixed(2)}</span>
+            <span>E£{total.toFixed(2)}</span>
           </div>
           <Link href='/checkout'>
-            <button className="w-full bg-primary-color hover:bg-[#B17457] transition text-white py-2 rounded">Proceed to Checkout</button>
+            <button className="w-full bg-btn-color hover:bg-[#4A4947] transition text-white py-2 rounded text-sm md:text-base">Proceed to Checkout</button>
           </Link>
         </div>
       </div>

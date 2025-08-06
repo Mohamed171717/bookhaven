@@ -96,7 +96,7 @@ export default function PostCard({ post, showComment }: props) {
   };
 
   return (
-    <div className="bg-[#FAF7F0] rounded-xl shadow p-4 mb-6">
+    <div className="bg-[#FAF7F0] overflow-hidden rounded-xl shadow p-4 mb-6">
       {/* Header */}
       <div className="flex items-center gap-2 mb-2">
         <Image

@@ -2,7 +2,7 @@
 'use client';
 
 import { useState } from 'react';
-import { BookType } from '@/types/BookType';
+import { BookType, Genre } from '@/types/BookType';
 import { doc, updateDoc } from 'firebase/firestore';
 import { uploadImageToImageKit } from "@/app/[locale]/utils/imagekitUpload";
 import { db } from '@/lib/firebase';
@@ -73,7 +73,7 @@ export default function EditBookModal({ book, onClose, onUpdate }: EditBookModal
           <input value={author} onChange={(e) => setAuthor(e.target.value)} className="w-full p-2 border rounded" placeholder="Author" />
           {/* genre */}
           <label htmlFor="genre" className="block text-sm font-medium text-gray-700">Genre</label>
-          <select value={genre} onChange={(e) => setGenre(e.target.value)} className="w-full p-2 border rounded">
+          <select value={genre} onChange={(e) => setGenre(e.target.value as Genre)} className="w-full p-2 border rounded">
             {genres.map((g) => <option key={g} value={g}>{g}</option>)}
           </select>
           {/* description */}

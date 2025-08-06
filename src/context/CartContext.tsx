@@ -27,7 +27,7 @@ const CartContext = createContext<CartContextType | null>(null)
 
 export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   const [cart, setCart] = useState<CartItem[]>([])
-  const { user } = useAuth() // assumes user?.uid is available
+  const { user } = useAuth() 
 
   // Load cart from Firestore on login
   useEffect(() => {
@@ -64,6 +64,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   }, [cart, user?.uid]);
 
   const addToCart = (item: CartItem) => {
+    if(!user) return (toast.error('Please login to add to cart.'))
     setCart((prev) => {
       const existing = prev.find((i) => i.bookId === item.bookId)
       if (existing) {

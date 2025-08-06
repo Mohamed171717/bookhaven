@@ -1,12 +1,12 @@
 "use client";
 import { useEffect, useState } from "react";
 import { ChatListModal } from "./ChatListModal";
-import { MessageCircle } from "lucide-react";
 import { collection, onSnapshot, query, where } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { useAuth } from "@/context/AuthContext";
 import { Chat } from "@/types/chatsType";
 import { ChatBox } from "./ChatBox";
+import { IoChatboxEllipses } from "react-icons/io5";
 
 export function ChatIcon() {
   const [open, setOpen] = useState(false);
@@ -50,26 +50,25 @@ export function ChatIcon() {
   };
 
   return (
+    <>
     <div className="relative">
       <button
         onClick={() => setOpen((prev) => !prev)}
-        className="p-2 rounded-full bg-[#B17457] text-white hover:bg-[#4A4947]"
+        className="text-xl md:text-[27px] mt-2 mx-2 color-primary hover:text-[#49423a] cursor-pointer"
         title="Chats"
       >
-        <MessageCircle className="w-5 h-5" />
+        <IoChatboxEllipses />
         {hasUnread && (
-          <span className="absolute top-0 right-0 block h-2 w-2 rounded-full bg-red-600 ring-2 ring-white" />
+          <span className="absolute top-2 right-2 block h-2 w-2 rounded-full bg-red-600 ring-2 ring-white" />
         )}
       </button>
-
       {open && (
-        <div className="absolute right-0 mt-2 z-50">
           <ChatListModal
+            onClose={() => setOpen(false)}
             chats={chats}
             currentUserId={currentUserId!}
             onSelectChat={handleSelect}
           />
-        </div>
       )}
 
       {isChatOpen && chatId && (
@@ -81,5 +80,6 @@ export function ChatIcon() {
         />
       )}
     </div>
+    </>
   );
 }

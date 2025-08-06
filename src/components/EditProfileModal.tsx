@@ -17,6 +17,7 @@ export default function EditProfileModal({ onClose, onUpdate }: Props) {
   const { user } = useAuth();
   const [name, setName] = useState(user?.name || '');
   const [bio, setBio] = useState(user?.bio || '');
+  const [address, setAddress] = useState(user?.address || '');
   const [photoUrl, setPhotoUrl] = useState<File | null>(null);
   const [selectedGenres, setSelectedGenres] = useState<string[]>(user?.genres || []);
 
@@ -48,6 +49,7 @@ export default function EditProfileModal({ onClose, onUpdate }: Props) {
       const updatedData = {
         name,
         bio,
+        address,
         genres: selectedGenres,
         photoUrl: imageUrl,
         updatedAt: new Date(),
@@ -77,7 +79,7 @@ export default function EditProfileModal({ onClose, onUpdate }: Props) {
           onChange={e => setName(e.target.value)}
           className="w-full border px-4 py-2 rounded mb-3"
         />
-        {/* uploud file */}
+        {/* bio */}
         <label htmlFor="bio" className="block text-sm font-medium text-gray-700 mb-1">Bio</label>
         <input
           name='bio'
@@ -87,6 +89,20 @@ export default function EditProfileModal({ onClose, onUpdate }: Props) {
           onChange={e => setBio(e.target.value)}
           className="w-full border px-4 py-2 rounded mb-3"
         />
+        {/* address */}
+        {user!.role === 'library' && (
+          <>
+            <label htmlFor="address" className="block text-sm font-medium text-gray-700 mb-1">Address</label>
+            <input
+              name='address'
+              type="text"
+              placeholder="Library Address"
+              value={user!.address || ''}
+              onChange={e => setAddress(e.target.value)}
+              className="w-full border px-4 py-2 rounded mb-3"
+            />
+          </>
+        )}
         {/* uploud file */}
         <label htmlFor="file" className="block text-sm font-medium text-gray-700 mb-1">Upload Profile Image</label>
         <input
@@ -101,6 +117,7 @@ export default function EditProfileModal({ onClose, onUpdate }: Props) {
           }}
         />
         {/* genres */}
+        { user!.role === 'reader' && (
         <div className="mb-4">
           <label className="font-medium mb-2 block">Favorite Genres</label>
           <div className="grid grid-cols-2 gap-2">
@@ -117,6 +134,7 @@ export default function EditProfileModal({ onClose, onUpdate }: Props) {
             ))}
           </div>
         </div>
+        )}
 
         <div className="flex justify-end gap-3">
           <button onClick={handleUpdate} className="px-4 py-2 rounded bg-btn-color text-gray-50 hover:bg-[#4A4947] transition text-sm">Save</button>

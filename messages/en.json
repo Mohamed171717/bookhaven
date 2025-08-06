@@ -1,8 +1,32 @@
 
 {
   "HomePage": {
-    "title": "Hello world!",
-    "shop": "Go to the shop page"
+    "home": "Home",
+    "shop": "Shop",
+    "community": "Community",
+    "support": "Support",
+    "searchPlaceholder": "Search books...",
+    "chat": "Recent Chats",
+    "explore": "Explore Books",
+    "start": "Start Trading",
+    "see": "See Community",
+    "discover": "Discover Your Next Great Read",
+    "build": "Build Your Personal Library",
+    "connect": "Connect with Community",
+    "buy": "Buy, Sell, and Swap Books",
+    "join": "Join our Community and Share your thoughts with other people",
+    "browse": "Browse thousands of books at unbeatable prices. From bestsellers to rare finds, your perfect book awaits.",
+    "best": "Best Selling",
+    "blog": "Join Our Community",
+    "new": "New Arrivals",
+    "viewAll": "View All Posts",
+    "newsletter": "Join Our Newsletter",
+    "newsletterDescription": "Stay updated with our latest arrivals and special offers",
+    "subscribe": "Subscribe",
+    "emailPlaceholder": "Enter your email"
+
+
+
   },
   "LoginPage": {
     "login": "Login",

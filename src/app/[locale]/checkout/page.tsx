@@ -74,7 +74,7 @@ const Checkout = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Checkout Form */}
         <div className="lg:col-span-2">
-          <div className="bg-gray-100 border rounded-lg p-6 shadow-sm">
+          <div className="bg-card-bg border rounded-lg p-6 shadow-sm">
             <h3 className="text-lg font-semibold mb-4">Shipping Information</h3>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -191,7 +191,7 @@ const Checkout = () => {
         </div>
 
         {/* Order Summary */}
-        <div className="border p-6 rounded-lg bg-gray-100 shadow-sm h-fit">
+        <div className="border p-6 rounded-lg bg-card-bg shadow-sm h-fit">
           <h3 className="text-lg font-semibold mb-4">Order Summary</h3>
           
           {/* Cart Items */}
@@ -209,7 +209,7 @@ const Checkout = () => {
                   <div className="font-medium text-sm">{item.title}</div>
                   <div className="text-xs text-gray-500">Qty: {item.quantity}</div>
                 </div>
-                <div className="font-medium text-sm">${(item.price! * item.quantity).toFixed(2)}</div>
+                <div className="font-medium text-sm">E£{(item.price! * item.quantity).toFixed(2)}</div>
               </div>
             ))}
           </div>
@@ -222,19 +222,19 @@ const Checkout = () => {
             </div>
             <div className="flex justify-between">
               <span>Sub Total</span>
-              <span>${subTotal.toFixed(2)}</span>
+              <span>E£{subTotal.toFixed(2)}</span>
             </div>
             <div className="flex justify-between">
               <span>Shipping</span>
-              <span>$5.00</span>
+              <span>E£5.00</span>
             </div>
             <div className="flex justify-between">
               <span>Taxes</span>
-              <span>$0.00</span>
+              <span>E£0.00</span>
             </div>
             <div className="flex justify-between font-semibold text-lg border-t pt-2">
               <span>Total</span>
-              <span>${total.toFixed(2)}</span>
+              <span>E£{total.toFixed(2)}</span>
             </div>
           </div>
         </div>

@@ -43,7 +43,7 @@ const TransactionTabs = ({ transactions }: Props) => {
             <TransactionCard key={tx.transactionId} transaction={tx} />
           ))
         ) : (
-          <p className="text-gray-500">No {activeTab} transactions yet.</p>
+          <p className="text-gray-500">No transactions yet.</p>
         )}
       </div>
     </div>

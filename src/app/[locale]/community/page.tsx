@@ -33,14 +33,14 @@ export default function BlogPage() {
     <>
       <Header />
       <LanguageSwitcher />
-      <div className="min-h-screen px-6 pb-6 pt-[155px]">
+      <div className="min-h-screen px-4 md:px-6 pb-6 pt-[80px] md:pt-[96px] 2xl:pt-[155px]">
         <div className="max-w-2xl mx-auto">
           <PostCreator />
           <div className="mt-4 space-y-4">
             {loading ? (
-              <p>Loading posts...</p>
+              <p className="text-center py-8">Loading posts...</p>
             ) : posts.length === 0 ? (
-              <p className="text-center text-[#4A4947]">No posts yet.</p>
+              <p className="text-center text-[#4A4947] py-8">No posts yet.</p>
             ) : (
               posts.map((post) => {
                 if (post.content == "") return;

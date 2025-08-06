@@ -12,7 +12,7 @@ import { Review, submitReview } from '@/lib/reviews';
 import { UserType } from '@/types/UserType';
 import Image from 'next/image';
 import { FaRegStar, FaStar } from 'react-icons/fa';
-import StartChatButton from './chat/StartChatButton';
+// import StartChatButton from './chat/StartChatButton';
 
 interface ReviewSectionProps {
   targetId: string;            // Book or user ID being reviewed
@@ -72,7 +72,7 @@ export default function ReviewSection({ targetId, currentUserId, type, targetUse
     ? reviews.reduce((acc, r) => acc + r.rating, 0) / reviews.length : 0;
 
   return (
-    <div className={`bg-gray-100 ${ type === 'book' ? 'flex-1' : 'flex-2'} p-4 mt-6 rounded-2xl shadow space-y-4`}>
+    <div className={`bg-card-bg border ${ type === 'book' ? 'flex-1' : 'flex-2 h-fit'} p-4 mt-6 rounded-2xl shadow space-y-4`}>
       {type === 'user' && targetUser && (
       <div className="space-y-6">
         {/* User Info */}
@@ -83,7 +83,7 @@ export default function ReviewSection({ targetId, currentUserId, type, targetUse
               alt="User"
               width={50}
               height={50}
-              className="rounded-full"
+              className="rounded-full w-12 h-12"
               />
             <div>
               <p className="font-semibold">{targetUser.name}</p>
@@ -135,7 +135,7 @@ export default function ReviewSection({ targetId, currentUserId, type, targetUse
             </div>
           </div>
         )}
-        <StartChatButton currentUserId={currentUserId} otherUserId={targetId}/>
+        {/* <StartChatButton currentUserId={currentUserId} otherUserId={targetId}/> */}
       </div>
       )}
 
@@ -196,7 +196,7 @@ export default function ReviewSection({ targetId, currentUserId, type, targetUse
           {/* Review List */}
           <div className="mt-4 space-y-4">
             {reviews.map((r) => (
-              <div key={r.reviewId} className="border border-gray-500 p-3 rounded-md">
+              <div key={r.reviewId} className="border border-gray-300 p-3 rounded-md">
                 <div className="flex items-center gap-2">
                   {[1, 2, 3, 4, 5].map((i) => (
                     <Star

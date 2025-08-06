@@ -42,8 +42,9 @@ export default function StartChatButton({
       );
     });
 
+    let finalChatId: string;
     if (existingChat) {
-      setChatId(existingChat.id);
+      finalChatId = existingChat.id
     } else {
       const newChatRef = await addDoc(collection(db, "chats"), {
         participants: [currentUserId, otherUserId],
@@ -52,19 +53,27 @@ export default function StartChatButton({
         lastSenderId: "",
         lastTimestamp: serverTimestamp(),
       });
-      setChatId(newChatRef.id);
+      finalChatId = newChatRef.id;
+      await addDoc(collection(db, "chats", finalChatId, "messages"), {
+        senderId: currentUserId,
+        content: `Hello! I’d like to connect with you`,
+        type: "system",
+        timestamp: serverTimestamp(),
+      });
     }
-
+    
+    setChatId(finalChatId);
     setIsChatOpen(true);
   };
 
   return (
     <>
       <button
+        disabled={currentUserId === otherUserId}
         onClick={() => handleStartChat()}
-        className="bg-btn-color text-[15px] hover:bg-[#a16950] text-gray-50 ml-1 py-2 px-4 rounded-full transition duration-300"
+        className="bg-btn-color text-[15px] disabled:bg-[#b17457c0] hover:bg-[#a16950] text-gray-50 ml-1 py-2 px-4 rounded-full transition duration-300"
       >
-        Message
+        Contact With Owner
       </button>
 
       {isChatOpen && chatId && (
