@@ -6,6 +6,7 @@
   /* --background: #FAF7F0; */
   --background: white;
   --card-background: #e7ded6;
+  --card-color: #f3f4f6;
   --foreground: #171717;
   --primary-color: #4a4947;
   --milk-color: #e6e0cd;
@@ -38,6 +39,9 @@ body {
 }
 .bg-card-color {
   background-color: var(--card-background);
+}
+.bg-card-bg {
+  background-color: var(--card-color);
 }
 .milk-color- {
   color: var(--milk-color);

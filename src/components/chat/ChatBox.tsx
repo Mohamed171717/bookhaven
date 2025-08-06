@@ -11,13 +11,13 @@ import {
   updateDoc,
   Timestamp,
   getDoc,
-  where,
-  getDocs,
+  // where,
+  // getDocs,
 } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { UserType } from "@/types/UserType";
 import Image from "next/image";
-import { Transaction } from "@/types/TransactionType";
+// import { Transaction } from "@/types/TransactionType";
 
 interface ChatBoxProps {
   chatId: string;
@@ -39,7 +39,7 @@ export function ChatBox({ chatId, currentUserId, otherUserId, onClose }: ChatBox
   const [newMessage, setNewMessage] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [otherUser, setOtherUser] = useState<UserType>();
-  const [transaction, setTransaction] = useState<Transaction>();
+  // const [transaction, setTransaction] = useState<Transaction>();
 
 
   useEffect(() => {
@@ -66,24 +66,24 @@ export function ChatBox({ chatId, currentUserId, otherUserId, onClose }: ChatBox
     };
     fetchOtherUser();
     // Fetch Transaction messages
-    const fetchTransaction = async () => {
-      try {
-        const transactionsRef = collection(db, "transactions");
-        const q = query(
-          transactionsRef,
-          where("chatId", "==", chatId)
-        );
-        const snap = await getDocs(q);
+    // const fetchTransaction = async () => {
+    //   try {
+    //     const transactionsRef = collection(db, "transactions");
+    //     const q = query(
+    //       transactionsRef,
+    //       where("chatId", "==", chatId)
+    //     );
+    //     const snap = await getDocs(q);
 
-        if (!snap.empty) {
-          const docSnap = snap.docs[0];
-          setTransaction({ ...docSnap.data(), transactionId: docSnap.id } as Transaction);
-        }
-      } catch (err) {
-        console.error("Error fetching transaction:", err); 
-      }
-    };
-    fetchTransaction();
+    //     if (!snap.empty) {
+    //       const docSnap = snap.docs[0];
+    //       setTransaction({ ...docSnap.data(), transactionId: docSnap.id } as Transaction);
+    //     }
+    //   } catch (err) {
+    //     console.error("Error fetching transaction:", err); 
+    //   }
+    // };
+    // fetchTransaction();
 
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const msgs: Message[] = [];
@@ -97,60 +97,60 @@ export function ChatBox({ chatId, currentUserId, otherUserId, onClose }: ChatBox
     return () => unsubscribe();
   }, [chatId, otherUserId]);
 
-  const isRequester = transaction?.buyerId === currentUserId;
-  const isResponder = transaction?.sellerId === currentUserId;
+  // const isRequester = transaction?.buyerId === currentUserId;
+  // const isResponder = transaction?.sellerId === currentUserId;
 
   // Handle confirmation
-  const handleConfirm = async () => {
-    if (!transaction) return;
+  // const handleConfirm = async () => {
+  //   if (!transaction) return;
 
-    const transactionRef = doc(db, "transactions", transaction.transactionId); // ← make sure you stored the `id`
-    const updateField = isRequester ? "requesterConfirmed" : "responderConfirmed";
+  //   const transactionRef = doc(db, "transactions", transaction.transactionId); // ← make sure you stored the `id`
+  //   const updateField = isRequester ? "requesterConfirmed" : "responderConfirmed";
 
-    await updateDoc(transactionRef, {
-      [updateField]: true,
-      status:
-        transaction.requesterConfirmed && transaction.responderConfirmed
-          ? "confirmed"
-          : transaction.status, // Only update if both confirmed
-    });
+  //   await updateDoc(transactionRef, {
+  //     [updateField]: true,
+  //     status:
+  //       transaction.requesterConfirmed && transaction.responderConfirmed
+  //         ? "confirmed"
+  //         : transaction.status, // Only update if both confirmed
+  //   });
 
-    // Re-fetch or optimistically update state
-    setTransaction((prev) => {
-      if (!prev) return undefined; // safety check
+  //   // Re-fetch or optimistically update state
+  //   setTransaction((prev) => {
+  //     if (!prev) return undefined; // safety check
 
-      const updatedTransaction: Transaction = {
-        ...prev,
-        [updateField]: true,
-        status:
-          (updateField === "requesterConfirmed" && prev.responderConfirmed) ||
-          (updateField === "responderConfirmed" && prev.requesterConfirmed)
-            ? "confirmed"
-            : prev.status,
-      };
+  //     const updatedTransaction: Transaction = {
+  //       ...prev,
+  //       [updateField]: true,
+  //       status:
+  //         (updateField === "requesterConfirmed" && prev.responderConfirmed) ||
+  //         (updateField === "responderConfirmed" && prev.requesterConfirmed)
+  //           ? "confirmed"
+  //           : prev.status,
+  //     };
 
-      return updatedTransaction;
-    });
+  //     return updatedTransaction;
+  //   });
 
-  };
+  // };
 
-  const handleCancel = async () => {
-    if (!transaction || !transaction.transactionId) return;
+  // const handleCancel = async () => {
+  //   if (!transaction || !transaction.transactionId) return;
 
-    const transactionRef = doc(db, "transactions", transaction.transactionId);
+  //   const transactionRef = doc(db, "transactions", transaction.transactionId);
 
-    await updateDoc(transactionRef, {
-      status: "cancelled",
-    });
+  //   await updateDoc(transactionRef, {
+  //     status: "cancelled",
+  //   });
 
-    setTransaction((prev) => {
-      if (!prev) return prev;
-      return {
-        ...prev,
-        status: "cancelled",
-      };
-    });
-  };
+  //   setTransaction((prev) => {
+  //     if (!prev) return prev;
+  //     return {
+  //       ...prev,
+  //       status: "cancelled",
+  //     };
+  //   });
+  // };
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -198,13 +198,13 @@ export function ChatBox({ chatId, currentUserId, otherUserId, onClose }: ChatBox
       </div>
 
       {/* transaction */}
-      {transaction && (
-        <div className="bg-[#FFF3E6] text-[#4A4947] px-3 py-2 text-xs border-b border-[#D8D2C2]">
-          <p className="text-sm mb-2"><strong>Swap request</strong></p>
+      {/* {transaction && (
+        <div className="bg-[#FFF3E6] text-[#4A4947] px-3 py-2 text-xs border-b border-[#D8D2C2]"> */}
+          {/* <p className="text-sm mb-2"><strong>Swap request</strong></p> */}
           {/* <p>You offered book<code>{transaction.swapWithBookId}</code></p>
           <p>In exchange for book<code>{transaction.bookId}</code></p> */}
-          <p><strong>Status:</strong> <span className="capitalize">{transaction.status}</span></p>
-          {(isRequester || isResponder) && (
+          {/* <p><strong>Status:</strong> <span className="capitalize">{transaction.status}</span></p> */}
+          {/* {(isRequester || isResponder) && (
             <div className="mt-2 flex gap-2">
               {!transaction[isRequester ? 'requesterConfirmed' : 'responderConfirmed'] && (
                 <>
@@ -226,9 +226,9 @@ export function ChatBox({ chatId, currentUserId, otherUserId, onClose }: ChatBox
                 <p className="text-green-700 font-semibold text-sm">You’ve confirmed</p>
               )}
             </div>
-          )}
-        </div>
-      )}
+          )} */}
+        {/* </div>
+      )} */}
 
       <div className="flex-1 overflow-y-auto px-3 py-2 space-y-2 max-h-72">
         {messages.map((msg) => (

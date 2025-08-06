@@ -68,14 +68,14 @@ export default function ShopBookGrid({
           key={book.id}
           href={`/shop/${book.id}`}
           style={{ position: 'relative' }}
-          className="bg-gray-100 position-relative transform hover:scale-[1.02] ease-in-out cursor-pointer rounded-2xl shadow-lg hover:shadow-xl transition duration-500 block"
+          className="bg-card-bg border position-relative transform hover:scale-[1.02] ease-in-out cursor-pointer rounded-2xl shadow-lg hover:shadow-xl transition duration-500 block"
         >
           <Image
             width={600}
             height={48}
             src={book.coverImage}
             alt={book.title}
-            className="w-full h-[250px] object-cover rounded-t mb-1"
+            className="w-full h-[250px] object-cover rounded-t-2xl mb-1"
           />
           <div className="p-4">
             {/* {book.averageRating !== undefined && (
@@ -89,7 +89,7 @@ export default function ShopBookGrid({
             <h4 className="font-semibold text-[#4A4947] text-lg">{ book.title.length >= 25 ? `${book.title.slice(0,25)}...` : `${book.title}` }</h4>
             <p className="text-sm my-1 text-gray-600">{book.author}</p>
             {book.availableFor.includes('sell') ? (
-              <p className="mt-1 text-lg font-semibold primary-color">${book.price?.toFixed(2)}</p>
+              <p className="mt-1 text-lg font-semibold primary-color">E£{book.price?.toFixed(2)}</p>
             ) : (<p className="mt-1 text-lg pt-7 font-semibold primary-color"></p>)}
             <div style={{ position: 'absolute'}} className='top-2 mt-4 '>
               {book.availableFor.includes('sell') && (

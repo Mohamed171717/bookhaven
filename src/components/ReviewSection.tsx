@@ -1,23 +1,17 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import {
-  collection,
-  query,
-  where,
-  getDocs,
-  Timestamp,
-} from "firebase/firestore";
-import { db } from "@/lib/firebase";
-import { Star } from "lucide-react";
-import clsx from "clsx";
-import { v4 as uuid } from "uuid";
-import toast from "react-hot-toast";
-import { Review, submitReview } from "@/lib/reviews";
-import { UserType } from "@/types/UserType";
-import Image from "next/image";
-import { FaRegStar, FaStar } from "react-icons/fa";
-import StartChatButton from "./chat/StartChatButton";
+import { useEffect, useState } from 'react';
+import { collection, query, where, getDocs, Timestamp, } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
+import { Star } from 'lucide-react';
+import clsx from 'clsx';
+import { v4 as uuid } from 'uuid';
+import toast from 'react-hot-toast';
+import { Review, submitReview } from '@/lib/reviews';
+import { UserType } from '@/types/UserType';
+import Image from 'next/image';
+import { FaRegStar, FaStar } from 'react-icons/fa';
+// import StartChatButton from './chat/StartChatButton';
 
 interface ReviewSectionProps {
   targetId: string; // Book or user ID being reviewed
@@ -93,22 +87,18 @@ export default function ReviewSection({
     : 0;
 
   return (
-    <div
-      className={`bg-gray-100 ${
-        type === "book" ? "flex-1" : "flex-2"
-      } p-4 mt-6 rounded-2xl shadow space-y-4`}
-    >
-      {type === "user" && targetUser && (
-        <div className="space-y-6">
-          {/* User Info */}
-          <div className="flex justify-between items-center gap-3">
-            <div className="flex items-center gap-3">
-              <Image
-                src={targetUser.photoUrl}
-                alt="User"
-                width={50}
-                height={50}
-                className="rounded-full"
+    <div className={`bg-card-bg border ${ type === 'book' ? 'flex-1' : 'flex-2 h-fit'} p-4 mt-6 rounded-2xl shadow space-y-4`}>
+      {type === 'user' && targetUser && (
+      <div className="space-y-6">
+        {/* User Info */}
+        <div className="flex justify-between items-center gap-3">
+          <div className='flex items-center gap-3'>
+            <Image
+              src={targetUser.photoUrl}
+              alt="User"
+              width={50}
+              height={50}
+              className="rounded-full w-12 h-12"
               />
               <div>
                 <p className="font-semibold">{targetUser.name}</p>
@@ -133,44 +123,39 @@ export default function ReviewSection({
             </div>
           </div>
 
-          {hasReviewed ? (
-            <p className="text-green-600 font-medium mr-48">
-              You’ve reviewed this user.
-            </p>
-          ) : (
-            <div className="flex justify-between items-center gap-3">
-              <div className="flex gap-1 mr-32">
-                <p className="font-medium mr-1">Rate the Owner:</p>
-                {[1, 2, 3, 4, 5].map((i) => (
-                  <Star
-                    key={i}
-                    className={clsx(
-                      "w-5 h-5 cursor-pointer transition",
-                      i <= (hoveredStar || rating)
-                        ? "fill-yellow-400 text-yellow-500"
-                        : "text-gray-500"
-                    )}
-                    onClick={() => setRating(i)}
-                    onMouseEnter={() => setHoveredStar(i)}
-                    onMouseLeave={() => setHoveredStar(0)}
-                  />
-                ))}
-              </div>
-              <div>
-                <button
-                  onClick={handleSubmit}
-                  className="bg-btn-color text-[15px] hover:bg-[#a16950] text-gray-50 py-2 px-4 mr-1 rounded-full transition duration-300"
-                >
-                  Submit
-                </button>
-              </div>
+        {hasReviewed ? (
+          <p className="text-green-600 font-medium mr-48">You’ve reviewed this user.</p>
+        ) : (
+          <div className='flex justify-between items-center gap-3'>
+            <div className="flex gap-1 mr-32">
+              <p className='font-medium mr-1'>Rate the Owner:</p>
+              {[1, 2, 3, 4, 5].map((i) => (
+                <Star
+                  key={i}
+                  className={clsx(
+                    'w-5 h-5 cursor-pointer transition',
+                    i <= (hoveredStar || rating)
+                      ? 'fill-yellow-400 text-yellow-500'
+                      : 'text-gray-500'
+                  )}
+                  onClick={() => setRating(i)}
+                  onMouseEnter={() => setHoveredStar(i)}
+                  onMouseLeave={() => setHoveredStar(0)}
+                />
+              ))}
             </div>
-          )}
-          <StartChatButton
-            currentUserId={currentUserId}
-            otherUserId={targetId}
-          />
-        </div>
+            <div>
+              <button
+                onClick={handleSubmit}
+                className="bg-btn-color text-[15px] hover:bg-[#a16950] text-gray-50 py-2 px-4 mr-1 rounded-full transition duration-300"
+              >
+                Submit
+              </button>
+            </div>
+          </div>
+        )}
+        {/* <StartChatButton currentUserId={currentUserId} otherUserId={targetId}/> */}
+      </div>
       )}
 
       {type === "book" && (
@@ -234,10 +219,7 @@ export default function ReviewSection({
           {/* Review List */}
           <div className="mt-4 space-y-4">
             {reviews.map((r) => (
-              <div
-                key={r.reviewId}
-                className="border border-gray-500 p-3 rounded-md"
-              >
+              <div key={r.reviewId} className="border border-gray-300 p-3 rounded-md">
                 <div className="flex items-center gap-2">
                   {[1, 2, 3, 4, 5].map((i) => (
                     <Star

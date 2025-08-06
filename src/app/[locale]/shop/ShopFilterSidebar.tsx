@@ -8,10 +8,10 @@ const genreOptions = [
 ];
 
 const priceOptions = [
-  { label: '$0 - $50', value: '0-50' },
-  { label: '$50 - $100', value: '50-100' },
-  { label: '$100 - $150', value: '100-150' },
-  { label: '$150 - $200', value: '150-200' },
+  { label: 'E£0 - E£50', value: '0-50' },
+  { label: 'E£50 - E£100', value: '50-100' },
+  { label: 'E£100 - E£150', value: '100-150' },
+  { label: 'E£150 - E£200', value: '150-200' },
 ];
 
 const availableOptions = [
@@ -75,8 +75,8 @@ export default function ShopFilterSidebar(
 
   
   return (
-    <div className="p-4 bg-gray-150 rounded-2xl shadow-xl">
-      <div className="space-y-6 ">
+    <div className="p-4 bg-card-bg border rounded-2xl shadow-xl">
+      <div className="space-y-6 bg-card-bg">
         {/* Genre Filter */}
         <div>
           <h4 className="font-semibold text-md mb-2">Genres</h4>

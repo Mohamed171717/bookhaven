@@ -12,13 +12,14 @@ import { logoutUser } from '@/lib/authService';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
 import AddBookModal from '@/components/AddBookForm';
-import { collection, doc, getDocs, query, updateDoc, where } from 'firebase/firestore';
+import { collection, doc, getDocs, query, where, deleteDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { BookType } from '@/types/BookType';
 import EditBookModal from '@/components/EditBookModal';
 import { useTransactionContext } from '@/context/TransactionContext';
 import TransactionTabs from '@/components/TransactionTab';
 import LanguageSwitcher from '@/components/layout/languageSwitcher';
+import ConfirmDialog from '@/components/ConfirmDialog';
 // import { Transaction } from '@/types/TransactionType';
 
 export default function ProfilePage() {
@@ -29,6 +30,9 @@ export default function ProfilePage() {
   const [books, setBooks] = useState<BookType[]>([]);
   const [selectedBook, setSelectedBook] = useState<BookType | null>(null);
   const [showEditModal, setShowEditModal] = useState(false);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [showLogoutDialog, setShowLogoutDialog] = useState(false);
+  const [bookToDelete, setBookToDelete] = useState<string | null>(null);
   const { transactions } = useTransactionContext();
 
   useEffect(() => {
@@ -57,19 +61,19 @@ export default function ProfilePage() {
   
   // handle delete book
   const handleDeleteBook = async (bookId: string) => {
-    const confirmDelete = window.confirm(
-      "Are you sure you want to delete this book?"
-    );
-    if (!confirmDelete) return;
+    setBookToDelete(bookId);
+    setShowDeleteDialog(true);
+  };
 
+  const confirmDeleteBook = async () => {
+    if (!bookToDelete) return;
+    
     try {
-      const ref = doc(db, "books", bookId);
-      await updateDoc(ref, {
-        isDeleted: true,
-        updatedAt: new Date(),
-      });
+      const bookRef = doc(db, "books", bookToDelete);
+      await deleteDoc(bookRef);
       toast.success("Book deleted successfully");
-      setBooks((prevBooks) => prevBooks.filter((book) => book.id !== bookId));
+      setBooks((prevBooks) => prevBooks.filter((book) => book.id !== bookToDelete));
+      setBookToDelete(null);
     } catch (error) {
       console.error(error);
       toast.error("Failed to delete book");
@@ -96,10 +100,11 @@ export default function ProfilePage() {
   ];
 
   // handle logout
-  const handleLogout = async () => {
-    const confirmLogout = window.confirm("Are you sure you want to log out?")
-    if (!confirmLogout) return
+  const handleLogout = () => {
+    setShowLogoutDialog(true);
+  };
 
+  const confirmLogout = async () => {
     try {
       await logoutUser()
       toast.success("Logged out successfully")
@@ -116,36 +121,43 @@ export default function ProfilePage() {
     <>
     <Header/>
     <LanguageSwitcher />
-    <div className="max-w-7xl px-6 pb-6 pt-[155px] mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div className="max-w-7xl px-4 md:px-6 pb-6 pt-[80px] md:pt-[96px] 2xl:pt-[155px] mx-auto grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
       {/* Left Sidebar */}
-      <div className="col-span-1 mt-14 space-y-6">
+      <div className="col-span-1 space-y-4 md:space-y-6">
         {/* Profile Card */}
-        <div className="bg-gray-100 p-6 rounded-lg shadow-md text-center">
-          <Image width={120} height={120} src={ user.photoUrl || '/user-default.jpg'} alt="profile" className="rounded-full mx-auto mb-3" />
-          <h2 className="text-xl font-semibold">{user.name}</h2>
-          <p className="text-sm text-gray-500">{user.email}</p>
+        <div className="bg-card-bg p-6 md:p-8 rounded-lg shadow-md text-center">
+          <Image width={100} height={100} src={ user.photoUrl || '/user-default.jpg'} alt="profile" className="rounded-full mx-auto mb-4 md:w-[140px] md:h-[140px]" />
+          <h2 className="text-xl md:text-2xl font-semibold mb-2">{user.name}</h2>
+          <p className="text-sm md:text-base text-gray-500 mb-3">{user.email}</p>
           <div className="flex w-[90px] m-auto my-3 items-center gap-1">
             {user.averageRating !== undefined && (
-              <div className="flex items-center text-yellow-500 mb-1 gap-0.5 text-base">
+              <div className="flex items-center text-yellow-500 mb-1 gap-0.5 text-base md:text-lg">
                 {Array.from({ length: 5 }, (_, i) =>
                   i < Math.round(user.averageRating!) ? (<FaStar key={i} />) : (<FaRegStar key={i} />)
                 )}
               </div>
             )}
           </div>
-          <p className="mt-3 text-sm text-gray-600">{user.bio}</p>
-          <button 
-            className="mt-4 px-4 py-2 mr-3 rounded-full bg-[#a8775a] text-white hover:bg-[#946a52]"
-            onClick={() => setOpenEdit(true)}
-          >  
-              Edit Profile
-            </button>
-            <button
-              onClick={handleLogout}
-              className="px-4 py-2 ml-3 bg-red-600 text-white rounded-full hover:bg-red-700 transition"
-            >
-              Logout
-            </button>
+          <p className="mt-3 text-sm md:text-base text-gray-600 mb-4">{user.bio}</p>
+          { user.role === 'library'&& user.address && (
+            <>
+              <p className="text-sm md:text-base text-gray-600 mb-4">Address: {user.address}</p> 
+            </>
+          )}
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <button 
+              className="px-4 py-2 rounded-full bg-[#a8775a] text-white hover:bg-[#946a52] text-sm md:text-base font-medium"
+              onClick={() => setOpenEdit(true)}
+            >  
+                Edit Profile
+              </button>
+              <button
+                onClick={handleLogout}
+                className="px-4 py-2 bg-red-600 text-white rounded-full hover:bg-red-700 transition text-sm md:text-base font-medium"
+              >
+                Logout
+              </button>
+            </div>
           </div>
 
           {/* Popup for edit profile */}
@@ -160,35 +172,37 @@ export default function ProfilePage() {
           )}
 
           {/* Favorite Genres */}
-          <div className="bg-gray-100 p-6 rounded-lg shadow-md">
-            <h3 className="font-semibold text-gray-800 mb-4">
+          { user.role === 'reader' && (
+            <div className="bg-card-bg p-6 md:p-8 rounded-lg shadow-md">
+            <h3 className="font-semibold text-gray-800 mb-4 md:mb-6 text-base md:text-lg">
               Favorite Genres
             </h3>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-3">
               {user.genres.map((genre, i) => (
                 <span
                   key={i}
-                  className="bg-[#a8775a]/20 text-[#a8775a] px-3 py-1 rounded-full text-sm"
+                  className="bg-[#a8775a]/20 text-[#a8775a] px-3 py-2 rounded-full text-sm md:text-base font-medium"
                 >
                   {genre}
                 </span>
               ))}
             </div>
           </div>
+          )}
 
           {/* Notifications */}
-          <div className="bg-gray-100 p-6 rounded-lg shadow-md">
-            <div className="flex justify-between items-center mb-3">
-              <h3 className="font-semibold text-gray-800">
+          <div className="bg-card-bg p-6 md:p-8 rounded-lg shadow-md">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="font-semibold text-gray-800 text-base md:text-lg">
                 Recent Notifications
               </h3>
-              <FaBell className="text-gray-600" />
+              <FaBell className="text-gray-600 text-lg" />
             </div>
-            <ul className="space-y-3 text-sm text-gray-700">
+            <ul className="space-y-4 text-sm md:text-base text-gray-700">
               {notifications.map((note) => (
-                <li key={note.id} className="border-l-4 border-[#a8775a] pl-2">
-                  <p>{note.message}</p>
-                  <span className="text-xs text-gray-400">{note.time}</span>
+                <li key={note.id} className="border-l-4 border-[#a8775a] pl-3">
+                  <p className="mb-1">{note.message}</p>
+                  <span className="text-xs md:text-sm text-gray-400">{note.time}</span>
                 </li>
               ))}
             </ul>
@@ -196,15 +210,15 @@ export default function ProfilePage() {
         </div>
 
         {/* Right Section */}
-        <div className="col-span-2 space-y-8">
+        <div className="col-span-1 lg:col-span-2 space-y-6 md:space-y-8">
           {/* Books for Sale/Trade */}
           <div>
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg font-semibold text-gray-800">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-3">
+              <h3 className="text-lg md:text-xl font-semibold text-gray-800">
                 Your Books for Sale/Exchange
               </h3>
               <button
-                className="bg-[#a8775a] text-white px-4 py-2 rounded-full hover:bg-[#946a52]"
+                className="bg-[#a8775a] text-white px-4 py-2 rounded-full hover:bg-[#946a52] text-sm md:text-base font-medium"
                 onClick={() => setShowAddBook(true)}
               >
                 + Add New Book
@@ -220,33 +234,33 @@ export default function ProfilePage() {
                 }}
               />
             )}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {books.map((book) => (
-                <div key={book.id} className="bg-gray-100 rounded-lg shadow-md">
+                <div key={book.id} className="bg-card-bg rounded-lg shadow-md">
                   <Image
                     src={book.coverImage}
                     width={600}
                     height={48}
                     alt={book.title}
-                    className="rounded-t w-full h-[250px] mb-3"
+                    className="rounded-t w-full h-[220px] md:h-[280px] mb-4 object-cover"
                   />
-                  <div className="p-4">
-                    <h4 className="font-semibold text-gray-800 text-sm mb-1 overflow-hidden">
+                  <div className="p-3 md:p-4">
+                    <h4 className="font-semibold text-gray-800 text-sm md:text-base mb-2 overflow-hidden">
                       {book.title.length >= 25
                         ? `${book.title.slice(0, 25)}...`
                         : `${book.title}`}
                     </h4>
-                    <p className="text-xs text-gray-500 mb-2 overflow-hidden">{book.author}</p>
+                    <p className="text-sm md:text-base text-gray-500 mb-3 overflow-hidden">{book.author}</p>
                     {book.availableFor.includes('sell') ? (
-                      <div className="text-[#a8775a] text-sm font-semibold overflow-hidden mb-2">
-                        ${book.price}
+                      <div className="text-[#a8775a] text-sm md:text-base font-semibold overflow-hidden mb-3">
+                        E£{book.price}
                       </div>
                     ) : (<p className="mt-1 text-lg pt-7 font-semibold text-[#a8775a]"></p>)}
-                    <div className="flex justify-between items-center text-gray-600 text-sm">
-                      <span className={`${book.approval === 'approved' ? 'bg-green-100' : book.approval === 'rejected' ? 'bg-red-100' : 'bg-orange-100'} px-2 py-1 rounded text-xs`}>
+                    <div className="flex justify-between items-center text-gray-600 text-sm md:text-base">
+                      <span className={`${book.approval === 'approved' ? 'bg-green-100 border' : book.approval === 'rejected' ? 'bg-red-100 border' : 'bg-orange-100 border'} px-3 py-1 rounded text-sm font-medium`}>
                         {book.approval}
                       </span>
-                      <div className="flex gap-2 text-lg">
+                      <div className="flex gap-3 text-lg md:text-xl">
                         <FiEdit
                           onClick={() => {
                             setSelectedBook(book);
@@ -285,8 +299,8 @@ export default function ProfilePage() {
           </div>
 
           {/* Transaction History */}
-          <div className="bg-gray-100 p-6 rounded-lg shadow-md">
-            <h3 className="text-lg font-semibold mb-4 text-gray-800">
+          <div className="bg-card-bg p-6 md:p-8 rounded-lg shadow-md">
+            <h3 className="text-lg md:text-xl font-semibold mb-6 text-gray-800">
               Transaction History
             </h3>
             <TransactionTabs transactions={transactions} />
@@ -294,6 +308,33 @@ export default function ProfilePage() {
         </div>
       </div>
     <Footer />
+    
+    {/* Confirm Delete Book Dialog */}
+    <ConfirmDialog
+      isOpen={showDeleteDialog}
+      onClose={() => {
+        setShowDeleteDialog(false);
+        setBookToDelete(null);
+      }}
+      onConfirm={confirmDeleteBook}
+      title="Delete Book"
+      message="Are you sure you want to delete this book? This action cannot be undo."
+      confirmText="Delete"
+      cancelText="Cancel"
+      confirmButtonColor="bg-red-600 hover:bg-red-700"
+    />
+
+    {/* Confirm Logout Dialog */}
+    <ConfirmDialog
+      isOpen={showLogoutDialog}
+      onClose={() => setShowLogoutDialog(false)}
+      onConfirm={confirmLogout}
+      title="Logout"
+      message="Are you sure you want to log out?"
+      confirmText="Logout"
+      cancelText="Cancel"
+      confirmButtonColor="bg-red-600 hover:bg-red-700"
+    />
     </>
   );
 }

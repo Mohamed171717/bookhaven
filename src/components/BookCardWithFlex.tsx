@@ -16,7 +16,7 @@ type BookDetails = {
 const BookCardWithFlex = (props: BookDetails) => {
   return (
     <>
-    <Link href={`/shop/${props.id}`} style={{position: 'relative'}} className="bg-card-color rounded-lg flex shadow-md overflow-hidden hover:shadow-lg transition duration-300">
+    <Link href={`/shop/${props.id}`} style={{position: 'relative'}} className="bg-card-bg border rounded-lg flex shadow-md overflow-hidden hover:shadow-lg transition duration-300">
       <div className='flex flex-1 w-full h-full'>
         <Image width={1000} height={1000} src={props.bookImg} alt={props.title} className="object-cover rounded-l" />
       </div>
@@ -26,7 +26,7 @@ const BookCardWithFlex = (props: BookDetails) => {
         <p className="text-gray-700 mb-4">{props.description}</p>
         <div className="flex justify-between items-center">
         {props.availableFor.includes('sell') ? (
-            <p className="mt-1 text-lg font-semibold primary-color">${props.price?.toFixed(2)}</p>
+            <p className="mt-1 text-lg font-semibold primary-color">E£{props.price?.toFixed(2)}</p>
           ) : (<p className="mt-1 text-lg pt-7 font-semibold primary-color"></p>)}
           <div style={{ position: 'absolute'}} className='top-2 left-3 mt-4 '>
             {props.availableFor.includes('sell') && (
