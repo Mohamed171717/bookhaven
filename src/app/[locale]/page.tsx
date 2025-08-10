@@ -17,6 +17,7 @@ import {
   FadePostCard,
 } from "@/components/animations/FadeInWrapper";
 import LanguageSwitcher from "@/components/layout/languageSwitcher";
+// import PaymobRedirect from "./payment-redirect/page";
 
 export default function HomePage() {
   const { books, loading } = useBooks();
@@ -62,6 +63,7 @@ export default function HomePage() {
 
   return (
     <>
+      {/* <PaymobRedirect /> */}
       <Header />
       <LanguageSwitcher />
       <main className="min-h-screen pt-[60px]">

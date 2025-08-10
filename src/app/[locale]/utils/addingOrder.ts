@@ -1,0 +1,47 @@
+import { OrdeType, ShippingInfoType } from "@/types/TransactionType";
+import { CartItem } from "@/types/CartType";
+import { doc, setDoc, serverTimestamp } from "firebase/firestore";
+import { db } from "@/lib/firebase";
+
+export function createOrderObject(
+  userId: string,
+  buyerInfo: ShippingInfoType,
+  items: CartItem[],
+  paymentParams: {
+    transactionId: string;
+    amount_cents: string;
+    currency: string;
+    paymentMethod: string;
+    paymentStatus: "pending" | "paid" | "failed";
+    paidAt?: Date;
+  }
+): OrdeType {
+  const now = new Date();
+
+  return {
+    orderId: paymentParams.transactionId,
+    userId,
+    buyerInfo,
+    items,
+    status: paymentParams.paymentStatus === "paid" ? "delivered" : "pending",
+    payment: {
+      method: paymentParams.paymentMethod,
+      transactionId: paymentParams.transactionId,
+      paidAt: paymentParams.paidAt || now,
+      amount: parseInt(paymentParams.amount_cents) / 100,
+      currency: paymentParams.currency as "EGP",
+      status: paymentParams.paymentStatus,
+    },
+    createdAt: now,
+    updatedAt: now,
+  };
+}
+
+export async function saveOrderToDb(order: OrdeType) {
+  const orderRef = doc(db, "orders", order.orderId);
+  await setDoc(orderRef, {
+    ...order,
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  });
+}

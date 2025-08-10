@@ -12,6 +12,7 @@ import {
   arrayUnion,
   arrayRemove,
   getDocs,
+  getDoc,
 } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { useAuth } from "@/context/AuthContext";
@@ -36,6 +37,10 @@ export default function PostCard({ post, showComment, onPostDeleted }: props) {
   const [isEditing, setIsEditing] = useState(false);
   const contentRef = useRef<HTMLParagraphElement>(null);
   const [isOverflowing, setIsOverflowing] = useState(false);
+  const [uploader, setUploader] = useState<{
+    name: string;
+    photoUrl: string;
+  } | null>(null);
 
   const isOwner = user?.uid === livePost.userId;
 
@@ -50,6 +55,27 @@ export default function PostCard({ post, showComment, onPostDeleted }: props) {
 
     return () => unsub();
   }, [post.postId]);
+
+  useEffect(() => {
+    const fetchUploader = async () => {
+      try {
+        const userDoc = await getDoc(doc(db, "users", post.userId));
+        if (userDoc.exists()) {
+          const data = userDoc.data();
+          setUploader({
+            name: data.name || "Unknown User",
+            photoUrl: data.photoUrl || "/user-default.jpg",
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching uploader:", error);
+      }
+    };
+
+    if (post.userId) {
+      fetchUploader();
+    }
+  }, [post.userId]);
 
   // 👍 Like status
   useEffect(() => {
@@ -127,13 +153,14 @@ export default function PostCard({ post, showComment, onPostDeleted }: props) {
       <div className="bg-[#f1f1f1]  rounded-xl shadow-lg p-5 border border-[#dddbd4] ">
         {/* Header */}
         <div className="flex items-center gap-3 mb-3">
-          <div className="relative">
+          <div className="relative ">
             <Image
-              src={post.userPhotoUrl || "/user-default.jpg"}
+              src={uploader?.photoUrl || "/user-default.jpg"}
               alt="user"
               width={40}
               height={40}
-              className="rounded-full border-2 border-[#B17457]"
+              className="rounded-full object-cover border-2 border-[#B17457] "
+              style={{ aspectRatio: "1 / 1" }}
             />
             {isOwner && (
               <div className="absolute -bottom-1 -right-1 bg-[#B17457] rounded-full p-1">
@@ -153,7 +180,7 @@ export default function PostCard({ post, showComment, onPostDeleted }: props) {
             )}
           </div>
           <div className="flex-1">
-            <p className="font-semibold text-[#4A4947]">{post.userName}</p>
+            <p className="font-semibold text-[#4A4947]">{uploader?.name}</p>
             <p className="text-xs text-[#B17457]">
               {formatDistanceToNow(
                 livePost.createdAt?.toDate?.() || new Date(),
@@ -275,13 +302,15 @@ export default function PostCard({ post, showComment, onPostDeleted }: props) {
               showComment && `max-h-[400px]`
             }`}
           >
-            <Image
-              src={livePost.imageURL}
-              alt="post"
-              width={600}
-              height={400}
-              className=" w-full object-cover border border-[#D8D2C2]"
-            />
+            <Link href={`/community/${post.postId}`}>
+              <Image
+                src={livePost.imageURL}
+                alt="post"
+                width={600}
+                height={400}
+                className=" w-full object-cover border border-[#D8D2C2]"
+              />
+            </Link>
           </div>
         )}
 
