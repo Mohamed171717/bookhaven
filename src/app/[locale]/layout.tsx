@@ -35,7 +35,7 @@ export default async function LocaleLayout({ children, params }: { children: Rea
   setRequestLocale(locale);
 
   return (
-    <html lang={locale} className={geist.className}>
+    <html lang={locale} dir={locale === 'ar' ? 'rtl' : 'ltr'} className={geist.className}>
       <body className="antialiased">
         <NextIntlClientProvider>
         <Toaster position="top-right" reverseOrder={false} />

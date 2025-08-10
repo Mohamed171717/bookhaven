@@ -3,11 +3,25 @@ import createNextIntlPlugin from 'next-intl/plugin';
 
 const nextConfig: NextConfig = {
   images: {
-    domains: [ 
-      'lh3.googleusercontent.com', 
-      'graph.facebook.com', 
-      // 'media.istockphoto.com',
-      "ik.imagekit.io"
+    // domains: [ 
+    //   'lh3.googleusercontent.com', 
+    //   'graph.facebook.com', 
+    //   // 'media.istockphoto.com',
+    //   "ik.imagekit.io"
+    // ],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "ik.imagekit.io",
+      },
+      {
+        protocol: "https",
+        hostname: "graph.facebook.com",
+      },
+      {
+        protocol: "https",
+        hostname: "lh3.googleusercontent.com",
+      },
     ],
   },
 

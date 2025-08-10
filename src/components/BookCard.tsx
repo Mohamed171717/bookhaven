@@ -1,4 +1,5 @@
 
+import { useTranslations } from "next-intl";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
@@ -14,6 +15,7 @@ type BookDetails = {
 };
 
 const BookCard = (props: BookDetails) => {
+  const t = useTranslations("ShopPage");
   return (
     <Link href={`/shop/${props.id}`} style={{position: 'relative'}} className="rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition duration-300">
       <Image width={600} height={600} src={props.bookImg} alt={props.title} className="w-full h-[250px] object-cover rounded-t mb-3" />
@@ -24,15 +26,15 @@ const BookCard = (props: BookDetails) => {
           {props.availableFor.includes('sell') ? (
             <p className="mt-1 text-lg font-semibold primary-color">E£{props.price?.toFixed(2)}</p>
           ) : (<p className="mt-1 text-lg pt-7 font-semibold primary-color"></p>)}
-          <div style={{ position: 'absolute'}} className='top-2 mt-4 '>
+          <div style={{ position: 'absolute'}} className='top-5 left-3'>
             {props.availableFor.includes('sell') && (
-              <span className="bg-primary-color mr-3 text-gray-50 px-5 py-2.5 rounded-full text-md">
-                Sale
+              <span className="bg-primary-color font-bold mx-1 text-gray-50 px-4 py-2.5 rounded-full text-sm lg:text-md">
+                {t('forSale')}
               </span>
             )}
             {props.availableFor.includes('swap') && (
-              <span className="bg-primary-color mr-3 text-gray-50 px-5 py-2.5 rounded-full text-md">
-                Exchange
+              <span className="bg-primary-color font-bold mx-1 text-gray-50 px-4 py-2.5 rounded-full text-sm lg:text-md">
+                {t('forExchange')}
               </span>
             )}
           </div>

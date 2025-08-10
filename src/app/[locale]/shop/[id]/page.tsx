@@ -1,8 +1,11 @@
 "use client";
 
+// import { addDoc, collection, doc, getDocs, query, serverTimestamp, setDoc, where } from 'firebase/firestore'
+// import SwapRequestModal from '@/components/SwapRequestModal';
+// import toast from 'react-hot-toast';
+// import { v4 as uuid } from 'uuid';
 import { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
-// import { addDoc, collection, doc, getDocs, query, serverTimestamp, setDoc, where } from 'firebase/firestore'
 import { collection, getDocs, query, where } from 'firebase/firestore'
 import { db } from '@/lib/firebase'
 import { FaRegStar, FaStar } from 'react-icons/fa';
@@ -11,22 +14,22 @@ import { useCart } from '@/context/CartContext'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
 import Image from 'next/image'
-// import SwapRequestModal from '@/components/SwapRequestModal';
 import ReviewSection from '@/components/ReviewSection'
 import { useAuth } from '@/context/AuthContext'
 import { UserType } from '@/types/UserType';
-// import toast from 'react-hot-toast';
 import StartChatButton from '@/components/chat/StartChatButton';
-// import { v4 as uuid } from 'uuid';
+import { useTranslations } from 'next-intl';
 
 export default function BookDetailsPage() {
+
+  // const [isSwapModalOpen, setIsSwapModalOpen] = useState(false);
+  // const [mySwappableBooks, setMySwappableBooks] = useState<BookType[]>([]);
   const { id } = useParams();
   const { user } = useAuth();
   const [book, setBook] = useState<BookType | null>(null);
   const [bookOwner, setBookOwner] = useState<UserType>();
   const { addToCart } = useCart();
-  // const [isSwapModalOpen, setIsSwapModalOpen] = useState(false);
-  // const [mySwappableBooks, setMySwappableBooks] = useState<BookType[]>([]);
+  const t = useTranslations('ShopPage');
 
   // get the book
   useEffect(() => {
@@ -133,7 +136,7 @@ export default function BookDetailsPage() {
   // };
 
   if (!book) {
-    return <div className="text-center py-20">Loading book details...</div>;
+    return <div className="text-center py-20">{t('loadingBooksDetails')}</div>;
   }
 
   return (
@@ -168,29 +171,31 @@ export default function BookDetailsPage() {
         {/* Right Section - Product Info */}
         <div className="flex flex-col gap-2 lg:w-1/2">
           <h2 className="text-2xl font-semibold">{book.title}</h2>
-          <p className="text-sm text-gray-500 font-semibold">Author: {book.author}</p>
-          <p className="text-sm text-gray-500 font-semibold">Genre: {book.genre}</p>
-          <p className="text-sm text-gray-500 font-semibold">Condition: {book.condition}</p>
+          <p className="text-sm text-gray-500 font-semibold">{t('author')} {book.author}</p>
+          <p className="text-sm text-gray-500 font-semibold">{t('genre')} {book.genre}</p>
+          <p className="text-sm text-gray-500 font-semibold">{t('condition')} {book.condition}</p>
 
-          <div className="flex items-center gap-1">
-            {book.averageRating !== undefined && (
-              <div className="flex items-center text-yellow-500 mb-1 gap-0.5 text-base">
-                {Array.from({ length: 5 }, (_, i) =>
-                  i < Math.round(book.averageRating!) ? (
-                    <FaStar key={i} />
-                  ) : (
-                    <FaRegStar key={i} />
-                  )
-                )}
-                <span className="ml-2 font-semibold text-[#4A4947]">
-                  {book.averageRating.toFixed(1)}
-                </span>
-              </div>
-            )}
-          </div>
+          { bookOwner?.role === 'library' && (
+            <div className="flex items-center gap-1">
+              {book.averageRating !== undefined && (
+                <div className="flex items-center text-yellow-500 mb-1 gap-0.5 text-base">
+                  {Array.from({ length: 5 }, (_, i) =>
+                    i < Math.round(book.averageRating!) ? (
+                      <FaStar key={i} />
+                    ) : (
+                      <FaRegStar key={i} />
+                    )
+                  )}
+                  <span className="ml-2 font-semibold text-[#4A4947]">
+                    {book.averageRating.toFixed(1)}
+                  </span>
+                </div>
+              )}
+            </div>
+          )}
 
           {book.availableFor.includes('sell') && (
-            <p className="text-2xl font-bold text-[#a8775a]">E£{book.price?.toFixed(2)}</p>
+            <p className="text-2xl font-bold text-[#a8775a]">{book.price?.toFixed(2)} EGP</p>
           )}
 
           <p className="text-sm text-gray-700 leading-relaxed">
@@ -210,7 +215,7 @@ export default function BookDetailsPage() {
                   quantity: 1
                 })} 
                 className="bg-btn-color disabled:bg-[#b17457c0] text-[15px] hover:bg-[#a16950] text-gray-50 py-2 px-4 rounded-full transition duration-300">
-                Add to Cart
+                {t('addToCart')}
               </button>
             )}
             {book.availableFor.includes('swap') && (
@@ -224,7 +229,7 @@ export default function BookDetailsPage() {
       </div>
       <div className='flex flex-col lg:flex-row gap-10 pb-16 container mx-auto px-20'>
         {bookOwner?.role === 'library' && 
-          (<ReviewSection targetId={book.id} currentUserId={user?.uid} type="book"/>)
+          (<ReviewSection targetId={book.id} targetUser={bookOwner} currentUserId={user?.uid} type="book"/>)
         }
         <ReviewSection targetId={book.ownerId} targetUser={bookOwner} currentUserId={user?.uid} type="user"/>
       </div>

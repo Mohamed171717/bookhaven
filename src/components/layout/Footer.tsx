@@ -67,3 +67,15 @@ const Footer = () => {
 };
 
 export default Footer;
+
+
+export const SmallFooter = () => {
+  return (
+    <footer className="bg-[#3d3a37] text-gray-300 py-2 text-sm">
+      <div className="text-center text-gray-400 my-[7px] text-xs px-4 md:px-6">
+        © 2025 BookHaven. All rights reserved.
+      </div>
+    </footer>
+  );
+};
+

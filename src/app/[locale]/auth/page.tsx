@@ -192,11 +192,12 @@ export default function AuthPage() {
         displayName: name,
       });
       console.log('Registered', user);
-      toast.success('You registered successfully, Go back to Login');
+      toast.success('You registered successfully');
+      handleLogin(); // Automatically log in after registration
     } catch (err: unknown) {
       if (err instanceof FirebaseError) {
-        console.error("Firebase error code:", err.code);
-        toast.error(err.message);
+        console.log("Firebase error code:", err.message);
+        toast.error(err.message.slice(22,-2));
       } else {
         console.error("Unknown error:", err);
         toast.error("An unknown error occurred.");

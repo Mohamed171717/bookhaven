@@ -12,6 +12,7 @@ import {
 import { db } from "@/lib/firebase";
 import { ChatBox } from "./ChatBox";
 import toast from "react-hot-toast";
+import { useTranslations } from "next-intl";
 
 interface StartChatButtonProps {
   currentUserId: string | undefined;
@@ -24,6 +25,7 @@ export default function StartChatButton({
 }: StartChatButtonProps) {
   const [chatId, setChatId] = useState<string | null>(null);
   const [isChatOpen, setIsChatOpen] = useState(false);
+  const t = useTranslations('ShopPage');
 
   const handleStartChat = async () => {
     if (!currentUserId) return toast.error("Please login to start a chat.");
@@ -56,7 +58,7 @@ export default function StartChatButton({
       finalChatId = newChatRef.id;
       await addDoc(collection(db, "chats", finalChatId, "messages"), {
         senderId: currentUserId,
-        content: `Hello! I’d like to connect with you`,
+        content: t('message'),
         type: "system",
         timestamp: serverTimestamp(),
       });
@@ -73,7 +75,7 @@ export default function StartChatButton({
         onClick={() => handleStartChat()}
         className="bg-btn-color text-[15px] disabled:bg-[#b17457c0] hover:bg-[#a16950] text-gray-50 ml-1 py-2 px-4 rounded-full transition duration-300"
       >
-        Contact With Owner
+        {t('contact')}
       </button>
 
       {isChatOpen && chatId && (

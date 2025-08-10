@@ -11,13 +11,14 @@ import { Review, submitReview } from '@/lib/reviews';
 import { UserType } from '@/types/UserType';
 import Image from 'next/image';
 import { FaRegStar, FaStar } from 'react-icons/fa';
+import { useTranslations } from 'next-intl';
 // import StartChatButton from './chat/StartChatButton';
 
 interface ReviewSectionProps {
   targetId: string; // Book or user ID being reviewed
   currentUserId: string | undefined; // Reviewer ID (current logged in user)
   type: "book" | "user";
-  targetUser?: UserType; // Optional label
+  targetUser: UserType | undefined;
 }
 
 export default function ReviewSection({
@@ -31,6 +32,7 @@ export default function ReviewSection({
   const [comment, setComment] = useState("");
   const [reviews, setReviews] = useState<Review[]>([]);
   const [hasReviewed, setHasReviewed] = useState(false);
+  const t = useTranslations('ShopPage');
 
   // Fetch reviews for this target
   useEffect(() => {
@@ -124,11 +126,11 @@ export default function ReviewSection({
           </div>
 
         {hasReviewed ? (
-          <p className="text-green-600 font-medium mr-48">You’ve reviewed this user.</p>
+          <p className="text-green-600 font-medium mr-48">{t('userReview')}</p>
         ) : (
           <div className='flex justify-between items-center gap-3'>
             <div className="flex gap-1 mr-32">
-              <p className='font-medium mr-1'>Rate the Owner:</p>
+              <p className='font-medium mr-1'>{t('rateOwner')}</p>
               {[1, 2, 3, 4, 5].map((i) => (
                 <Star
                   key={i}
@@ -147,9 +149,10 @@ export default function ReviewSection({
             <div>
               <button
                 onClick={handleSubmit}
-                className="bg-btn-color text-[15px] hover:bg-[#a16950] text-gray-50 py-2 px-4 mr-1 rounded-full transition duration-300"
+                disabled={currentUserId === targetId}
+                className="bg-btn-color disabled:bg-[#b17457c0] text-[15px] hover:bg-[#a16950] text-gray-50 py-2 px-4 mr-1 rounded-full transition duration-300"
               >
-                Submit
+                {t('rate')}
               </button>
             </div>
           </div>
@@ -162,17 +165,17 @@ export default function ReviewSection({
         <div className="space-y-4">
           {/* Book Review Title */}
           <h3 className="text-xl font-semibold">
-            Book Reviews ({reviews.length})
+            {t('leaveReview')} ({reviews.length})
           </h3>
 
           <p className="text-yellow-600 font-medium">
-            Rate: {avgRating.toFixed(1)} / 5.0
+            {t('rating')} {avgRating.toFixed(1)} / 5.0
           </p>
 
           {/* Review Form */}
           {!hasReviewed && (
             <div className="space-y-2">
-              <p className="font-medium">Leave a review:</p>
+              <p className="font-medium">{t('leaveReview')}</p>
 
               {/* Star Rating UI */}
               <div className="flex gap-1">
@@ -197,22 +200,23 @@ export default function ReviewSection({
                 type="text"
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
-                placeholder="Write your comment (optional)..."
+                placeholder= {t('writeComment')}
                 className="w-full p-2 border rounded-md"
               />
 
               <button
                 onClick={handleSubmit}
-                className="bg-btn-color text-[15px] hover:bg-[#a16950] text-gray-50 py-2 px-4 rounded-full transition duration-300"
+                disabled={currentUserId === targetUser!.uid}
+                className="bg-btn-color disabled:bg-[#b17457c0] text-[15px] hover:bg-[#a16950] text-gray-50 py-2 px-4 rounded-full transition duration-300"
               >
-                Submit Review
+                {t('submitReview')}
               </button>
             </div>
           )}
 
           {hasReviewed && (
             <p className="text-green-600 font-medium">
-              You’ve reviewed this book.
+              {t('BookReview')}
             </p>
           )}
 

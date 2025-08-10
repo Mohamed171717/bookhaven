@@ -6,24 +6,33 @@ import Header from '@/components/layout/Header';
 import { useCart } from '@/context/CartContext';
 import { FaTrash } from "react-icons/fa";
 import Image from 'next/image';
-import Link from 'next/link';
-import LanguageSwitcher from '@/components/layout/languageSwitcher';
+import { useRouter } from "next/navigation";
+
+import toast from 'react-hot-toast';
 // import { useBooks } from '@/context/BooksContext';
 
 
 const CartPage = () => {
   const { cart, removeFromCart, updateQuantity, clearCart } = useCart();
+  const router = useRouter();
   // const { books } = useBooks();
   const subTotal = cart.reduce((sum, item) => sum + item.price! * item.quantity, 0);
   const shiping = 5.00; // Fixed shipping cost
   const total = subTotal + shiping;
+
+  const handleCheckout = () => {
+    if (cart.length === 0) {
+      toast.error("Your cart is empty. Please add items to your cart before proceeding to checkout.");
+      return;
+    }
+    router.push('/checkout');
+  };
   
 
   return (
     <>
     <Header/>
-    <LanguageSwitcher />
-    <div className="px-4 md:px-6 pb-[43px] pt-[80px] md:pt-[96px] 2xl:pt-[155px] fix-height max-w-7xl mx-auto">
+    <div className="px-4 md:px-6 pb-[43px] pt-[100px] md:pt-[150px] xl:pt-[180px] fix-height max-w-7xl mx-auto">
       <h2 className="text-xl md:text-2xl font-semibold text-center">Shopping Cart</h2>
       <p className="text-xs md:text-sm text-gray-500 text-center mb-4 md:mb-6">Home / Shopping Cart</p>
 
@@ -43,6 +52,11 @@ const CartPage = () => {
                 </tr>
               </thead>
               <tbody className="bg-gray-100 shadow-lg">
+                { cart.length === 0 && (
+                  <tr>
+                    <td colSpan={5} className="text-center p-6 text-gray-500">Your cart is empty</td>
+                  </tr>
+                )}
                 {cart.map((item) => (
                   <tr key={item.bookId} className="border-b">
                     <td className="p-4 flex gap-4 items-center">
@@ -161,9 +175,9 @@ const CartPage = () => {
             <span>Total</span>
             <span>E£{total.toFixed(2)}</span>
           </div>
-          <Link href='/checkout'>
+          <div onClick={handleCheckout}>
             <button className="w-full bg-btn-color hover:bg-[#4A4947] transition text-white py-2 rounded text-sm md:text-base">Proceed to Checkout</button>
-          </Link>
+          </div>
         </div>
       </div>
     </div>

@@ -18,7 +18,6 @@ import { BookType } from '@/types/BookType';
 import EditBookModal from '@/components/EditBookModal';
 import { useTransactionContext } from '@/context/TransactionContext';
 import TransactionTabs from '@/components/TransactionTab';
-import LanguageSwitcher from '@/components/layout/languageSwitcher';
 import ConfirmDialog from '@/components/ConfirmDialog';
 // import { Transaction } from '@/types/TransactionType';
 
@@ -120,13 +119,12 @@ export default function ProfilePage() {
   return (
     <>
     <Header/>
-    <LanguageSwitcher />
-    <div className="max-w-7xl px-4 md:px-6 pb-6 pt-[80px] md:pt-[96px] 2xl:pt-[155px] mx-auto grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
+    <div className="max-w-7xl px-4 md:px-6 pb-6 pt-[100px] md:pt-[150px] xl:pt-[180px] mx-auto grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
       {/* Left Sidebar */}
       <div className="col-span-1 space-y-4 md:space-y-6">
         {/* Profile Card */}
-        <div className="bg-card-bg p-6 md:p-8 rounded-lg shadow-md text-center">
-          <Image width={100} height={100} src={ user.photoUrl || '/user-default.jpg'} alt="profile" className="rounded-full mx-auto mb-4 md:w-[140px] md:h-[140px]" />
+        <div className="bg-card-bg border p-6 md:p-8 rounded-lg shadow-md text-center">
+          <Image width={900} height={900} src={ user.photoUrl || '/user-default.jpg'} alt="profile" className="rounded-full w-[100px] h-[100px] mx-auto mb-4 md:w-[140px] md:h-[140px]" />
           <h2 className="text-xl md:text-2xl font-semibold mb-2">{user.name}</h2>
           <p className="text-sm md:text-base text-gray-500 mb-3">{user.email}</p>
           <div className="flex w-[90px] m-auto my-3 items-center gap-1">
@@ -173,7 +171,7 @@ export default function ProfilePage() {
 
           {/* Favorite Genres */}
           { user.role === 'reader' && (
-            <div className="bg-card-bg p-6 md:p-8 rounded-lg shadow-md">
+            <div className="bg-card-bg border p-6 md:p-8 rounded-lg shadow-md">
             <h3 className="font-semibold text-gray-800 mb-4 md:mb-6 text-base md:text-lg">
               Favorite Genres
             </h3>
@@ -191,7 +189,7 @@ export default function ProfilePage() {
           )}
 
           {/* Notifications */}
-          <div className="bg-card-bg p-6 md:p-8 rounded-lg shadow-md">
+          <div className="bg-card-bg border p-6 md:p-8 rounded-lg shadow-md">
             <div className="flex justify-between items-center mb-4">
               <h3 className="font-semibold text-gray-800 text-base md:text-lg">
                 Recent Notifications
@@ -236,7 +234,7 @@ export default function ProfilePage() {
             )}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {books.map((book) => (
-                <div key={book.id} className="bg-card-bg rounded-lg shadow-md">
+                <div key={book.id} className="bg-card-bg border rounded-lg shadow-md">
                   <Image
                     src={book.coverImage}
                     width={600}
@@ -299,7 +297,7 @@ export default function ProfilePage() {
           </div>
 
           {/* Transaction History */}
-          <div className="bg-card-bg p-6 md:p-8 rounded-lg shadow-md">
+          <div className="bg-card-bg border p-6 md:p-8 rounded-lg shadow-md">
             <h3 className="text-lg md:text-xl font-semibold mb-6 text-gray-800">
               Transaction History
             </h3>

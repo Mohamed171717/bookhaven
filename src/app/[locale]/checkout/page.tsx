@@ -7,7 +7,6 @@ import Image from 'next/image';
 import toast from 'react-hot-toast';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import LanguageSwitcher from '@/components/layout/languageSwitcher';
 
 const Checkout = () => {
   const { cart, clearCart } = useCart();
@@ -66,8 +65,7 @@ const Checkout = () => {
   return (
     <>
     <Header/>
-    <LanguageSwitcher />
-    <div className="px-6 pb-6 fix-height pt-[155px] max-w-7xl mx-auto">
+    <div className="px-6 pb-6 fix-height pt-[100px] md:pt-[150px] xl:pt-[180px] max-w-7xl mx-auto">
       <h2 className="text-2xl font-semibold text-center">Checkout</h2>
       <p className="text-sm text-gray-500 text-center mb-6">Home / Cart / Checkout</p>
 

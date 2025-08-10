@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
+import { useAuth } from "@/context/AuthContext";
 
 interface Slide {
   id: number;
@@ -16,6 +17,7 @@ interface Slide {
 
 const Hero = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const { user } = useAuth();
   const t = useTranslations("HomePage");
 
   // Auto-slide functionality
@@ -34,7 +36,7 @@ const Hero = () => {
       title: t('build'),
       subtitle: t('buy'),
       buttonLabel: t('start'),
-      buttonLink: "/profile",
+      buttonLink: user ? "/profile" : "/auth",
     },
     {
       id: 3,
@@ -42,7 +44,7 @@ const Hero = () => {
       title: t('connect'),
       subtitle: t('join'),
       buttonLabel: t('see'),
-      buttonLink: "/community",
+      buttonLink: user ? "/community" : "/auth",
     },
   ];
 

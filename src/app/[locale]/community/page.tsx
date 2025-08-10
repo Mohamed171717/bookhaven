@@ -17,6 +17,7 @@ import {
 } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { motion } from "framer-motion";
+// import { useAuth } from "@/context/AuthContext";
 
 const POSTS_PER_PAGE_INITIAL = 6;
 const POSTS_PER_PAGE = 4;
@@ -24,6 +25,7 @@ const LOAD_MORE_MARGIN = "300px";
 
 export default function BlogPage() {
   const [posts, setPosts] = useState<PostType[]>([]);
+  // const { user } = useAuth();
   const [loading, setLoading] = useState(true);
   const [lastDoc, setLastDoc] = useState<DocumentSnapshot<DocumentData> | null>(
     null
@@ -163,11 +165,10 @@ export default function BlogPage() {
       setFetchedPostIds((prev) => new Set(prev).add(newPost.postId));
     }
   };
-
   return (
     <>
       <Header />
-      <div className="min-h-screen px-4 sm:px-8 md:px-16 lg:px-24 py-4">
+      <div className="min-h-screen px-4 pt-[100px] sm:px-8 md:px-16 lg:px-24 py-4">
         <div className="max-w-5xl xl:max-w-6xl 2xl:max-w-7xl mx-auto">
           <PostCreator onPostCreated={handleNewPost} />
           {renderPosts()}

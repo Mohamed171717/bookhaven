@@ -17,6 +17,7 @@ import { useTranslations } from "next-intl";
 export default function Header() {
   const { user, loading } = useAuth();
   const t = useTranslations('HomePage');
+  const l = useTranslations('LoginPage');
   const { cart } = useCart();
   const { books } = useBooks();
   const router = useRouter();
@@ -79,11 +80,12 @@ export default function Header() {
   };
 
   return (
-    <header style={{width: '100%', position: 'fixed'}} className="bg-white z-30 px-4 py-4 2xl:py-8 shadow-lg">
+    <header style={{width: '100%', position: 'fixed'}} className="bg-white z-30 px-4 py-2 2xl:py-8 shadow-lg">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         {/* Left: Logo + Nav */}
         <div className="flex items-baseline gap-4 md:gap-16">
           <Link href="/" className="text-2xl md:text-3xl font-bold primary-color">
+            <Image src={"/logo.png"} alt="Book Haven Logo" width={80} height={80} className="inline-block mr-2" />
             BookHaven
           </Link>
           {/* Desktop Navigation - Only show on 2xl screens and above (1440px) */}
@@ -94,12 +96,25 @@ export default function Header() {
             <Link href="/shop" className="hover:text-gray-900 transition-colors">
               {t('shop')}
             </Link>
-            <Link href="/community" className="hover:text-gray-900 transition-colors">
-              {t('community')}
-            </Link>
-            <Link href="/support" className="hover:text-gray-900 transition-colors">
-              {t('support')}
-            </Link>
+            { user ? (
+              <>
+              <Link href="/community" className="hover:text-gray-900 transition-colors">
+                {t('community')}
+              </Link>
+              <Link href="/support" className="hover:text-gray-900 transition-colors">
+                {t('support')}
+              </Link>
+              </>
+            ) : (
+              <>
+              <Link href="/auth" className="hover:text-gray-900 transition-colors">
+                {t('community')}
+              </Link>
+              <Link href="/auth" className="hover:text-gray-900 transition-colors">
+                {t('support')}
+              </Link>
+              </>
+            )}
             <div className="hover:text-gray-900 transition-colors">
               <LanguageSwitcher />
             </div>
@@ -184,9 +199,9 @@ export default function Header() {
           ) : (
             <Link
               href="/auth"
-              className="px-4 py-1 md:py-2 rounded-full bg-card-bg border text-gray-50 bg-btn-color hover:bg-[#4A4947] transition"
+              className="px-4 py-1 md:py-2 rounded-full border text-gray-50 bg-primary-color hover:bg-[#b17457] transition"
             >
-              Login
+              {l('login')}
             </Link>
           )}
 

@@ -1,29 +1,14 @@
 
 'use client';
 
-const genreOptions = [
-  'Fiction', 'Fantasy', 'Science Fiction', 'Mystery & Thriller',
-  'Romance', 'Historical', 'Young Adult', 'Horror',
-  'Biography', 'Personal Growth',
-];
+import { useTranslations } from "next-intl";
 
 const priceOptions = [
-  { label: 'E£0 - E£50', value: '0-50' },
-  { label: 'E£50 - E£100', value: '50-100' },
-  { label: 'E£100 - E£150', value: '100-150' },
-  { label: 'E£150 - E£200', value: '150-200' },
+  { label: '0 EGP - 50 EGP', value: '0-50' },
+  { label: '50 EGP - 100 EGP', value: '50-100' },
+  { label: '100 EGP - 150 EGP', value: '100-150' },
+  { label: '150 EGP - 200 EGP', value: '150-200' },
 ];
-
-const availableOptions = [
-  { label: 'Sell', value: 'sell' },
-  { label: 'Exchange', value: 'swap' },
-];
-
-const conditions = [
-  { label: 'New', value: 'new' },
-  { label: 'Used', value: 'used' },
-];
-
 
 interface Props {
   selectedGenres: string[];
@@ -46,6 +31,25 @@ export default function ShopFilterSidebar(
     setSelectedGenres, 
     setSelectedPriceRanges
   }: Props) {
+
+  const t = useTranslations('ShopPage');
+
+  const genreOptions = [
+    t('fiction'), t('fantasy'), t('science fiction'), t('mystery & thriller'),
+    t('romance'), t('historical'), t('young adult'), t('horror'),
+    t('biography'), t('personal growth'),
+  ];
+
+  const availableOptions = [
+    { label: t('sell'), value: 'sell' },
+    { label: t('exchange'), value: 'swap' },
+  ];
+
+  const conditions = [
+    { label: t('new'), value: 'new' },
+    { label: t('used'), value: 'used' },
+  ];
+
 
   // handle genre change
   const handleGenreChange = (genre: string) => {
@@ -79,12 +83,12 @@ export default function ShopFilterSidebar(
       <div className="space-y-6 bg-card-bg">
         {/* Genre Filter */}
         <div>
-          <h4 className="font-semibold text-md mb-2">Genres</h4>
+          <h4 className="font-semibold text-md mb-2">{t('genres')}</h4>
           {genreOptions.map((genre) => (
             <label key={genre} className="block text-md mb-1">
               <input
                 type="checkbox"
-                className='appearance-none mr-2 mb-[-2px] w-4 h-4 border-2 border-gray-500 rounded-sm checked:bg-[#4A4947] checked:border-[#4A4947] focus:outline-none'
+                className='appearance-none mx-2 mb-[-2px] w-4 h-4 border-2 border-gray-500 rounded-sm checked:bg-[#4A4947] checked:border-[#4A4947] focus:outline-none'
                 checked={selectedGenres.includes(genre)}
                 onChange={() => handleGenreChange(genre)}
               />
@@ -95,12 +99,12 @@ export default function ShopFilterSidebar(
 
         {/* Price Filter */}
         <div>
-          <h4 className="font-semibold text-md mb-2">Price Range</h4>
+          <h4 className="font-semibold text-md mb-2">{t('price')}</h4>
           {priceOptions.map(({ label, value }) => (
             <label key={value} className="block text-md mb-1">
               <input
                 type="checkbox"
-                className='appearance-none mr-2 mb-[-2px] w-4 h-4 border-2 border-gray-500 rounded-sm checked:bg-[#4A4947] checked:border-[#4A4947] focus:outline-none'
+                className='appearance-none mx-2 mb-[-2px] w-4 h-4 border-2 border-gray-500 rounded-sm checked:bg-[#4A4947] checked:border-[#4A4947] focus:outline-none'
                 checked={selectedPriceRanges.includes(value)}
                 onChange={() => handlePriceChange(value)}
               />
@@ -110,12 +114,12 @@ export default function ShopFilterSidebar(
         </div>
         {/* available Filter */}
         <div>
-          <h4 className="font-semibold text-md mb-2">Avilable for</h4>
+          <h4 className="font-semibold text-md mb-2">{t('avilable')}</h4>
           {availableOptions.map(({ label, value }) => (
             <label key={value} className="block text-md">
               <input
                 type="checkbox"
-                className="appearance-none mr-2 mb-[-2px] w-4 h-4 border-2 border-gray-500 rounded-sm checked:bg-[#4A4947] checked:border-[#4A4947] focus:outline-none"
+                className="appearance-none mx-2 mb-[-2px] w-4 h-4 border-2 border-gray-500 rounded-sm checked:bg-[#4A4947] checked:border-[#4A4947] focus:outline-none"
                 checked={selectedAvilable.includes(value)}
                 onChange={() => handleAvilableChange(value)}
               />
@@ -125,12 +129,12 @@ export default function ShopFilterSidebar(
         </div>
         {/* conditions Filter */}
         <div>
-          <h4 className="font-semibold text-md mb-2">Conditions</h4>
+          <h4 className="font-semibold text-md mb-2">{t('conditions')}</h4>
           {conditions.map(({ label, value }) => (
             <label key={value} className="block text-md">
               <input
                 type="checkbox"
-                className="appearance-none mr-2 mb-[-2px] w-4 h-4 border-2 border-gray-500 rounded-sm checked:bg-[#4A4947] checked:border-[#4A4947] focus:outline-none"
+                className="appearance-none mx-2 mb-[-2px] w-4 h-4 border-2 border-gray-500 rounded-sm checked:bg-[#4A4947] checked:border-[#4A4947] focus:outline-none"
                 checked={selectedCondition.includes(value)}
                 onChange={() => handleConditionChange(value)}
               />

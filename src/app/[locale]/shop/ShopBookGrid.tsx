@@ -2,6 +2,7 @@
 'use client';
 
 import { useBooks } from "@/context/BooksContext";
+import { useTranslations } from "next-intl";
 import Image from "next/image";
 import Link from "next/link";
 // import { FaRegStar, FaStar } from "react-icons/fa";
@@ -29,11 +30,12 @@ export default function ShopBookGrid({
   booksPerPage,
   setCurrentPage,
 }: Props) {
-  const { books, loading } = useBooks();
 
+  const { books, loading } = useBooks();
+  const t = useTranslations('ShopPage');
 
   if (loading) {
-    return <p className="text-center py-10">Loading books...</p>;
+    return <p className="text-center py-10">{t('loadingBooks')}</p>;
   }
 
   const filteredBooks = books.filter(book => book.approval === 'approved' && book.isDeleted === false).filter(book => {
@@ -63,6 +65,9 @@ export default function ShopBookGrid({
   return (
     <>
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+      {paginatedBooks.length === 0 && (
+        <p className="col-span-3 text-center text-xl text-gray-500">{t('noBooks')}</p>
+      )}
       { paginatedBooks.map((book) => (
         <Link
           key={book.id}
@@ -89,17 +94,17 @@ export default function ShopBookGrid({
             <h4 className="font-semibold text-[#4A4947] text-lg">{ book.title.length >= 25 ? `${book.title.slice(0,25)}...` : `${book.title}` }</h4>
             <p className="text-sm my-1 text-gray-600">{book.author}</p>
             {book.availableFor.includes('sell') ? (
-              <p className="mt-1 text-lg font-semibold primary-color">E£{book.price?.toFixed(2)}</p>
+              <p className="mt-1 text-lg font-semibold primary-color">{book.price?.toFixed(2)} EGP</p>
             ) : (<p className="mt-1 text-lg pt-7 font-semibold primary-color"></p>)}
-            <div style={{ position: 'absolute'}} className='top-2 mt-4 '>
+            <div style={{ position: 'absolute'}} className='top-5 left-3'>
               {book.availableFor.includes('sell') && (
-                <span className="bg-primary-color mr-3 text-gray-50 px-5 py-2.5 rounded-full text-md">
-                  Sale
+                <span className="bg-primary-color mx-1 text-gray-50 px-4 py-2.5 rounded-full text-sm lg:text-md">
+                  {t('forSale')}
                 </span>
               )}
               {book.availableFor.includes('swap') && (
-                <span className="bg-primary-color mr-3 text-gray-50 px-5 py-2.5 rounded-full text-md">
-                  Exchange
+                <span className="bg-primary-color mx-1 text-gray-50 px-4 py-2.5 rounded-full text-sm lg:text-md">
+                  {t('forExchange')}
                 </span>
               )}
             </div>
@@ -114,17 +119,17 @@ export default function ShopBookGrid({
           disabled={currentPage === 1}
           className="px-4 py-2 bg-[#D8D2C2] rounded hover:bg-[#c0bbad] disabled:opacity-50"
         >
-          Previous
+          {t('prev')}
         </button>
         <span className="px-4 py-2 text-gray-700">
-          Page {currentPage} of {totalPages}
+          {t('page')} {currentPage} {t('of')} {totalPages}
         </span>
         <button
           onClick={() => setCurrentPage(currentPage + 1)}
           disabled={currentPage === totalPages}
           className="px-4 py-2 bg-[#D8D2C2] rounded hover:bg-[#c0bbad] disabled:opacity-50"
         >
-          Next
+          {t('next')}
         </button>
       </div>
     )}
