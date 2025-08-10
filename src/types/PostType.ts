@@ -3,8 +3,8 @@ import { Timestamp } from "firebase/firestore";
 export interface PostType {
   postId: string;
   userId: string;
-  userPhotoUrl: string;
-  userName: string;
+  // userPhotoUrl: string;
+  // userName: string;
   content: string;
   imageURL?: string;
   comments?: CommentType[];
@@ -21,4 +21,3 @@ export interface CommentType {
   userName: string;
   userPhotoUrl: string;
 }
-

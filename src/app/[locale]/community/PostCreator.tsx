@@ -62,8 +62,8 @@ const PostCreator = ({ onPostCreated }: PostCreatorProps) => {
         content,
         imageURL: imageUrl || "",
         createdAt: serverTimestamp(),
-        userPhotoUrl: user?.photoUrl,
-        userName: user?.name,
+        // userPhotoUrl: user?.photoUrl,
+        // userName: user?.name,
         likes: [],
       });
 
@@ -94,6 +94,13 @@ const PostCreator = ({ onPostCreated }: PostCreatorProps) => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const closeDialog = () => {
+    setIsOpen(false);
+    setContent("");
+    setImage(null);
+    setImagePreview(null);
   };
 
   return (
@@ -150,11 +157,7 @@ const PostCreator = ({ onPostCreated }: PostCreatorProps) => {
       </div>
 
       {/* Modal */}
-      <Dialog
-        open={isOpen}
-        onClose={() => setIsOpen(false)}
-        className="relative z-50"
-      >
+      <Dialog open={isOpen} onClose={closeDialog} className="relative z-50">
         <div className="fixed inset-0 bg-black/40" aria-hidden="true" />
 
         <div className="fixed inset-0 flex items-center justify-center p-4">
@@ -251,7 +254,7 @@ const PostCreator = ({ onPostCreated }: PostCreatorProps) => {
 
             {/* Close Button */}
             <button
-              onClick={() => setIsOpen(false)}
+              onClick={closeDialog}
               className="absolute top-3 right-4 text-[#4A4947] text-2xl"
             >
               ×

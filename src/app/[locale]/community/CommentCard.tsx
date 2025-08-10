@@ -65,7 +65,8 @@ export default function CommentCard({
         alt="user"
         width={32}
         height={32}
-        className="rounded-full"
+        className="rounded-full object-cover"
+        style={{ aspectRatio: "1 / 1" }}
       />
 
       <div className="flex-1">

@@ -1,18 +1,17 @@
-
-// 
-import {NextIntlClientProvider, hasLocale} from 'next-intl';
+//
+import { NextIntlClientProvider, hasLocale } from "next-intl";
 import type { Metadata } from "next";
-import {setRequestLocale} from 'next-intl/server';
-import { AuthProvider } from '@/context/AuthContext';
+import { setRequestLocale } from "next-intl/server";
+import { AuthProvider } from "@/context/AuthContext";
 import { BooksProvider } from "@/context/BooksContext";
-import { CartProvider } from '@/context/CartContext';
-import { Toaster } from 'react-hot-toast';
-import {notFound} from 'next/navigation';
-import { Geist } from 'next/font/google'
-import {routing} from '@/i18n/routing';
+import { CartProvider } from "@/context/CartContext";
+import { Toaster } from "react-hot-toast";
+import { notFound } from "next/navigation";
+import { Geist } from "next/font/google";
+import { routing } from "@/i18n/routing";
 import "./globals.css";
-import { TransactionProvider } from '@/context/TransactionContext';
-
+import { TransactionProvider } from "@/context/TransactionContext";
+// import PaymobRedirect from "./payment-redirect/page";
 
 export const metadata: Metadata = {
   title: "BookHaven",
@@ -20,13 +19,18 @@ export const metadata: Metadata = {
 };
 
 const geist = Geist({
-  subsets: ['latin'],
-})
+  subsets: ["latin"],
+});
 
-export default async function LocaleLayout({ children, params }: { children: React.ReactNode; params: Promise<{locale: string}>;}) {
-
+export default async function LocaleLayout({
+  children,
+  params,
+}: {
+  children: React.ReactNode;
+  params: Promise<{ locale: string }>;
+}) {
   // Ensure that the incoming `locale` is valid
-  const {locale} = await params;
+  const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) {
     notFound();
   }
@@ -38,15 +42,16 @@ export default async function LocaleLayout({ children, params }: { children: Rea
     <html lang={locale} dir={locale === 'ar' ? 'rtl' : 'ltr'} className={geist.className}>
       <body className="antialiased">
         <NextIntlClientProvider>
-        <Toaster position="top-right" reverseOrder={false} />
+          <Toaster position="top-right" reverseOrder={false} />
           <AuthProvider>
-          <BooksProvider>
-            <CartProvider>
-              <TransactionProvider>
-                {children}
-              </TransactionProvider>
-            </CartProvider>
-          </BooksProvider>
+            <BooksProvider>
+              <CartProvider>
+                <TransactionProvider>
+                  {/* <PaymobRedirect /> */}
+                  {children}
+                </TransactionProvider>
+              </CartProvider>
+            </BooksProvider>
           </AuthProvider>
         </NextIntlClientProvider>
       </body>
