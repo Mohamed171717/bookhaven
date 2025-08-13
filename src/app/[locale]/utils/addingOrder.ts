@@ -1,4 +1,4 @@
-import { OrdeType, ShippingInfoType } from "@/types/TransactionType";
+import { OrderType, ShippingInfoType } from "@/types/TransactionType";
 import { CartItem } from "@/types/CartType";
 import { doc, setDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "@/lib/firebase";
@@ -15,7 +15,7 @@ export function createOrderObject(
     paymentStatus: "pending" | "paid" | "failed";
     paidAt?: Date;
   }
-): OrdeType {
+): OrderType {
   const now = new Date();
 
   return {
@@ -37,7 +37,7 @@ export function createOrderObject(
   };
 }
 
-export async function saveOrderToDb(order: OrdeType) {
+export async function saveOrderToDb(order: OrderType) {
   const orderRef = doc(db, "orders", order.orderId);
   await setDoc(orderRef, {
     ...order,
