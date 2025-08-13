@@ -2,6 +2,7 @@ import { OrderType, ShippingInfoType } from "@/types/TransactionType";
 import { CartItem } from "@/types/CartType";
 import { doc, setDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "@/lib/firebase";
+import { v4 as uuid } from "uuid";
 
 export function createOrderObject(
   userId: string,
@@ -19,7 +20,7 @@ export function createOrderObject(
   const now = new Date();
 
   return {
-    orderId: paymentParams.transactionId,
+    orderId: uuid(),
     userId,
     buyerInfo,
     items,

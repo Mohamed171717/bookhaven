@@ -66,6 +66,11 @@ const Checkout = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    if (cart.length === 0) {
+      toast.error("Your cart is empty");
+      return;
+    }
+
     // Basic validation
     if (
       !formData.firstName ||

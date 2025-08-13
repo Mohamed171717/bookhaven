@@ -113,7 +113,10 @@ const CartPage = () => {
                         {(item.price! * item.quantity).toFixed(2)} EGP
                       </td>
                       <td className="p-4 text-center">
-                        <button onClick={() => removeFromCart(item.bookId)}>
+                        <button
+                          title="Remove"
+                          onClick={() => removeFromCart(item.bookId)}
+                        >
                           <FaTrash className="w-4 h-4 text-red-700 hover:text-red-600" />
                         </button>
                       </td>
@@ -175,7 +178,10 @@ const CartPage = () => {
                           <span className="text-sm font-medium">
                             {(item.price! * item.quantity).toFixed(2)} EGP
                           </span>
-                          <button onClick={() => removeFromCart(item.bookId)}>
+                          <button
+                            title="Remove"
+                            onClick={() => removeFromCart(item.bookId)}
+                          >
                             <FaTrash className="w-4 h-4 text-red-700 hover:text-red-600" />
                           </button>
                         </div>

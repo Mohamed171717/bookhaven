@@ -62,7 +62,7 @@ const PostCreator = ({ onPostCreated }: PostCreatorProps) => {
       const newPostRef = await addDoc(collection(db, "posts"), {
         userId: user?.uid,
         content,
-        imageURL: imageUrl || "",
+        imageURL: imageUrl || null,
         createdAt: serverTimestamp(),
         // userPhotoUrl: user?.photoUrl,
         // userName: user?.name,
