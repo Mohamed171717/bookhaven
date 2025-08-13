@@ -5,27 +5,29 @@ import { useState } from "react";
 import { db } from "@/lib/firebase";
 import { setDoc, doc } from "firebase/firestore";
 import { uploadImageToImageKit } from "@/app/[locale]/utils/imagekitUpload";
-import { v4 as uuid } from 'uuid';
-import { useAuth } from '@/context/AuthContext';
-import toast from 'react-hot-toast';
-import { BookType, Genre, Location } from '@/types/BookType';
+import { v4 as uuid } from "uuid";
+import { useAuth } from "@/context/AuthContext";
+import toast from "react-hot-toast";
+import { BookType, Genre, Location } from "@/types/BookType";
 
 interface AddBookModalProps {
   onClose: () => void;
   onAdd: (addedBook: BookType) => void;
 }
 
-export default function AddBookModal({ onClose, onAdd }: AddBookModalProps ) {
+export default function AddBookModal({ onClose, onAdd }: AddBookModalProps) {
   const { user } = useAuth();
-  const [title, setTitle] = useState('');
-  const [author, setAuthor] = useState('');
-  const [genre, setGenre] = useState<Genre>('Fiction');
-  const [location, setLocation] = useState<Location>('Cairo');
-  const [condition, setCondition] = useState<'new' | 'used'>('new');
-  const [description, setDescription] = useState('');
+  const [title, setTitle] = useState("");
+  const [author, setAuthor] = useState("");
+  const [genre, setGenre] = useState<Genre>("Fiction");
+  const [location, setLocation] = useState<Location>("Cairo");
+  const [condition, setCondition] = useState<"new" | "used">("new");
+  const [description, setDescription] = useState("");
   const [file, setFile] = useState<File | null>(null);
   const [files, setFiles] = useState<File[]>([]);
-  const [availableFor, setAvailableFor] = useState<BookType["availableFor"]>([]);
+  const [availableFor, setAvailableFor] = useState<BookType["availableFor"]>(
+    []
+  );
   const [price, setPrice] = useState<number | "">("");
   const [quantity, setQuantity] = useState<number | "">("");
   const [loading, setLoading] = useState(false);
@@ -39,8 +41,15 @@ export default function AddBookModal({ onClose, onAdd }: AddBookModalProps ) {
   };
 
   const handleAddBook = async () => {
-    if (!user?.uid || !title || !author || !genre || !file || files.length === 0) {
-      toast.error('Please fill in all required fields');
+    if (
+      !user?.uid ||
+      !title ||
+      !author ||
+      !genre ||
+      !file ||
+      files.length === 0
+    ) {
+      toast.error("Please fill in all required fields");
       return;
     }
     // Check with role
@@ -48,7 +57,7 @@ export default function AddBookModal({ onClose, onAdd }: AddBookModalProps ) {
       toast.error("Please fill in all required fields");
       return;
     }
-    if (user.role === "library") availableFor.push('sell')
+    if (user.role === "library") availableFor.push("sell");
     if (user.role === "reader" && availableFor.length === 0) {
       toast.error("Please select at least one option for available for");
       return;
@@ -62,7 +71,8 @@ export default function AddBookModal({ onClose, onAdd }: AddBookModalProps ) {
         return url;
       })
     );
-    if (!imageUrl || imageUrls.length === 0) return alert("Failed to upload image");
+    if (!imageUrl || imageUrls.length === 0)
+      return alert("Failed to upload image");
 
     const generatedId = uuid();
     try {
@@ -156,39 +166,50 @@ export default function AddBookModal({ onClose, onAdd }: AddBookModalProps ) {
           onChange={(e) => setDescription(e.target.value)}
         />
         {/* locations */}
-        { user!.role === 'reader' && (
+        {user!.role === "reader" && (
           <>
-          <label htmlFor="location" className="block text-sm font-medium text-gray-700 mb-1">Location</label>
-          <select name='location' className="w-full mb-2 p-2 border rounded" value={location} onChange={(e) => setLocation(e.target.value as Location)}>
-            <option value="Cairo">Cairo</option>
-            <option value="Giza">Giza</option>
-            <option value="Alexandria">Alexandria</option>
-            <option value="Dakahlia">Dakahlia</option>
-            <option value="Red Sea">Red Sea</option>
-            <option value="Beheira">Beheira</option>
-            <option value="Fayoum">Fayoum</option>
-            <option value="Gharbia">Gharbia</option>
-            <option value="Ismailia">Ismailia</option>
-            <option value="Monufia">Monufia</option>
-            <option value="Minya">Minya</option>
-            <option value="Qalyubia">Qalyubia</option>
-            <option value="New Valley">New Valley</option>
-            <option value="Suez">Suez</option>
-            <option value="Aswan">Aswan</option>
-            <option value="Assiut">Assiut</option>
-            <option value="Beni Suef">Beni Suef</option>
-            <option value="Damietta">Damietta</option>
-            <option value="Sharqia">Sharqia</option>
-            <option value="South Sinai">South Sinai</option>
-            <option value="Kafr El Sheikh">Kafr El Sheikh</option>
-            <option value="Matruh">Matruh</option>
-            <option value="Luxor">Luxor</option>
-            <option value="Sohag">Sohag</option>
-            <option value="North Sinai">North Sinai</option>
-          </select>
+            <label
+              htmlFor="location"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
+              Location
+            </label>
+            <select
+              title="location"
+              name="location"
+              className="w-full mb-2 p-2 border rounded"
+              value={location}
+              onChange={(e) => setLocation(e.target.value as Location)}
+            >
+              <option value="Cairo">Cairo</option>
+              <option value="Giza">Giza</option>
+              <option value="Alexandria">Alexandria</option>
+              <option value="Dakahlia">Dakahlia</option>
+              <option value="Red Sea">Red Sea</option>
+              <option value="Beheira">Beheira</option>
+              <option value="Fayoum">Fayoum</option>
+              <option value="Gharbia">Gharbia</option>
+              <option value="Ismailia">Ismailia</option>
+              <option value="Monufia">Monufia</option>
+              <option value="Minya">Minya</option>
+              <option value="Qalyubia">Qalyubia</option>
+              <option value="New Valley">New Valley</option>
+              <option value="Suez">Suez</option>
+              <option value="Aswan">Aswan</option>
+              <option value="Assiut">Assiut</option>
+              <option value="Beni Suef">Beni Suef</option>
+              <option value="Damietta">Damietta</option>
+              <option value="Sharqia">Sharqia</option>
+              <option value="South Sinai">South Sinai</option>
+              <option value="Kafr El Sheikh">Kafr El Sheikh</option>
+              <option value="Matruh">Matruh</option>
+              <option value="Luxor">Luxor</option>
+              <option value="Sohag">Sohag</option>
+              <option value="North Sinai">North Sinai</option>
+            </select>
           </>
         )}
-        
+
         {/* condition */}
         <label
           htmlFor="condition"
@@ -207,8 +228,19 @@ export default function AddBookModal({ onClose, onAdd }: AddBookModalProps ) {
           <option value="used">Used</option>
         </select>
         {/* genre */}
-        <label htmlFor="genre" className="block text-sm font-medium text-gray-700 mb-1">Genre</label>
-        <select name='genre' className="w-full mb-2 p-2 border rounded" value={genre} onChange={(e) => setGenre(e.target.value as Genre)}>
+        <label
+          htmlFor="genre"
+          className="block text-sm font-medium text-gray-700 mb-1"
+        >
+          Genre
+        </label>
+        <select
+          title="location"
+          name="genre"
+          className="w-full mb-2 p-2 border rounded"
+          value={genre}
+          onChange={(e) => setGenre(e.target.value as Genre)}
+        >
           <option value="fiction">Fiction</option>
           <option value="fantasy">Fantasy</option>
           <option value="science fiction">Science Fiction</option>
@@ -221,78 +253,94 @@ export default function AddBookModal({ onClose, onAdd }: AddBookModalProps ) {
           <option value="personal growth">Personal Growth</option>
         </select>
         {/* available for */}
-        { user!.role === 'reader' ? (
-        <>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          Available For
-        </label>
-        <div className="flex items-center space-x-2 mt-1 mb-2">
-          <div className="flex items-center space-x-2">
-            <input
-              type="checkbox"
-              id="sell"
-              className="appearance-none w-4 h-4 border-2 border-gray-300 rounded-sm checked:bg-[#4A4947] checked:border-[#4A4947] focus:outline-none"
-              checked={availableFor.includes("sell")}
-              onChange={(e) => handleCheckboxChange("sell", e.target.checked)}
-            />
-            <label htmlFor="sell" className="text-sm font-medium text-gray-700">
-              Sell
+        {user!.role === "reader" ? (
+          <>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Available For
             </label>
-          </div>
-          <div className="flex items-center space-x-2">
-            <input
-              type="checkbox"
-              id="swap"
-              className="appearance-none w-4 h-4 border-2 border-gray-300 rounded-sm checked:bg-[#4A4947] checked:border-[#4A4947] focus:outline-none"
-              checked={availableFor.includes("swap")}
-              onChange={(e) => handleCheckboxChange("swap", e.target.checked)}
-            />
-            <label htmlFor="swap" className="text-sm font-medium text-gray-700">
-              Exchange
-            </label>
-          </div>
-        </div>
-        {availableFor.includes("sell") && (
-          <input
-            title="price of the book"
-            type="number"
-            className="w-full mb-2 p-2 border rounded"
-            placeholder="Price"
-            value={price}
-            onChange={(e) => setPrice(Number(e.target.value))}
-          />
-        )}
-        </>
+            <div className="flex items-center space-x-2 mt-1 mb-2">
+              <div className="flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  id="sell"
+                  className="appearance-none w-4 h-4 border-2 border-gray-300 rounded-sm checked:bg-[#4A4947] checked:border-[#4A4947] focus:outline-none"
+                  checked={availableFor.includes("sell")}
+                  onChange={(e) =>
+                    handleCheckboxChange("sell", e.target.checked)
+                  }
+                />
+                <label
+                  htmlFor="sell"
+                  className="text-sm font-medium text-gray-700"
+                >
+                  Sell
+                </label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  id="swap"
+                  className="appearance-none w-4 h-4 border-2 border-gray-300 rounded-sm checked:bg-[#4A4947] checked:border-[#4A4947] focus:outline-none"
+                  checked={availableFor.includes("swap")}
+                  onChange={(e) =>
+                    handleCheckboxChange("swap", e.target.checked)
+                  }
+                />
+                <label
+                  htmlFor="swap"
+                  className="text-sm font-medium text-gray-700"
+                >
+                  Exchange
+                </label>
+              </div>
+            </div>
+            {availableFor.includes("sell") && (
+              <input
+                title="price of the book"
+                type="number"
+                className="w-full mb-2 p-2 border rounded"
+                placeholder="Price"
+                value={price}
+                onChange={(e) => setPrice(Number(e.target.value))}
+              />
+            )}
+          </>
         ) : (
           <>
-          <label htmlFor="price" className="text-sm font-medium text-gray-700">
-            Price
-          </label>
-          <input
-            id="price"
-            title="price of the book"
-            type="number"
-            className="w-full mb-2 p-2 border rounded"
-            placeholder="Price"
-            value={price}
-            onChange={(e) => setPrice(Number(e.target.value))}
-          />
+            <label
+              htmlFor="price"
+              className="text-sm font-medium text-gray-700"
+            >
+              Price
+            </label>
+            <input
+              id="price"
+              title="price of the book"
+              type="number"
+              className="w-full mb-2 p-2 border rounded"
+              placeholder="Price"
+              value={price}
+              onChange={(e) => setPrice(Number(e.target.value))}
+            />
           </>
         )}
         {/* quantity */}
-        { user?.role === 'library' && (
+        {user?.role === "library" && (
           <>
-          <label htmlFor="quantity" className="block text-sm font-medium text-gray-700 mb-1">
-            Quantity
-          </label>
-          <input
-            id="quantity"
-            type="number"
-            className="w-full mb-2 p-2 border rounded"
-            placeholder="Quantity"
+            <label
+              htmlFor="quantity"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
+              Quantity
+            </label>
+            <input
+              id="quantity"
+              type="number"
+              className="w-full mb-2 p-2 border rounded"
+              placeholder="Quantity"
               value={quantity}
               onChange={(e) => setQuantity(Number(e.target.value))}
-          />
+            />
           </>
         )}
         {/* upload image */}

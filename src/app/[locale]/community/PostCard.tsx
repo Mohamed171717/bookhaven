@@ -40,6 +40,7 @@ export default function PostCard({ post, showComment, onPostDeleted }: props) {
   const [uploader, setUploader] = useState<{
     name: string;
     photoUrl: string;
+    uid: string;
   } | null>(null);
 
   const isOwner = user?.uid === livePost.userId;
@@ -65,6 +66,7 @@ export default function PostCard({ post, showComment, onPostDeleted }: props) {
           setUploader({
             name: data.name || "Unknown User",
             photoUrl: data.photoUrl || "/user-default.jpg",
+            uid: data.uid || "Unknown UID",
           });
         }
       } catch (error) {
@@ -180,7 +182,9 @@ export default function PostCard({ post, showComment, onPostDeleted }: props) {
             )}
           </div>
           <div className="flex-1">
-            <p className="font-semibold text-[#4A4947]">{uploader?.name}</p>
+            <Link href={`/user/${uploader?.uid}`}>
+              <p className="font-semibold text-[#4A4947]">{uploader?.name}</p>
+            </Link>
             <p className="text-xs text-[#B17457]">
               {formatDistanceToNow(
                 livePost.createdAt?.toDate?.() || new Date(),
