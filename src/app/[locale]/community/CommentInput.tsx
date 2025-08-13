@@ -5,10 +5,12 @@ import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { useAuth } from "@/context/AuthContext";
 import { db } from "@/lib/firebase";
 import toast from "react-hot-toast";
+import { useTranslations } from "next-intl";
 
 export default function CommentInput({ postId }: { postId: string }) {
   const [content, setContent] = useState("");
   const { user } = useAuth();
+  const t = useTranslations('CommunityPage')
 
   const handleSubmit = async () => {
     if (!user) {
@@ -40,20 +42,20 @@ export default function CommentInput({ postId }: { postId: string }) {
 
   return (
     <div className="flex items-start gap-2">
-      <div className="w-full border border-[#D8D2C2] rounded-xl bg-white p-2 flex gap-2">
+      <div className="w-full border border-[#D8D2C2] rounded-full bg-white p-2 flex gap-2">
         <textarea
           className="resize-none flex-1 p-2 text-sm focus:outline-none bg-white text-[#4A4947]"
           rows={1}
-          placeholder="Write a comment..."
+          placeholder= {t('writeComment')}
           value={content}
           maxLength={300}
           onChange={(e) => setContent(e.target.value)}
         />
         <button
           onClick={handleSubmit}
-          className="bg-[#B17457] text-white px-4 py-1.5 rounded-xl hover:brightness-110 text-sm"
+          className="bg-[#B17457] text-white px-4 py-1.5 rounded-full hover:brightness-110 text-sm"
         >
-          Post
+          {t('post')}
         </button>
       </div>
     </div>

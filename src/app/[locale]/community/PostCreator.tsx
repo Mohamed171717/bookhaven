@@ -16,6 +16,7 @@ import { useAuth } from "@/context/AuthContext";
 import Image from "next/image";
 import toast from "react-hot-toast";
 import { PostType } from "@/types/PostType";
+import { useTranslations } from "next-intl";
 
 interface PostCreatorProps {
   onPostCreated?: (post: PostType) => void;
@@ -29,6 +30,7 @@ const PostCreator = ({ onPostCreated }: PostCreatorProps) => {
   const [content, setContent] = useState("");
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
+  const t = useTranslations('CommunityPage');
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -106,7 +108,7 @@ const PostCreator = ({ onPostCreated }: PostCreatorProps) => {
   return (
     <>
       {/* Trigger Box */}
-      <div className="bg-[#f1f1f1] rounded-xl shadow-md p-4 mb-6 flex gap-3 items-center mt-20 border border-[#D8D2C2]">
+      <div className="bg-[#f1f1f1] rounded-xl shadow-md p-4 mb-6 flex gap-3 items-center border border-[#D8D2C2]">
         <div className="relative">
           <Image
             src={user?.photoUrl || "/user-default.jpg"}
@@ -136,7 +138,7 @@ const PostCreator = ({ onPostCreated }: PostCreatorProps) => {
         >
           <div className="flex items-center justify-between">
             <span className="text-sm sm:text-base">
-              What book are you thinking about?
+              {t('think')}
             </span>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -163,7 +165,7 @@ const PostCreator = ({ onPostCreated }: PostCreatorProps) => {
         <div className="fixed inset-0 flex items-center justify-center p-4">
           <Dialog.Panel className="w-full max-w-xl rounded-xl bg-[#FAF7F0] p-6 shadow-xl relative">
             <Dialog.Title className="text-2xl font-semibold text-[#4A4947] mb-4">
-              Share a post
+              {t('share')}
             </Dialog.Title>
 
             {/* Post Form */}
@@ -171,7 +173,7 @@ const PostCreator = ({ onPostCreated }: PostCreatorProps) => {
               {/* Content */}
               <div>
                 <label className="block text-[#4A4947] font-medium mb-1">
-                  Your Thoughts
+                  {t('thoughts')}
                 </label>
                 <textarea
                   rows={5}
@@ -182,14 +184,14 @@ const PostCreator = ({ onPostCreated }: PostCreatorProps) => {
                   onChange={(e) => setContent(e.target.value)}
                 />
                 <p className="text-sm text-[#4A4947] mt-1">
-                  Max 800 characters
+                  {t('max')}
                 </p>
               </div>
 
               {/* Image Upload */}
               <div>
                 <label className="block text-[#4A4947] font-medium mb-1">
-                  Image
+                  {t('image')}
                 </label>
                 {imagePreview ? (
                   <div className="relative group">
@@ -234,7 +236,7 @@ const PostCreator = ({ onPostCreated }: PostCreatorProps) => {
                       className="hidden"
                     />
                     <span className="text-[#4A4947]">
-                      Click to upload image
+                      {t('click')}
                     </span>
                   </label>
                 )}

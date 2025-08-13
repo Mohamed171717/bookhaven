@@ -80,13 +80,12 @@ export default function Header() {
   };
 
   return (
-    <header style={{width: '100%', position: 'fixed'}} className="bg-white z-30 px-4 py-2 2xl:py-8 shadow-lg">
+    <header style={{width: '100%', position: 'fixed'}} className="bg-white z-30 px-4 py-6 shadow-lg">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         {/* Left: Logo + Nav */}
         <div className="flex items-baseline gap-4 md:gap-16">
           <Link href="/" className="text-2xl md:text-3xl font-bold primary-color">
-            <Image src={"/logo.png"} alt="Book Haven Logo" width={80} height={80} className="inline-block mr-2" />
-            BookHaven
+            <Image src={"/logo.png"} alt="Book Haven Logo" width={120} height={120} className="inline-block mr-2" />
           </Link>
           {/* Desktop Navigation - Only show on 2xl screens and above (1440px) */}
           <nav className="hidden 2xl:flex gap-5 items-baseline text-xl font-medium text-gray-700">
@@ -229,7 +228,7 @@ export default function Header() {
               <form onSubmit={handleSearchSubmit}>
                 <input
                   type="text"
-                  placeholder="Search books..."
+                  placeholder={t('searchPlaceholder')}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="w-full pl-4 pr-10 py-3 rounded-full bg-gray-100 placeholder-gray-600 text-gray-800 outline-none"
@@ -264,7 +263,7 @@ export default function Header() {
                         </p>
                         {book.price && (
                           <p className="text-xs font-medium text-primary-color">
-                            ${book.price.toFixed(2)}
+                            {book.price.toFixed(2)} EGP
                           </p>
                         )}
                       </div>
@@ -294,14 +293,14 @@ export default function Header() {
                 className="block py-2 text-lg font-medium text-gray-700 hover:text-gray-900 transition-colors"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
-                Community
+                {t('community')}
               </Link>
               <Link 
                 href="/support" 
                 className="block py-2 text-lg font-medium text-gray-700 hover:text-gray-900 transition-colors"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
-                Support
+                {t('support')}
               </Link>
               <div className="hover:text-gray-900 transition-colors">
                 <LanguageSwitcher />

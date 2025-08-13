@@ -16,14 +16,18 @@ import { collection, doc, getDocs, query, where, deleteDoc } from 'firebase/fire
 import { db } from '@/lib/firebase';
 import { BookType } from '@/types/BookType';
 import EditBookModal from '@/components/EditBookModal';
-import { useTransactionContext } from '@/context/TransactionContext';
-import TransactionTabs from '@/components/TransactionTab';
+// import { useTransactionContext } from '@/context/TransactionContext';
+// import TransactionTabs from '@/components/TransactionTab';
 import ConfirmDialog from '@/components/ConfirmDialog';
+import { useTranslations } from 'next-intl';
+import { useOrders } from '@/context/OrderContext';
 // import { Transaction } from '@/types/TransactionType';
 
 export default function ProfilePage() {
+  // const { transactions } = useTransactionContext();
   const router = useRouter();
   const { user, loading, setUser } = useAuth();
+  const { orders, myBooks, orderLoading } = useOrders();
   const [openEdit, setOpenEdit] = useState(false);
   const [showAddBook, setShowAddBook] = useState(false);
   const [books, setBooks] = useState<BookType[]>([]);
@@ -32,7 +36,7 @@ export default function ProfilePage() {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [showLogoutDialog, setShowLogoutDialog] = useState(false);
   const [bookToDelete, setBookToDelete] = useState<string | null>(null);
-  const { transactions } = useTransactionContext();
+  const t = useTranslations('ProfilePage');
 
   useEffect(() => {
     if (!user?.uid) return;
@@ -114,16 +118,18 @@ export default function ProfilePage() {
     }
   }
 
+  const filterOrder = orders.filter(order => order.userId === user?.uid)
+
   if (loading || !user) return null;
 
   return (
     <>
     <Header/>
-    <div className="max-w-7xl px-4 md:px-6 pb-6 pt-[100px] md:pt-[150px] xl:pt-[180px] mx-auto grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
+    <div className="max-w-7xl px-4 md:px-6 fix-height pt-[155px] pb-10 mx-auto grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
       {/* Left Sidebar */}
       <div className="col-span-1 space-y-4 md:space-y-6">
         {/* Profile Card */}
-        <div className="bg-card-bg border p-6 md:p-8 rounded-lg shadow-md text-center">
+        <div className="bg-card-bg border p-6 mt-16 md:p-8 rounded-lg shadow-md text-center">
           <Image width={900} height={900} src={ user.photoUrl || '/user-default.jpg'} alt="profile" className="rounded-full w-[100px] h-[100px] mx-auto mb-4 md:w-[140px] md:h-[140px]" />
           <h2 className="text-xl md:text-2xl font-semibold mb-2">{user.name}</h2>
           <p className="text-sm md:text-base text-gray-500 mb-3">{user.email}</p>
@@ -139,7 +145,7 @@ export default function ProfilePage() {
           <p className="mt-3 text-sm md:text-base text-gray-600 mb-4">{user.bio}</p>
           { user.role === 'library'&& user.address && (
             <>
-              <p className="text-sm md:text-base text-gray-600 mb-4">Address: {user.address}</p> 
+              <p className="text-sm md:text-base text-gray-600 mb-4">{t('address')} {user.address}</p> 
             </>
           )}
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
@@ -147,13 +153,13 @@ export default function ProfilePage() {
               className="px-4 py-2 rounded-full bg-[#a8775a] text-white hover:bg-[#946a52] text-sm md:text-base font-medium"
               onClick={() => setOpenEdit(true)}
             >  
-                Edit Profile
+                {t('editProfile')}
               </button>
               <button
                 onClick={handleLogout}
                 className="px-4 py-2 bg-red-600 text-white rounded-full hover:bg-red-700 transition text-sm md:text-base font-medium"
               >
-                Logout
+                {t('logout')}
               </button>
             </div>
           </div>
@@ -173,7 +179,7 @@ export default function ProfilePage() {
           { user.role === 'reader' && (
             <div className="bg-card-bg border p-6 md:p-8 rounded-lg shadow-md">
             <h3 className="font-semibold text-gray-800 mb-4 md:mb-6 text-base md:text-lg">
-              Favorite Genres
+              {t('favoriteGenres')}
             </h3>
             <div className="flex flex-wrap gap-3">
               {user.genres.map((genre, i) => (
@@ -192,7 +198,7 @@ export default function ProfilePage() {
           <div className="bg-card-bg border p-6 md:p-8 rounded-lg shadow-md">
             <div className="flex justify-between items-center mb-4">
               <h3 className="font-semibold text-gray-800 text-base md:text-lg">
-                Recent Notifications
+                {t('recent')}
               </h3>
               <FaBell className="text-gray-600 text-lg" />
             </div>
@@ -213,13 +219,13 @@ export default function ProfilePage() {
           <div>
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-3">
               <h3 className="text-lg md:text-xl font-semibold text-gray-800">
-                Your Books for Sale/Exchange
+                {t('myBooks')}
               </h3>
               <button
                 className="bg-[#a8775a] text-white px-4 py-2 rounded-full hover:bg-[#946a52] text-sm md:text-base font-medium"
                 onClick={() => setShowAddBook(true)}
               >
-                + Add New Book
+                {t('add')}
               </button>
             </div>
             {/* add book popup */}
@@ -251,7 +257,7 @@ export default function ProfilePage() {
                     <p className="text-sm md:text-base text-gray-500 mb-3 overflow-hidden">{book.author}</p>
                     {book.availableFor.includes('sell') ? (
                       <div className="text-[#a8775a] text-sm md:text-base font-semibold overflow-hidden mb-3">
-                        E£{book.price}
+                        {book.price} EGP
                       </div>
                     ) : (<p className="mt-1 text-lg pt-7 font-semibold text-[#a8775a]"></p>)}
                     <div className="flex justify-between items-center text-gray-600 text-sm md:text-base">
@@ -297,11 +303,150 @@ export default function ProfilePage() {
           </div>
 
           {/* Transaction History */}
-          <div className="bg-card-bg border p-6 md:p-8 rounded-lg shadow-md">
+          <div className="bg-card-bg border h-[500px] overflow-y-scroll p-6 md:p-8 rounded-lg shadow-md">
             <h3 className="text-lg md:text-xl font-semibold mb-6 text-gray-800">
-              Transaction History
+              {t("tran")}
             </h3>
-            <TransactionTabs transactions={transactions} />
+
+            <h4 className='font-medium mb-5'>All books you ordered</h4>
+            { orderLoading ? (
+              <p className="text-gray-500 text-center">{t("orderLoading")}</p>
+            ) : filterOrder.length === 0 ? (
+                <p className='text-center'>No orders found.</p>
+            ) : (
+              <>
+                {filterOrder.map((order) => (
+                  <div
+                    key={order.orderId}
+                    className="border my-4 bg-white rounded-lg p-4 shadow-sm"
+                  >
+                      { order.items.map((item) => (
+                        <div key={item.bookId} className="flex space-y-6 gap-5 items-center">
+                          <div className="w-14 h-20 relative rounded-md overflow-hidden">
+                            <Image
+                              width={600}
+                              height={600}
+                              src={item.coverImage}
+                              alt={item.title}
+                              className="w-full h-full object-cover"
+                            />
+                          </div>
+                          <div>
+                            <h4 className="text-base font-semibold text-gray-800">
+                              {item.title}
+                            </h4>
+                            <p className="text-sm text-gray-500">{item.author}</p>
+                            <div className="flex items-center space-x-2 mt-1">
+                              <span
+                                className={`text-xs px-2 py-0.5 rounded-full ${
+                                  order.status === "delivered"
+                                    ? "bg-green-200 text-green-700"
+                                    : order.status === "pending"
+                                    ? "bg-yellow-200 text-yellow-700"
+                                    : "bg-red-200 text-red-700"
+                                }`}
+                              >
+                                {order.status}
+                              </span>
+                              <span className="text-xs text-gray-400">
+                                {order.createdAt instanceof Date
+                                  ? order.createdAt.toLocaleDateString()
+                                  : order.createdAt.toDate().toLocaleDateString()}
+                              </span>
+                            </div>
+                          </div>
+
+                          <div className="text-[#B76E58] flex-auto text-end font-semibold">
+                            {item.price?.toFixed(2)} EGP
+                          </div>
+                        </div>
+                      ))} 
+                    </div>
+                ))}
+              </>
+            )}
+
+            <h4 className='font-medium my-5'>All books that had been sold</h4>
+            {orderLoading ? (
+              <p className="text-gray-500 text-center">{t("orderLoading")}</p>
+            ) : myBooks.length === 0 ? (
+              <p className="text-gray-500 text-center">{t("noOrders")}</p>
+            ) : (
+              <div className="space-y-4">
+                {orders.map((order) => {
+                  // Filter the items in this order to only those belonging to the logged-in user
+                  const matchingItems = order.items.filter((item) =>
+                    myBooks.some((book) => book.id === item.bookId)
+                  );
+
+                  return (
+                    <div
+                      key={order.orderId}
+                      className="border rounded-lg p-4 bg-white shadow-sm"
+                    >
+                      {matchingItems.map((item) => {
+                        const book = myBooks.find((b) => b.id === item.bookId);
+                        if (!book) return null;
+
+                        return (
+                          <div
+                            key={book.id}
+                            className="flex items-center justify-between py-2 border-b last:border-b-0"
+                          >
+                            <div className="flex items-center space-x-4">
+                              <div className="w-14 h-20 relative rounded-md overflow-hidden">
+                                <Image
+                                  width={600}
+                                  height={600}
+                                  src={book.coverImage}
+                                  alt={book.title}
+                                  className="w-full h-full object-cover"
+                                />
+                              </div>
+                              <div>
+                                <h4 className="text-base font-semibold text-gray-800">
+                                  {book.title}
+                                </h4>
+                                <p className="text-sm text-gray-500">{book.author}</p>
+                                <div className="flex items-center space-x-2 mt-1">
+                                  <span
+                                    className={`text-xs px-2 py-0.5 rounded-full ${
+                                      order.status === "delivered"
+                                        ? "bg-green-200 text-green-700"
+                                        : order.status === "pending"
+                                        ? "bg-yellow-200 text-yellow-700"
+                                        : "bg-red-200 text-red-700"
+                                    }`}
+                                  >
+                                    {order.status}
+                                  </span>
+                                  <span className="text-xs text-gray-400">
+                                    {order.createdAt instanceof Date
+                                      ? order.createdAt.toLocaleDateString()
+                                      : order.createdAt.toDate().toLocaleDateString()}
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+
+                            <span className="text-[#B76E58] font-semibold">
+                              {book.price?.toFixed(2)} EGP
+                            </span>
+                          </div>
+                        );
+                      })}
+
+                      <div className="text-right mt-2 text-sm text-gray-600">
+                        {t("total")}:{" "}
+                        <span className="font-medium">
+                          {order.payment.amount} {order.payment.currency}
+                        </span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -315,10 +460,10 @@ export default function ProfilePage() {
         setBookToDelete(null);
       }}
       onConfirm={confirmDeleteBook}
-      title="Delete Book"
-      message="Are you sure you want to delete this book? This action cannot be undo."
-      confirmText="Delete"
-      cancelText="Cancel"
+      title={t('deleteBook')} 
+      message={t('confirmDelete')}
+      confirmText={t('delete')}
+      cancelText={t('cancel')}
       confirmButtonColor="bg-red-600 hover:bg-red-700"
     />
 
@@ -327,10 +472,10 @@ export default function ProfilePage() {
       isOpen={showLogoutDialog}
       onClose={() => setShowLogoutDialog(false)}
       onConfirm={confirmLogout}
-      title="Logout"
-      message="Are you sure you want to log out?"
-      confirmText="Logout"
-      cancelText="Cancel"
+      title={t('logout')}
+      message={t('confirm')}
+      confirmText={t('logout')}
+      cancelText={t('cancel')}
       confirmButtonColor="bg-red-600 hover:bg-red-700"
     />
     </>

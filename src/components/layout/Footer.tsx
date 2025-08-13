@@ -4,7 +4,7 @@ import { FaFacebookF, FaTwitter, FaInstagram, FaPinterestP } from "react-icons/f
 
 const Footer = () => {
   return (
-    <footer className="bg-[#3d3a37] text-gray-300 py-8 md:py-12 text-sm">
+    <footer className="bg-[#3d3a37] text-gray-300 pt-12 pb-4 text-sm">
       <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 px-4 md:px-6">
         {/* About */}
         <div>
@@ -57,9 +57,9 @@ const Footer = () => {
         </div>
       </div>
 
-      <hr className="border-gray-600 mt-8 md:mt-10" />
+      <hr className="border-gray-600 my-3" />
 
-      <div className="text-center text-gray-400 mt-4 md:mt-6 text-xs px-4 md:px-6">
+      <div className="text-center text-gray-400 text-xs px-4 md:px-6">
         © 2025 BookHaven. All rights reserved.
       </div>
     </footer>

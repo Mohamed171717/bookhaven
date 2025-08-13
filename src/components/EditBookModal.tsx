@@ -7,18 +7,13 @@ import { doc, updateDoc } from 'firebase/firestore';
 import { uploadImageToImageKit } from "@/app/[locale]/utils/imagekitUpload";
 import { db } from '@/lib/firebase';
 import { toast } from 'react-hot-toast';
+import { useTranslations } from 'next-intl';
 
 interface EditBookModalProps {
   book: BookType;
   onClose: () => void;
   onUpdate: (updatedBook: BookType) => void;
 }
-
-const genres = [
-  'Fiction', 'Fantasy', 'Science Fiction', 'Mystery & Thriller',
-  'Romance', 'Historical', 'Young Adult', 'Horror',
-  'Biography', 'Personal Growth',
-];
 
 export default function EditBookModal({ book, onClose, onUpdate }: EditBookModalProps) {
 
@@ -27,6 +22,15 @@ export default function EditBookModal({ book, onClose, onUpdate }: EditBookModal
   const [genre, setGenre] = useState(book.genre);
   const [file, setFile] = useState<File | null>(null);
   const [description, setDescription] = useState(book.description || '');
+    const t = useTranslations('ProfilePage');
+    const s = useTranslations('ShopPage');
+  
+    const genres = [
+      s('fiction'), s('fantasy'), s('science fiction'), s('mystery & thriller'),
+      s('romance'), s('historical'), s('young adult'), s('horror'),
+      s('biography'), s('personal growth'),
+    ];
+
 
   
   const handleSave = async () => {
@@ -60,27 +64,27 @@ export default function EditBookModal({ book, onClose, onUpdate }: EditBookModal
 
   return (
     <div className="fixed inset-0 bg-black/20 z-50 flex items-center justify-center">
-      <div className="bg-white p-6 rounded-xl w-full max-w-2xl shadow-xl relative">
+      <div className="bg-white p-6 pt-10 rounded-xl w-full max-w-2xl shadow-xl relative">
         <button onClick={onClose} className="absolute top-2 right-3 text-gray-500 hover:text-[#b63333] text-3xl transition">×</button>
-        <h2 className="text-lg font-bold mb-4">Edit Book</h2>
+        <h2 className="text-lg font-bold mb-4">{t('editBook')}</h2>
 
         <div className="space-y-3">
           {/* title */}
-          <label htmlFor="title" className="block text-sm font-medium text-gray-700">Title</label>
-          <input value={title} onChange={(e) => setTitle(e.target.value)} className="w-full p-2 border rounded" placeholder="Title" />
+          <label htmlFor="title" className="block text-sm font-medium text-gray-700">{t('title')}</label>
+          <input value={title} onChange={(e) => setTitle(e.target.value)} className="w-full p-2 border rounded" placeholder={t('title')} />
           {/* author */}
-          <label htmlFor="author" className="block text-sm font-medium text-gray-700">Author</label>
-          <input value={author} onChange={(e) => setAuthor(e.target.value)} className="w-full p-2 border rounded" placeholder="Author" />
+          <label htmlFor="author" className="block text-sm font-medium text-gray-700">{t('author')}</label>
+          <input value={author} onChange={(e) => setAuthor(e.target.value)} className="w-full p-2 border rounded" placeholder={t('author')} />
           {/* genre */}
-          <label htmlFor="genre" className="block text-sm font-medium text-gray-700">Genre</label>
+          <label htmlFor="genre" className="block text-sm font-medium text-gray-700">{t('genre')}</label>
           <select value={genre} onChange={(e) => setGenre(e.target.value as Genre)} className="w-full p-2 border rounded">
             {genres.map((g) => <option key={g} value={g}>{g}</option>)}
           </select>
           {/* description */}
-          <label htmlFor="description" className="block text-sm font-medium text-gray-700">Description</label>
-          <textarea value={description} onChange={(e) => setDescription(e.target.value)} className="w-full p-2 border rounded resize-none" rows={3} placeholder="Description" />
+          <label htmlFor="description" className="block text-sm font-medium text-gray-700">{t('description')}</label>
+          <textarea value={description} onChange={(e) => setDescription(e.target.value)} className="w-full p-2 border rounded resize-none" rows={3} placeholder={t('description')} />
           {/* uploud file */}
-          <label htmlFor="file" className="block text-sm font-medium text-gray-700 mb-1">Upload Cover Image</label>
+          <label htmlFor="file" className="block text-sm font-medium text-gray-700 mb-1">{t('upload')}</label>
           <input
             type="file"
             accept="image/*"
@@ -94,7 +98,7 @@ export default function EditBookModal({ book, onClose, onUpdate }: EditBookModal
           />
 
           <button onClick={handleSave} className="bg-[#B17457] text-white w-full py-2 rounded hover:bg-[#4A4947] transition mt-2">
-            Save Changes
+            {t('save')}
           </button>
         </div>
       </div>

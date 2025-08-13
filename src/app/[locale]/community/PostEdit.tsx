@@ -8,6 +8,7 @@ import { db } from "@/lib/firebase";
 import Image from "next/image";
 import toast from "react-hot-toast";
 import { PostType } from "@/types/PostType";
+import { useTranslations } from "next-intl";
 
 interface EditPostModalProps {
   isOpen: boolean;
@@ -26,6 +27,7 @@ export default function EditPostModal({
     post.imageURL || null
   );
   const [loading, setLoading] = useState(false);
+  const t = useTranslations('CommunityPage');
 
   useEffect(() => {
     if (isOpen) {
@@ -85,14 +87,14 @@ export default function EditPostModal({
       <div className="fixed inset-0 flex items-center justify-center p-4">
         <Dialog.Panel className="w-full max-w-xl rounded-xl bg-[#FAF7F0] p-6 shadow-xl relative">
           <Dialog.Title className="text-2xl font-semibold text-[#4A4947] mb-4">
-            Edit Post
+            {t('edit')}
           </Dialog.Title>
 
           <form className="space-y-4" onSubmit={handleUpdate}>
             {/* Content */}
             <div>
               <label className="block text-[#4A4947] font-medium mb-1">
-                Your Thoughts
+                {t('thoughts')}
               </label>
               <textarea
                 rows={5}
@@ -102,13 +104,13 @@ export default function EditPostModal({
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
               />
-              <p className="text-sm text-[#4A4947] mt-1">Max 600 characters</p>
+              <p className="text-sm text-[#4A4947] mt-1">{t('max')}</p>
             </div>
 
             {/* Image Upload */}
             <div>
               <label className="block text-[#4A4947] font-medium mb-1">
-                Image
+                {t('image')}
               </label>
               {imagePreview ? (
                 <div className="relative group">
@@ -152,7 +154,7 @@ export default function EditPostModal({
                     onChange={handleImageChange}
                     className="hidden"
                   />
-                  <span className="text-[#4A4947]">Click to upload image</span>
+                  <span className="text-[#4A4947]">{t('click')}</span>
                 </label>
               )}
             </div>
@@ -164,7 +166,7 @@ export default function EditPostModal({
                 disabled={loading}
                 className="bg-[#B17457] text-white font-semibold py-2 px-6 rounded-full hover:bg-[#a1674d] transition disabled:opacity-50"
               >
-                {loading ? "Updating..." : "Update"}
+                {loading ? t('updating') : t('update')}
               </button>
             </div>
           </form>

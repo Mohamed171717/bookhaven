@@ -12,6 +12,7 @@ import { UserType } from '@/types/UserType';
 import Image from 'next/image';
 import { FaRegStar, FaStar } from 'react-icons/fa';
 import { useTranslations } from 'next-intl';
+import { CartItem } from '@/types/CartType';
 // import StartChatButton from './chat/StartChatButton';
 
 interface ReviewSectionProps {
@@ -32,6 +33,7 @@ export default function ReviewSection({
   const [comment, setComment] = useState("");
   const [reviews, setReviews] = useState<Review[]>([]);
   const [hasReviewed, setHasReviewed] = useState(false);
+  const [hasPurchased, setHasPurchased] = useState(false);
   const t = useTranslations('ShopPage');
 
   // Fetch reviews for this target
@@ -51,6 +53,34 @@ export default function ReviewSection({
     fetchReviews();
   }, [targetId, currentUserId]);
 
+  // check if the user has purchased
+  useEffect(() => {
+    if (!currentUserId || type !== "book") return;
+
+    const checkPurchase = async () => {
+      const q = query(
+        collection(db, "orders"),
+        where("buyerId", "==", currentUserId)
+      );
+      const snapshot = await getDocs(q);
+
+      let purchased = false;
+
+      snapshot.forEach((doc) => {
+        const order = doc.data();
+        if (order.items?.some((item: CartItem) => item.bookId === targetId)) {
+          purchased = true;
+        }
+      });
+
+      setHasPurchased(purchased);
+    };
+
+    checkPurchase();
+  }, [currentUserId, targetId, type]);
+
+
+  // handle review request
   const handleSubmit = async () => {
     if (!currentUserId) return toast.error("Please login to submit a review.");
     if (rating === 0 || hasReviewed) return;
@@ -128,34 +158,43 @@ export default function ReviewSection({
         {hasReviewed ? (
           <p className="text-green-600 font-medium mr-48">{t('userReview')}</p>
         ) : (
-          <div className='flex justify-between items-center gap-3'>
-            <div className="flex gap-1 mr-32">
-              <p className='font-medium mr-1'>{t('rateOwner')}</p>
-              {[1, 2, 3, 4, 5].map((i) => (
-                <Star
-                  key={i}
-                  className={clsx(
-                    'w-5 h-5 cursor-pointer transition',
-                    i <= (hoveredStar || rating)
-                      ? 'fill-yellow-400 text-yellow-500'
-                      : 'text-gray-500'
-                  )}
-                  onClick={() => setRating(i)}
-                  onMouseEnter={() => setHoveredStar(i)}
-                  onMouseLeave={() => setHoveredStar(0)}
-                />
-              ))}
+          <>
+          { hasPurchased && (
+            <div className='flex justify-between items-center gap-3'>
+              <div className="flex gap-1 mr-32">
+                <p className='font-medium mr-1'>{t('rateOwner')}</p>
+                {[1, 2, 3, 4, 5].map((i) => (
+                  <Star
+                    key={i}
+                    className={clsx(
+                      'w-5 h-5 cursor-pointer transition',
+                      i <= (hoveredStar || rating)
+                        ? 'fill-yellow-400 text-yellow-500'
+                        : 'text-gray-500'
+                    )}
+                    onClick={() => setRating(i)}
+                    onMouseEnter={() => setHoveredStar(i)}
+                    onMouseLeave={() => setHoveredStar(0)}
+                  />
+                ))}
+              </div>
+              <div>
+                <button
+                  onClick={handleSubmit}
+                  disabled={currentUserId === targetId}
+                  className="bg-btn-color disabled:bg-[#b17457c0] text-[15px] hover:bg-[#a16950] text-gray-50 py-2 px-4 mr-1 rounded-full transition duration-300"
+                >
+                  {t('rate')}
+                </button>
+              </div>
             </div>
-            <div>
-              <button
-                onClick={handleSubmit}
-                disabled={currentUserId === targetId}
-                className="bg-btn-color disabled:bg-[#b17457c0] text-[15px] hover:bg-[#a16950] text-gray-50 py-2 px-4 mr-1 rounded-full transition duration-300"
-              >
-                {t('rate')}
-              </button>
-            </div>
-          </div>
+          )}
+          {!hasPurchased && (
+            <p className="text-gray-500 text-sm">
+              You can only review this user after purchasing his items.
+            </p>
+          )}
+          </>
         )}
         {/* <StartChatButton currentUserId={currentUserId} otherUserId={targetId}/> */}
       </div>
@@ -173,52 +212,60 @@ export default function ReviewSection({
           </p>
 
           {/* Review Form */}
-          {!hasReviewed && (
-            <div className="space-y-2">
-              <p className="font-medium">{t('leaveReview')}</p>
-
-              {/* Star Rating UI */}
-              <div className="flex gap-1">
-                {[1, 2, 3, 4, 5].map((i) => (
-                  <Star
-                    key={i}
-                    className={clsx(
-                      "w-6 h-6 cursor-pointer transition",
-                      i <= (hoveredStar || rating)
-                        ? "fill-yellow-400 text-yellow-500"
-                        : "text-gray-500"
-                    )}
-                    onClick={() => setRating(i)}
-                    onMouseEnter={() => setHoveredStar(i)}
-                    onMouseLeave={() => setHoveredStar(0)}
-                  />
-                ))}
-              </div>
-
-              {/* Optional Comment */}
-              <input
-                type="text"
-                value={comment}
-                onChange={(e) => setComment(e.target.value)}
-                placeholder= {t('writeComment')}
-                className="w-full p-2 border rounded-md"
-              />
-
-              <button
-                onClick={handleSubmit}
-                disabled={currentUserId === targetUser!.uid}
-                className="bg-btn-color disabled:bg-[#b17457c0] text-[15px] hover:bg-[#a16950] text-gray-50 py-2 px-4 rounded-full transition duration-300"
-              >
-                {t('submitReview')}
-              </button>
-            </div>
-          )}
-
-          {hasReviewed && (
+          {hasReviewed ? (
             <p className="text-green-600 font-medium">
               {t('BookReview')}
             </p>
-          )}
+            ) : (
+              <>
+              { hasPurchased && (
+                <div className="space-y-2">
+                  <p className="font-medium">{t('leaveReview')}</p>
+
+                  {/* Star Rating UI */}
+                  <div className="flex gap-1">
+                    {[1, 2, 3, 4, 5].map((i) => (
+                      <Star
+                        key={i}
+                        className={clsx(
+                          "w-6 h-6 cursor-pointer transition",
+                          i <= (hoveredStar || rating)
+                            ? "fill-yellow-400 text-yellow-500"
+                            : "text-gray-500"
+                        )}
+                        onClick={() => setRating(i)}
+                        onMouseEnter={() => setHoveredStar(i)}
+                        onMouseLeave={() => setHoveredStar(0)}
+                      />
+                    ))}
+                  </div>
+
+                  {/* Optional Comment */}
+                  <input
+                    type="text"
+                    value={comment}
+                    onChange={(e) => setComment(e.target.value)}
+                    placeholder= {t('writeComment')}
+                    className="w-full p-2 border rounded-md"
+                  />
+
+                  <button
+                    onClick={handleSubmit}
+                    disabled={currentUserId === targetUser!.uid}
+                    className="bg-btn-color disabled:bg-[#b17457c0] text-[15px] hover:bg-[#a16950] text-gray-50 py-2 px-4 rounded-full transition duration-300"
+                  >
+                    {t('submitReview')}
+                  </button>
+                </div>
+              )}
+              {!hasPurchased && (
+                <p className="text-gray-500 text-sm">
+                  You can only review this book after purchasing it.
+                </p>
+              )}
+              </>
+            )
+          }
 
           {/* Review List */}
           <div className="mt-4 space-y-4">

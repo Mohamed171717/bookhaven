@@ -7,11 +7,12 @@ import toast from 'react-hot-toast';
 import { db } from '@/lib/firebase';
 import { UserType } from '@/types/UserType';
 import { uploadImageToImageKit } from '@/app/[locale]/utils/imagekitUpload';
+import { useTranslations } from 'next-intl';
 
 interface Props {
   onClose: () => void;
   onUpdate: (updatedUser: UserType) => void;
-}
+} 
 
 export default function EditProfileModal({ onClose, onUpdate }: Props) {
   const { user } = useAuth();
@@ -20,11 +21,13 @@ export default function EditProfileModal({ onClose, onUpdate }: Props) {
   const [address, setAddress] = useState(user?.address || '');
   const [photoUrl, setPhotoUrl] = useState<File | null>(null);
   const [selectedGenres, setSelectedGenres] = useState<string[]>(user?.genres || []);
+  const t = useTranslations('ProfilePage');
+  const s = useTranslations('ShopPage');
 
   const genreOptions = [
-    "Fiction", "Fantasy", "Science Fiction", "Mystery & Thriller",
-    "Romance", "Historical", "Young Adult", "Horror",
-    "Biography", "Personal Growth"
+    s('fiction'), s('fantasy'), s('science fiction'), s('mystery & thriller'),
+    s('romance'), s('historical'), s('young adult'), s('horror'),
+    s('biography'), s('personal growth'),
   ];
 
   const toggleGenre = (genre: string) => {
@@ -68,23 +71,23 @@ export default function EditProfileModal({ onClose, onUpdate }: Props) {
   return (
     <div style={{margin: 0}} className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center">
       <div className="bg-white rounded-lg p-6 w-full max-w-2xl">
-        <h2 className="text-xl font-bold mb-4">Edit Profile</h2>
+        <h2 className="text-xl font-bold mb-4">{t('editProfile')}</h2>
         {/* name */}
-        <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+        <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">{t('name')}</label>
         <input
           name='name'
           type="text"
-          placeholder="Name"
+          placeholder={t('name')}
           value={name}
           onChange={e => setName(e.target.value)}
           className="w-full border px-4 py-2 rounded mb-3"
         />
         {/* bio */}
-        <label htmlFor="bio" className="block text-sm font-medium text-gray-700 mb-1">Bio</label>
+        <label htmlFor="bio" className="block text-sm font-medium text-gray-700 mb-1">{t('bio')}</label>
         <input
           name='bio'
           type="text"
-          placeholder="Bio"
+          placeholder={t('bio')}
           value={bio}
           onChange={e => setBio(e.target.value)}
           className="w-full border px-4 py-2 rounded mb-3"
@@ -92,11 +95,11 @@ export default function EditProfileModal({ onClose, onUpdate }: Props) {
         {/* address */}
         {user!.role === 'library' && (
           <>
-            <label htmlFor="address" className="block text-sm font-medium text-gray-700 mb-1">Address</label>
+            <label htmlFor="address" className="block text-sm font-medium text-gray-700 mb-1">{t('editAddress')}</label>
             <input
               name='address'
               type="text"
-              placeholder="Library Address"
+              placeholder={t('address')}
               value={user!.address || ''}
               onChange={e => setAddress(e.target.value)}
               className="w-full border px-4 py-2 rounded mb-3"
@@ -104,7 +107,7 @@ export default function EditProfileModal({ onClose, onUpdate }: Props) {
           </>
         )}
         {/* uploud file */}
-        <label htmlFor="file" className="block text-sm font-medium text-gray-700 mb-1">Upload Profile Image</label>
+        <label htmlFor="file" className="block text-sm font-medium text-gray-700 mb-1">{t('uploadProfile')}</label>
         <input
           type="file"
           accept="image/*"
@@ -119,7 +122,7 @@ export default function EditProfileModal({ onClose, onUpdate }: Props) {
         {/* genres */}
         { user!.role === 'reader' && (
         <div className="mb-4">
-          <label className="font-medium mb-2 block">Favorite Genres</label>
+          <label className="font-medium mb-2 block">{t('favoriteGenres')}</label>
           <div className="grid grid-cols-2 gap-2">
             {genreOptions.map((genre, i) => (
               <label key={i} className="flex items-center gap-2 text-sm">
@@ -137,8 +140,8 @@ export default function EditProfileModal({ onClose, onUpdate }: Props) {
         )}
 
         <div className="flex justify-end gap-3">
-          <button onClick={handleUpdate} className="px-4 py-2 rounded bg-btn-color text-gray-50 hover:bg-[#4A4947] transition text-sm">Save</button>
-          <button onClick={onClose} className="px-4 py-2 rounded text-gray-50 bg-[#d63d3d] hover:bg-[#b33333] text-sm">Cancel</button>
+          <button onClick={handleUpdate} className="px-4 py-2 rounded bg-btn-color text-gray-50 hover:bg-[#4A4947] transition text-sm">{t('save')}</button>
+          <button onClick={onClose} className="px-4 py-2 rounded text-gray-50 bg-[#d63d3d] hover:bg-[#b33333] text-sm">{t('cancel')}</button>
         </div>
       </div>
     </div>

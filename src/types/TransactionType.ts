@@ -17,7 +17,7 @@ export interface SwapType {
   updatedAt?: Date | Timestamp;
 }
 
-export interface OrdeType {
+export interface OrderType {
   orderId: string;
   userId: string;
   buyerInfo: ShippingInfoType;

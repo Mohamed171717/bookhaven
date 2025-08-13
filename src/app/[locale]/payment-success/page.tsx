@@ -24,7 +24,7 @@ export default function PaymentSuccessPage() {
     if (storedInfo) {
       setShippingInfo(JSON.parse(storedInfo));
     }
-  }, []);
+  }, [cart, clearCart]);
 
   if (!boughtBooks.length || !shippingInfo) return <p>Loading...</p>;
 
@@ -39,7 +39,7 @@ export default function PaymentSuccessPage() {
   return (
     <>
       <Header />
-      <div className="min-h-screen py-12 px-4 flex justify-center pt-[110px]">
+      <div className=".fix-height px-4 flex justify-center pt-[140px]">
         <div className="max-w-2xl w-full">
           {/* Success Icon & Title */}
           <div className="text-center mb-8">

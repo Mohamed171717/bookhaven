@@ -17,6 +17,7 @@ import {
 } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { motion } from "framer-motion";
+import { useTranslations } from "next-intl";
 // import { useAuth } from "@/context/AuthContext";
 
 const POSTS_PER_PAGE_INITIAL = 6;
@@ -33,6 +34,7 @@ export default function BlogPage() {
   const [hasMore, setHasMore] = useState(true);
   const [fetchedPostIds, setFetchedPostIds] = useState<Set<string>>(new Set());
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
+  const t = useTranslations('CommunityPage');
 
   const breakpointColumnsObj = {
     default: 2,
@@ -123,7 +125,7 @@ export default function BlogPage() {
     if (uniquePosts.length === 0 && !loading) {
       return (
         <p className="text-center mt-8 text-[#4A4947]">
-          No posts yet. Be the first to share something!
+          {t('noPosts')}
         </p>
       );
     }
@@ -168,20 +170,20 @@ export default function BlogPage() {
   return (
     <>
       <Header />
-      <div className="min-h-screen px-4 pt-[100px] sm:px-8 md:px-16 lg:px-24 py-4">
+      <div className="fix-height pt-[155px] pb-10 sm:px-8 md:px-16 lg:px-24 py-4">
         <div className="max-w-5xl xl:max-w-6xl 2xl:max-w-7xl mx-auto">
           <PostCreator onPostCreated={handleNewPost} />
           {renderPosts()}
           {loading && (
             <div className="flex justify-center mt-4">
               <div className="animate-pulse text-[#4A4947]">
-                Loading more posts...
+                {t('loading')}
               </div>
             </div>
           )}
           {!hasMore && posts.length > 0 && (
             <p className="text-center mt-4 text-[#4A4947]">
-              You reached the end!
+              {t('reach')}
             </p>
           )}
           {hasMore && <div ref={loadMoreRef} className="h-20 w-full" />}

@@ -15,6 +15,7 @@ import Header from "@/components/layout/Header";
 import { SmallFooter } from "@/components/layout/Footer";
 import { useAuth } from "@/context/AuthContext";
 import toast from "react-hot-toast";
+import { useTranslations } from "next-intl";
 
 interface Message {
   id?: string;
@@ -31,6 +32,7 @@ export default function ChatPage() {
   const [welcomeIndex, setWelcomeIndex] = useState(0);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const { user } = useAuth();
+  const t = useTranslations('ChatPage')
 
   // display messages
   useEffect(() => {
@@ -65,7 +67,7 @@ export default function ChatPage() {
   }, [loadingBot, messages]);
 
   // welcome message
-  const welcomeFullText = "Hello, my name is mr.book can I help you?";
+  const welcomeFullText = t('welcome');
   useEffect(() => {
     if (welcomeIndex < welcomeFullText.length) {
       const timeout = setTimeout(() => {
@@ -73,7 +75,7 @@ export default function ChatPage() {
       }, 40);
       return () => clearTimeout(timeout);
     }
-  }, [welcomeIndex]);
+  }, [welcomeIndex, welcomeFullText]);
 
 
   const sendMessage = async (e: FormEvent) => {
@@ -118,9 +120,9 @@ export default function ChatPage() {
   return (
     <>
     <Header/>
-    <div className="pt-[120px] lg:pt-[140px] pb-10 container mx-auto px-4 md:px-8 lg:px-20">
+    <div className="pt-[120px] chat-height lg:pt-[140px] pb-10 container mx-auto px-4 md:px-8 lg:px-20">
       <div className="flex flex-col h-[68vh] messages-container max-w-3xl lg:max-w-5xl mx-auto bg-color-bg rounded-lg overflow-hidden">
-        <h1 className="text-2xl font-bold mb-2 text-start">MR. Book</h1>
+        <h1 className="text-2xl font-bold mb-2 text-start">{t('mrBook')}</h1>
         <div className={`${ messages.length > 0 || "flex items-center justify-center"} flex-1 overflow-y-auto py-6 px-6 md:px-20 lg:px-40 space-y-4`}>
           {messages.length > 0 ? messages.map((msg) => (
             <div
@@ -161,14 +163,14 @@ export default function ChatPage() {
           type="text"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
-          placeholder="Type your message..."
+          placeholder={t('message')}
           className="flex-grow px-4 py-2 m-3 focus:outline-none"
         />
         <button
           type="submit"
           className="bg-btn-color text-white m-3 px-4 py-2 rounded-full hover:bg-[#4a4947] transition"
         >
-          Send
+          {t('send')}
         </button>
       </form>
     </div>

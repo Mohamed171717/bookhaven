@@ -10,7 +10,6 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "OpenAI API key is missing" }, { status: 500 });
     }
 
-    // طلب من OpenAI API
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {

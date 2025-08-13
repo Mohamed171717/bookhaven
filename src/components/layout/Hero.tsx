@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useAuth } from "@/context/AuthContext";
 
 interface Slide {
@@ -18,6 +18,7 @@ interface Slide {
 const Hero = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const { user } = useAuth();
+  const locale = useLocale();
   const t = useTranslations("HomePage");
 
   // Auto-slide functionality
@@ -62,11 +63,11 @@ const Hero = () => {
     setCurrentIndex((prev) => (prev - 1 + slides.length) % slides.length);
 
   return (
-    <section className="relative h-[85vh] md:h-[93vh] overflow-hidden">
+    <section className="relative h-[100vh] overflow-hidden">
       {/* Slides container */}
       <div
         className="flex transition-transform duration-700 ease-in-out h-full"
-        style={{ transform: `translateX(-${currentIndex * 100}%)` }}
+        style={{ transform: locale === 'en' ? `translateX(-${currentIndex * 100}%)` : `translateX(${currentIndex * 100}%)` }}
       >
         {slides.map((slide) => (
           <div
@@ -94,7 +95,7 @@ const Hero = () => {
       </div>
 
       {/* Pagination Dots */}
-      <div className="absolute bottom-4 md:bottom-8 left-1/2 transform -translate-x-1/2 z-10 flex space-x-2">
+      <div className="absolute gap-[6px] bottom-4 md:bottom-8 left-1/2 transform -translate-x-1/2 z-10 flex">
         {slides.map((_, index) => (
           <button
             key={index}
@@ -113,13 +114,13 @@ const Hero = () => {
         onClick={prevSlide}
         className="absolute left-2 md:left-6 top-1/2 transform -translate-y-1/2 text-white text-2xl md:text-3xl z-10 hover:bg-black hover:bg-opacity-30 rounded-full p-1 transition-all"
       >
-        ‹
+        { locale === 'en' ? '‹' : '›'}
       </button>
       <button
         onClick={nextSlide}
         className="absolute right-2 md:right-6 top-1/2 transform -translate-y-1/2 text-white text-2xl md:text-3xl z-10 hover:bg-black hover:bg-opacity-30 rounded-full p-1 transition-all"
       >
-        ›
+        { locale === 'en' ? '›' : '‹'}
       </button>
     </section>
   );

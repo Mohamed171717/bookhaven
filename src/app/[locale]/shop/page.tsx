@@ -29,7 +29,7 @@ export default function ShopPage() {
   return (
     <>
       <Header />
-      <div className="min-h-screen pt-[100px] md:pt-[150px] xl:pt-[180px] pb-16 container mx-auto px-4 md:px-8 lg:px-20">
+      <div className="fix-height pt-[155px] pb-10 container mx-auto px-4 md:px-8 lg:px-20">
         {/* Mobile Filter Button */}
         <div className="lg:hidden mb-4">
           <button

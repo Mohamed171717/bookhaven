@@ -64,7 +64,7 @@ export default function HomePage() {
   return (
     <>
       <Header />
-      <main className="min-h-screen pt-[37px] md:pt-[50px] 2xl:pt-[80px]">
+      <main>
         {/* Hero Section */}
         <Hero />
         {/* Best Selling Books */}

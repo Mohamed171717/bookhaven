@@ -9,6 +9,7 @@ import { v4 as uuid } from 'uuid';
 import { useAuth } from '@/context/AuthContext';
 import toast from 'react-hot-toast';
 import { BookType, Genre, Location } from '@/types/BookType';
+import { useTranslations } from "next-intl";
 
 interface AddBookModalProps {
   onClose: () => void;
@@ -29,6 +30,8 @@ export default function AddBookModal({ onClose, onAdd }: AddBookModalProps ) {
   const [price, setPrice] = useState<number | "">("");
   const [quantity, setQuantity] = useState<number | "">("");
   const [loading, setLoading] = useState(false);
+  const t = useTranslations('ProfilePage');
+  const s = useTranslations('ShopPage');
 
   const handleCheckboxChange = (option: "sell" | "swap", checked: boolean) => {
     if (checked) {
@@ -105,25 +108,25 @@ export default function AddBookModal({ onClose, onAdd }: AddBookModalProps ) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-      <div className="bg-white p-6 rounded-lg max-w-2xl w-full shadow-md relative">
+      <div className="bg-white p-6 pt-10 rounded-lg max-w-2xl w-full shadow-md relative">
         <button
           onClick={onClose}
           className="absolute top-2 right-3 text-gray-500 hover:text-[#b63333] text-3xl transition"
         >
           ×
         </button>
-        <h2 className="text-lg font-bold mb-4">Add New Book</h2>
+        <h2 className="text-lg font-bold mb-4">{t('addBook')}</h2>
         {/* title */}
         <label
           htmlFor="title"
           className="block text-sm font-medium text-gray-700 mb-1"
         >
-          Title
+          {t('title')}
         </label>
         <input
           name="title"
           className="w-full mb-2 p-2 border rounded"
-          placeholder="ex: The Laws of Human Nature"
+          placeholder={t('exTitle')}
           value={title}
           onChange={(e) => setTitle(e.target.value)}
         />
@@ -132,12 +135,12 @@ export default function AddBookModal({ onClose, onAdd }: AddBookModalProps ) {
           htmlFor="author"
           className="block text-sm font-medium text-gray-700 mb-1"
         >
-          Author
+          {t('author')}
         </label>
         <input
           name="author"
           className="w-full mb-2 p-2 border rounded"
-          placeholder="ex: Robert Greene"
+          placeholder={t('exAuthor')}
           value={author}
           onChange={(e) => setAuthor(e.target.value)}
         />
@@ -146,19 +149,19 @@ export default function AddBookModal({ onClose, onAdd }: AddBookModalProps ) {
           htmlFor="description"
           className="block text-sm font-medium text-gray-700 mb-1"
         >
-          Description
+          {t('description')}
         </label>
         <textarea
           name="description"
           className="w-full mb-2 p-2 border rounded"
-          placeholder="Brief description..."
+          placeholder={t('preifDesc')}
           value={description}
           onChange={(e) => setDescription(e.target.value)}
         />
         {/* locations */}
         { user!.role === 'reader' && (
           <>
-          <label htmlFor="location" className="block text-sm font-medium text-gray-700 mb-1">Location</label>
+          <label htmlFor="location" className="block text-sm font-medium text-gray-700 mb-1">{t('location')}</label>
           <select name='location' className="w-full mb-2 p-2 border rounded" value={location} onChange={(e) => setLocation(e.target.value as Location)}>
             <option value="Cairo">Cairo</option>
             <option value="Giza">Giza</option>
@@ -194,7 +197,7 @@ export default function AddBookModal({ onClose, onAdd }: AddBookModalProps ) {
           htmlFor="condition"
           className="block text-sm font-medium text-gray-700 mb-1"
         >
-          Condition
+          {t('condition')}
         </label>
         <select
           title="type condition"
@@ -203,28 +206,28 @@ export default function AddBookModal({ onClose, onAdd }: AddBookModalProps ) {
           value={condition}
           onChange={(e) => setCondition(e.target.value as "new" | "used")}
         >
-          <option value="new">New</option>
-          <option value="used">Used</option>
+          <option value="new">{s('new')}</option>
+          <option value="used">{s('used')}</option>
         </select>
         {/* genre */}
-        <label htmlFor="genre" className="block text-sm font-medium text-gray-700 mb-1">Genre</label>
+        <label htmlFor="genre" className="block text-sm font-medium text-gray-700 mb-1">{t('genre')}</label>
         <select name='genre' className="w-full mb-2 p-2 border rounded" value={genre} onChange={(e) => setGenre(e.target.value as Genre)}>
-          <option value="fiction">Fiction</option>
-          <option value="fantasy">Fantasy</option>
-          <option value="science fiction">Science Fiction</option>
-          <option value="mystery & thriller">Mystery & Thriller</option>
-          <option value="romance">Romance</option>
-          <option value="historical">Historical</option>
-          <option value="young adult">Young Adult</option>
-          <option value="horror">Horror</option>
-          <option value="biography">Biography</option>
-          <option value="personal growth">Personal Growth</option>
+          <option value="fiction">{s('fiction')}</option>
+          <option value="fantasy">{s('fantasy')}</option>
+          <option value="science fiction">{s('science fiction')}</option>
+          <option value="mystery & thriller">{s('mystery & thriller')}</option>
+          <option value="romance">{s('romance')}</option>
+          <option value="historical">{s('historical')}</option>
+          <option value="young adult">{s('young adult')}</option>
+          <option value="horror">{s('horror')}</option>
+          <option value="biography">{s('biography')}</option>
+          <option value="personal growth">{s('personal growth')}</option>
         </select>
         {/* available for */}
         { user!.role === 'reader' ? (
         <>
         <label className="block text-sm font-medium text-gray-700 mb-1">
-          Available For
+          {s('avilable')}
         </label>
         <div className="flex items-center space-x-2 mt-1 mb-2">
           <div className="flex items-center space-x-2">
@@ -236,7 +239,7 @@ export default function AddBookModal({ onClose, onAdd }: AddBookModalProps ) {
               onChange={(e) => handleCheckboxChange("sell", e.target.checked)}
             />
             <label htmlFor="sell" className="text-sm font-medium text-gray-700">
-              Sell
+              {s('sell')}
             </label>
           </div>
           <div className="flex items-center space-x-2">
@@ -248,16 +251,16 @@ export default function AddBookModal({ onClose, onAdd }: AddBookModalProps ) {
               onChange={(e) => handleCheckboxChange("swap", e.target.checked)}
             />
             <label htmlFor="swap" className="text-sm font-medium text-gray-700">
-              Exchange
+              {s('exchange')}
             </label>
           </div>
         </div>
         {availableFor.includes("sell") && (
           <input
-            title="price of the book"
+            title={t('pricebook')}
             type="number"
             className="w-full mb-2 p-2 border rounded"
-            placeholder="Price"
+            placeholder={s('price')}
             value={price}
             onChange={(e) => setPrice(Number(e.target.value))}
           />
@@ -266,14 +269,14 @@ export default function AddBookModal({ onClose, onAdd }: AddBookModalProps ) {
         ) : (
           <>
           <label htmlFor="price" className="text-sm font-medium text-gray-700">
-            Price
+            {s('price')}
           </label>
           <input
             id="price"
-            title="price of the book"
+            title={t('pricebook')}
             type="number"
             className="w-full mb-2 p-2 border rounded"
-            placeholder="Price"
+            placeholder={s('price')}
             value={price}
             onChange={(e) => setPrice(Number(e.target.value))}
           />
@@ -283,13 +286,13 @@ export default function AddBookModal({ onClose, onAdd }: AddBookModalProps ) {
         { user?.role === 'library' && (
           <>
           <label htmlFor="quantity" className="block text-sm font-medium text-gray-700 mb-1">
-            Quantity
+            {t('quantity')}
           </label>
           <input
             id="quantity"
             type="number"
             className="w-full mb-2 p-2 border rounded"
-            placeholder="Quantity"
+            placeholder={t('quantity')}
               value={quantity}
               onChange={(e) => setQuantity(Number(e.target.value))}
           />
@@ -300,7 +303,7 @@ export default function AddBookModal({ onClose, onAdd }: AddBookModalProps ) {
           htmlFor="file"
           className="block text-sm font-medium text-gray-700 mb-1"
         >
-          Upload Cover Image
+          {t('upload')}
         </label>
         <input
           id="file"
@@ -320,7 +323,7 @@ export default function AddBookModal({ onClose, onAdd }: AddBookModalProps ) {
           htmlFor="files"
           className="block text-sm font-medium text-gray-700 mb-1"
         >
-          Upload Extra Images
+          {t('uploads')}
         </label>
         <input
           id="files"
@@ -344,7 +347,7 @@ export default function AddBookModal({ onClose, onAdd }: AddBookModalProps ) {
           className="bg-[#a8775a] text-white w-full py-2 rounded hover:bg-[#946a52]"
           disabled={loading}
         >
-          {loading ? "Adding..." : "Add Book"}
+          {loading ? t('adding') : t('addBook')}
         </button>
       </div>
     </div>

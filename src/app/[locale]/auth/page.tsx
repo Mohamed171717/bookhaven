@@ -1,6 +1,5 @@
 
 "use client";
-import { useTranslations } from "next-intl";
 import { loginUser, registerUser, signInWithFacebookPopup, signInWithGooglePopup } from '@/lib/authService';
 import { FirebaseError } from 'firebase/app';
 import { signOut, updateProfile, User } from 'firebase/auth';
@@ -14,6 +13,7 @@ import { auth, db } from "@/lib/firebase";
 import { doc, getDoc, serverTimestamp, setDoc } from "firebase/firestore";
 import { UserType } from "@/types/UserType";
 import { AbsoluteLanguageSwitcher } from "@/components/layout/languageSwitcher";
+import { useLocale, useTranslations } from "next-intl";
 
 type Role = "reader" | "library";
 type Error = {
@@ -23,7 +23,9 @@ type Error = {
 };
 
 export default function AuthPage() {
+  // const [loginProvider, setLoginProvider] = useState<"google" | "facebook" | null>(null);
   const t = useTranslations('LoginPage');
+  const locale = useLocale();
   const router = useRouter();
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
@@ -32,12 +34,11 @@ export default function AuthPage() {
   const [role, setRole] = useState<Role>('reader');
   const [errors, setErrors] = useState<Error>({});
   const [showRoleModal, setShowRoleModal] = useState(false);
-  // const [loginProvider, setLoginProvider] = useState<"google" | "facebook" | null>(null);
   const [tempUser, setTempUser] = useState<User | null>(null);
 
   // Regex patterns for validation
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{12,}$/;
   const nameRegex = /^[a-zA-Z\s]{2,50}$/;
 
   // Real-time validation functions
@@ -297,7 +298,7 @@ export default function AuthPage() {
         {/* Sliding Container */}
         <div
           className={`w-[200%] h-full flex transition-transform duration-700 ease-in-out ${
-            isLogin ? "translate-x-0" : "-translate-x-1/2"
+            isLogin ? "translate-x-0" : locale === 'en' ? "-translate-x-1/2" : "translate-x-1/2"
           }`}
         >
           {/* Login Panel */}
@@ -429,23 +430,23 @@ export default function AuthPage() {
               )}
               {/* Role selector */}
               <div className="flex items-center gap-4 mb-4 mt-2">
-                <label className="flex items-center">
+                <label className="flex gap-2 items-center">
                   <input
                     type="radio"
                     value="reader"
                     checked={role === 'reader'}
                     onChange={() => setRole('reader')}
-                    className="appearance-none w-3 h-3 border-2 border-[#4A4947] rounded-full mr-2 checked:bg-[#4A4947] checked:border-[#4A4947] focus:outline-none"
+                    className="appearance-none w-3 h-3 border-2 border-[#4A4947] rounded-full checked:bg-[#4A4947] checked:border-[#4A4947] focus:outline-none"
                   />
                   {t('reader')}
                 </label>
-                <label className="flex items-center">
+                <label className="flex gap-2 items-center">
                   <input
                     type="radio"
                     value="library"
                     checked={role === 'library'}
                     onChange={() => setRole('library')}
-                    className="appearance-none w-3 h-3 border-2 border-[#4A4947] rounded-full mr-2 checked:bg-[#4A4947] checked:border-[#4A4947] focus:outline-none"
+                    className="appearance-none w-3 h-3 border-2 border-[#4A4947] rounded-full checked:bg-[#4A4947] checked:border-[#4A4947] focus:outline-none"
                   />
                   {t('library')}
                 </label>

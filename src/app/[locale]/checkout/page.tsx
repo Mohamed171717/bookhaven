@@ -13,9 +13,11 @@ import { egyptLocations } from "./egyptLocations";
 import { createPaymentIntention } from "@/app/api/paymob/route";
 import { useAuth } from "@/context/AuthContext";
 import { ShippingInfoType } from "@/types/TransactionType";
+import { useTranslations } from "next-intl";
 
 const Checkout = () => {
   const [loading, setLoading] = useState(false);
+  const t = useTranslations("CartPage");
   const { cart } = useCart();
   const { user } = useAuth();
   const [formData, setFormData] = useState({
@@ -111,10 +113,10 @@ const Checkout = () => {
     <>
       <Header />
       <LanguageSwitcher />
-      <div className="px-6 pb-6 fix-height pt-[100px] max-w-7xl mx-auto">
-        <h2 className="text-2xl font-semibold text-center">Checkout</h2>
+      <div className="px-6 fix-height pt-[120px] pb-10 max-w-7xl mx-auto">
+        <h2 className="text-2xl font-semibold text-center">{t('mainCheckout')}</h2>
         <p className="text-sm text-gray-500 text-center mb-6">
-          Home / Cart / Checkout
+          {t('paths')}
         </p>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -122,7 +124,7 @@ const Checkout = () => {
           <div className="lg:col-span-2">
             <div className="bg-gray-100 border rounded-lg p-6 shadow-sm">
               <h3 className="text-lg font-semibold mb-4">
-                Shipping Information
+                {t('shippingInfo')}
               </h3>
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -131,7 +133,7 @@ const Checkout = () => {
                       htmlFor="fName"
                       className="block text-sm font-medium text-gray-700 mb-1"
                     >
-                      First Name *
+                      {t('firstName')}
                     </label>
                     <input
                       id="fName"
@@ -148,7 +150,7 @@ const Checkout = () => {
                       htmlFor="lName"
                       className="block text-sm font-medium text-gray-700 mb-1"
                     >
-                      Last Name *
+                      {t('lastName')}
                     </label>
                     <input
                       id="lName"
@@ -168,7 +170,7 @@ const Checkout = () => {
                       htmlFor="email"
                       className="block text-sm font-medium text-gray-700 mb-1"
                     >
-                      Email *
+                      {t('email')}
                     </label>
                     <input
                       id="email"
@@ -185,7 +187,7 @@ const Checkout = () => {
                       htmlFor="tel"
                       className="block text-sm font-medium text-gray-700 mb-1"
                     >
-                      Phone *
+                      {t('phone')}
                     </label>
                     <input
                       id="tel"
@@ -203,7 +205,7 @@ const Checkout = () => {
                   {/* Government Select */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Government *
+                      {t('government')}
                     </label>
                     <select
                       title="gov"
@@ -213,7 +215,7 @@ const Checkout = () => {
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-color focus:border-transparent"
                       required
                     >
-                      <option value="">Select Government</option>
+                      <option value="">{t('selectgov')}</option>
                       {Object.keys(egyptLocations).map((gov) => (
                         <option key={gov} value={gov}>
                           {gov}
@@ -225,7 +227,7 @@ const Checkout = () => {
                   {/* City Select */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      City *
+                      {t('city')}
                     </label>
                     <select
                       title="city"
@@ -236,7 +238,7 @@ const Checkout = () => {
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-color focus:border-transparent"
                       required
                     >
-                      <option value="">Select City</option>
+                      <option value="">{t('select')}</option>
                       {formData.government &&
                         egyptLocations[formData.government]?.map((city) => (
                           <option key={city} value={city}>
@@ -249,28 +251,28 @@ const Checkout = () => {
                   {/* Address Input */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Address (Optional)
+                      {t('address')}
                     </label>
                     <input
                       type="text"
                       name="address"
                       value={formData.address || ""}
                       onChange={handleInputChange}
-                      placeholder="Street name, building number..."
+                      placeholder={t('exCity')}
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-color focus:border-transparent"
                     />
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Note (Optional)
+                      {t('note')}
                     </label>
                     <input
                       type="text"
                       name="note"
                       value={formData.note || ""}
                       onChange={handleInputChange}
-                      placeholder="note about delivery"
+                      placeholder={t('exNote')}
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-color focus:border-transparent"
                     />
                   </div>
@@ -282,7 +284,7 @@ const Checkout = () => {
                     disabled={loading}
                     className="w-full bg-primary-color text-white py-3 px-4 rounded-md font-semibold hover:bg-primary-color/90 transition duration-200 disabled:opacity-50"
                   >
-                    {loading ? "Processing..." : "Pay Order"}
+                    {loading ? t('proceed') : t('pay')}
                   </button>
                 </div>
               </form>
@@ -291,7 +293,7 @@ const Checkout = () => {
 
           {/* Order Summary */}
           <div className="border p-6 rounded-lg bg-gray-100 shadow-sm h-fit">
-            <h3 className="text-lg font-semibold mb-4">Order Summary</h3>
+            <h3 className="text-lg font-semibold mb-4">{t('order')}</h3>
 
             {/* Cart Items */}
             <div className="space-y-3 mb-4">
@@ -307,11 +309,11 @@ const Checkout = () => {
                   <div className="flex-1">
                     <div className="font-medium text-sm">{item.title}</div>
                     <div className="text-xs text-gray-500">
-                      Qty: {item.quantity}
+                      {t('quantity')} {item.quantity}
                     </div>
                   </div>
                   <div className="font-medium text-sm">
-                    ${(item.price! * item.quantity).toFixed(2)}
+                    {(item.price! * item.quantity).toFixed(2)} EGP
                   </div>
                 </div>
               ))}
@@ -320,26 +322,26 @@ const Checkout = () => {
             {/* Summary Details */}
             <div className="space-y-2 border-t pt-4">
               <div className="flex justify-between">
-                <span>Items</span>
+                <span>{t('items')}</span>
                 <span>
                   {cart.reduce((sum, item) => sum + item.quantity, 0)}
                 </span>
               </div>
               <div className="flex justify-between">
-                <span>Sub Total</span>
-                <span>${subTotal.toFixed(2)}</span>
+                <span>{t('subtotal')}</span>
+                <span>{subTotal.toFixed(2)} EGP</span>
               </div>
               <div className="flex justify-between">
-                <span>Shipping</span>
-                <span>$5.00</span>
+                <span>{t('shipping')}</span>
+                <span>5.00 EGP</span>
               </div>
               <div className="flex justify-between">
-                <span>Taxes</span>
-                <span>$0.00</span>
+                <span>{t('taxs')}</span>
+                <span>0.00 EGP</span>
               </div>
               <div className="flex justify-between font-semibold text-lg border-t pt-2">
-                <span>Total</span>
-                <span>${total.toFixed(2)}</span>
+                <span>{t('total')}</span>
+                <span>{total.toFixed(2)} EGP</span>
               </div>
             </div>
           </div>

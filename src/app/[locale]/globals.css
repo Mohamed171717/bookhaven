@@ -60,6 +60,17 @@ body {
   min-height: calc(100vh - 335px);
 }
 
+.cart-height {
+  min-height: calc(100vh - 245px);
+}
+
+.chat-height {
+  min-height: calc(100vh - 46px);
+}
+
+.pad-top {
+
+}
 .brown {
   color: #b17457;
 }

@@ -28,7 +28,7 @@ const BookCardWithFlex = (props: BookDetails) => {
         <p className="text-gray-700 mb-4">{props.description}</p>
         <div className="flex justify-between items-center">
         {props.availableFor.includes('sell') ? (
-            <p className="mt-1 text-lg font-semibold primary-color">E£{props.price?.toFixed(2)}</p>
+            <p className="mt-1 text-lg font-semibold primary-color">{props.price?.toFixed(2)} EGP</p>
           ) : (<p className="mt-1 text-lg pt-7 font-semibold primary-color"></p>)}
           <div style={{ position: 'absolute'}} className='top-5 left-3'>
             {props.availableFor.includes('sell') && (

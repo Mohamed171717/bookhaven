@@ -8,17 +8,19 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 import toast from "react-hot-toast";
+import { useTranslations } from "next-intl";
 // import { useBooks } from '@/context/BooksContext';
 
 const CartPage = () => {
   const { cart, removeFromCart, updateQuantity, clearCart } = useCart();
+  const t = useTranslations('CartPage');
   const router = useRouter();
   // const { books } = useBooks();
   const subTotal = cart.reduce(
     (sum, item) => sum + item.price! * item.quantity,
     0
   );
-  const shiping = 5.0; // Fixed shipping cost
+  const shiping = 5.0;
   const total = subTotal + shiping;
 
   const handleCheckout = () => {
@@ -34,12 +36,12 @@ const CartPage = () => {
   return (
     <>
       <Header />
-      <div className="px-4 md:px-6 pb-[43px] pt-[100px] md:pt-[150px] xl:pt-[180px] fix-height max-w-7xl mx-auto">
+      <div className="px-4 md:px-6 cart-height pt-[174px] pb-10 max-w-7xl mx-auto">
         <h2 className="text-xl md:text-2xl font-semibold text-center">
-          Shopping Cart
+          {t('shopCart')}
         </h2>
         <p className="text-xs md:text-sm text-gray-500 text-center mb-4 md:mb-6">
-          Home / Shopping Cart
+          {t('path')}
         </p>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
@@ -50,18 +52,18 @@ const CartPage = () => {
               <table className="w-full border rounded-lg overflow-hidden text-left">
                 <thead className="bg-primary-color text-white text-sm">
                   <tr>
-                    <th className="p-4">Product</th>
-                    <th className="p-4">Price</th>
-                    <th className="p-4">Quantity</th>
-                    <th className="p-4">Subtotal</th>
-                    <th className="p-4 text-center">Remove</th>
+                    <th className="p-4">{t('prod')}</th>
+                    <th className="p-4">{t('price')}</th>
+                    <th className="p-4">{t('quantity')}</th>
+                    <th className="p-4">{t('subtotal')}</th>
+                    <th className="p-4 text-center">{t('remove')}</th>
                   </tr>
                 </thead>
                 <tbody className="bg-gray-100 shadow-lg">
                   {cart.length === 0 && (
                     <tr>
                       <td colSpan={5} className="text-center p-6 text-gray-500">
-                        Your cart is empty
+                        {t('empty')}
                       </td>
                     </tr>
                   )}
@@ -80,11 +82,11 @@ const CartPage = () => {
                             {item.title}
                           </div>
                           <div className="text-sm text-gray-500">
-                            Author: {item.author}
+                            {t('author')} {item.author}
                           </div>
                         </div>
                       </td>
-                      <td className="p-4">E£{item.price!.toFixed(2)}</td>
+                      <td className="p-4">{item.price!.toFixed(2)} EGP</td>
                       <td className="p-4">
                         <div className="flex items-center gap-2">
                           <button
@@ -108,7 +110,7 @@ const CartPage = () => {
                         </div>
                       </td>
                       <td className="p-4 font-medium">
-                        E£{(item.price! * item.quantity).toFixed(2)}
+                        {(item.price! * item.quantity).toFixed(2)} EGP
                       </td>
                       <td className="p-4 text-center">
                         <button onClick={() => removeFromCart(item.bookId)}>
@@ -141,10 +143,10 @@ const CartPage = () => {
                         {item.title}
                       </div>
                       <div className="text-xs text-gray-500">
-                        Author: {item.author}
+                        {t('author')} {item.author}
                       </div>
                       <div className="text-sm font-medium mt-1">
-                        E£{item.price!.toFixed(2)}
+                        {item.price!.toFixed(2)} EGP
                       </div>
 
                       <div className="flex items-center justify-between mt-3">
@@ -171,7 +173,7 @@ const CartPage = () => {
                         </div>
                         <div className="flex items-center gap-2">
                           <span className="text-sm font-medium">
-                            E£{(item.price! * item.quantity).toFixed(2)}
+                            {(item.price! * item.quantity).toFixed(2)} EGP
                           </span>
                           <button onClick={() => removeFromCart(item.bookId)}>
                             <FaTrash className="w-4 h-4 text-red-700 hover:text-red-600" />
@@ -191,7 +193,7 @@ const CartPage = () => {
                   onClick={clearCart}
                   className="text-white text-xs md:text-sm py-2 px-3 font-semibold rounded transition bg-primary-color hover:bg-red-600"
                 >
-                  Clear All
+                  {t('clear')}
                 </button>
               </div>
             )}
@@ -200,31 +202,31 @@ const CartPage = () => {
           {/* Order Summary */}
           <div className="border p-4 md:p-6 rounded-lg bg-gray-100 shadow-sm h-fit">
             <h3 className="text-base md:text-lg font-semibold mb-4">
-              Order Summary
+              {t('order')}
             </h3>
             <div className="flex justify-between py-2 text-sm">
-              <span>Items</span>
+              <span>{t('items')}</span>
               <span>{cart.reduce((sum, item) => sum + item.quantity, 0)}</span>
             </div>
             <div className="flex justify-between py-2 text-sm">
-              <span>Sub Total</span>
-              <span>E£{subTotal.toFixed(2)}</span>
+              <span>{t('subtotal')}</span>
+              <span>{subTotal.toFixed(2)} EGP</span>
             </div>
             <div className="flex justify-between py-2 text-sm">
-              <span>Shipping</span>
-              <span>E£5.00</span>
+              <span>{t('shipping')}</span>
+              <span>5.00 EGP</span>
             </div>
             <div className="flex justify-between py-2 text-sm">
-              <span>Taxes</span>
-              <span>E£0.00</span>
+              <span>{t('taxs')}</span>
+              <span>0.00 EGP</span>
             </div>
             <div className="flex justify-between py-4 font-semibold text-base md:text-lg border-t mt-4">
-              <span>Total</span>
-              <span>E£{total.toFixed(2)}</span>
+              <span>{t('total')}</span>
+              <span>{total.toFixed(2)} EGP</span>
             </div>
             <div onClick={handleCheckout}>
               <button className="w-full bg-btn-color hover:bg-[#4A4947] transition text-white py-2 rounded text-sm md:text-base">
-                Proceed to Checkout
+                {t('checkout')}
               </button>
             </div>
           </div>
