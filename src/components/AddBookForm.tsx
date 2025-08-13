@@ -9,10 +9,6 @@ import { v4 as uuid } from "uuid";
 import { useAuth } from "@/context/AuthContext";
 import toast from "react-hot-toast";
 import { BookType, Genre, Location } from "@/types/BookType";
-import { v4 as uuid } from 'uuid';
-import { useAuth } from '@/context/AuthContext';
-import toast from 'react-hot-toast';
-import { BookType, Genre, Location } from '@/types/BookType';
 import { useTranslations } from "next-intl";
 
 interface AddBookModalProps {
@@ -36,8 +32,8 @@ export default function AddBookModal({ onClose, onAdd }: AddBookModalProps) {
   const [price, setPrice] = useState<number | "">("");
   const [quantity, setQuantity] = useState<number | "">("");
   const [loading, setLoading] = useState(false);
-  const t = useTranslations('ProfilePage');
-  const s = useTranslations('ShopPage');
+  const t = useTranslations("ProfilePage");
+  const s = useTranslations("ShopPage");
 
   const handleCheckboxChange = (option: "sell" | "swap", checked: boolean) => {
     if (checked) {
@@ -129,18 +125,18 @@ export default function AddBookModal({ onClose, onAdd }: AddBookModalProps) {
         >
           ×
         </button>
-        <h2 className="text-lg font-bold mb-4">{t('addBook')}</h2>
+        <h2 className="text-lg font-bold mb-4">{t("addBook")}</h2>
         {/* title */}
         <label
           htmlFor="title"
           className="block text-sm font-medium text-gray-700 mb-1"
         >
-          {t('title')}
+          {t("title")}
         </label>
         <input
           name="title"
           className="w-full mb-2 p-2 border rounded"
-          placeholder={t('exTitle')}
+          placeholder={t("exTitle")}
           value={title}
           onChange={(e) => setTitle(e.target.value)}
         />
@@ -149,12 +145,12 @@ export default function AddBookModal({ onClose, onAdd }: AddBookModalProps) {
           htmlFor="author"
           className="block text-sm font-medium text-gray-700 mb-1"
         >
-          {t('author')}
+          {t("author")}
         </label>
         <input
           name="author"
           className="w-full mb-2 p-2 border rounded"
-          placeholder={t('exAuthor')}
+          placeholder={t("exAuthor")}
           value={author}
           onChange={(e) => setAuthor(e.target.value)}
         />
@@ -163,46 +159,57 @@ export default function AddBookModal({ onClose, onAdd }: AddBookModalProps) {
           htmlFor="description"
           className="block text-sm font-medium text-gray-700 mb-1"
         >
-          {t('description')}
+          {t("description")}
         </label>
         <textarea
           name="description"
           className="w-full mb-2 p-2 border rounded"
-          placeholder={t('preifDesc')}
+          placeholder={t("preifDesc")}
           value={description}
           onChange={(e) => setDescription(e.target.value)}
         />
         {/* locations */}
         {user!.role === "reader" && (
           <>
-          <label htmlFor="location" className="block text-sm font-medium text-gray-700 mb-1">{t('location')}</label>
-          <select name='location' className="w-full mb-2 p-2 border rounded" value={location} onChange={(e) => setLocation(e.target.value as Location)}>
-            <option value="Cairo">Cairo</option>
-            <option value="Giza">Giza</option>
-            <option value="Alexandria">Alexandria</option>
-            <option value="Dakahlia">Dakahlia</option>
-            <option value="Red Sea">Red Sea</option>
-            <option value="Beheira">Beheira</option>
-            <option value="Fayoum">Fayoum</option>
-            <option value="Gharbia">Gharbia</option>
-            <option value="Ismailia">Ismailia</option>
-            <option value="Monufia">Monufia</option>
-            <option value="Minya">Minya</option>
-            <option value="Qalyubia">Qalyubia</option>
-            <option value="New Valley">New Valley</option>
-            <option value="Suez">Suez</option>
-            <option value="Aswan">Aswan</option>
-            <option value="Assiut">Assiut</option>
-            <option value="Beni Suef">Beni Suef</option>
-            <option value="Damietta">Damietta</option>
-            <option value="Sharqia">Sharqia</option>
-            <option value="South Sinai">South Sinai</option>
-            <option value="Kafr El Sheikh">Kafr El Sheikh</option>
-            <option value="Matruh">Matruh</option>
-            <option value="Luxor">Luxor</option>
-            <option value="Sohag">Sohag</option>
-            <option value="North Sinai">North Sinai</option>
-          </select>
+            <label
+              htmlFor="location"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
+              {t("location")}
+            </label>
+            <select
+              title="location"
+              name="location"
+              className="w-full mb-2 p-2 border rounded"
+              value={location}
+              onChange={(e) => setLocation(e.target.value as Location)}
+            >
+              <option value="Cairo">Cairo</option>
+              <option value="Giza">Giza</option>
+              <option value="Alexandria">Alexandria</option>
+              <option value="Dakahlia">Dakahlia</option>
+              <option value="Red Sea">Red Sea</option>
+              <option value="Beheira">Beheira</option>
+              <option value="Fayoum">Fayoum</option>
+              <option value="Gharbia">Gharbia</option>
+              <option value="Ismailia">Ismailia</option>
+              <option value="Monufia">Monufia</option>
+              <option value="Minya">Minya</option>
+              <option value="Qalyubia">Qalyubia</option>
+              <option value="New Valley">New Valley</option>
+              <option value="Suez">Suez</option>
+              <option value="Aswan">Aswan</option>
+              <option value="Assiut">Assiut</option>
+              <option value="Beni Suef">Beni Suef</option>
+              <option value="Damietta">Damietta</option>
+              <option value="Sharqia">Sharqia</option>
+              <option value="South Sinai">South Sinai</option>
+              <option value="Kafr El Sheikh">Kafr El Sheikh</option>
+              <option value="Matruh">Matruh</option>
+              <option value="Luxor">Luxor</option>
+              <option value="Sohag">Sohag</option>
+              <option value="North Sinai">North Sinai</option>
+            </select>
           </>
         )}
 
@@ -211,7 +218,7 @@ export default function AddBookModal({ onClose, onAdd }: AddBookModalProps) {
           htmlFor="condition"
           className="block text-sm font-medium text-gray-700 mb-1"
         >
-          {t('condition')}
+          {t("condition")}
         </label>
         <select
           title="type condition"
@@ -220,28 +227,39 @@ export default function AddBookModal({ onClose, onAdd }: AddBookModalProps) {
           value={condition}
           onChange={(e) => setCondition(e.target.value as "new" | "used")}
         >
-          <option value="new">{s('new')}</option>
-          <option value="used">{s('used')}</option>
+          <option value="new">{s("new")}</option>
+          <option value="used">{s("used")}</option>
         </select>
         {/* genre */}
-        <label htmlFor="genre" className="block text-sm font-medium text-gray-700 mb-1">{t('genre')}</label>
-        <select name='genre' className="w-full mb-2 p-2 border rounded" value={genre} onChange={(e) => setGenre(e.target.value as Genre)}>
-          <option value="fiction">{s('fiction')}</option>
-          <option value="fantasy">{s('fantasy')}</option>
-          <option value="science fiction">{s('science fiction')}</option>
-          <option value="mystery & thriller">{s('mystery & thriller')}</option>
-          <option value="romance">{s('romance')}</option>
-          <option value="historical">{s('historical')}</option>
-          <option value="young adult">{s('young adult')}</option>
-          <option value="horror">{s('horror')}</option>
-          <option value="biography">{s('biography')}</option>
-          <option value="personal growth">{s('personal growth')}</option>
+        <label
+          htmlFor="genre"
+          className="block text-sm font-medium text-gray-700 mb-1"
+        >
+          {t("genre")}
+        </label>
+        <select
+          title="genre"
+          name="genre"
+          className="w-full mb-2 p-2 border rounded"
+          value={genre}
+          onChange={(e) => setGenre(e.target.value as Genre)}
+        >
+          <option value="fiction">{s("fiction")}</option>
+          <option value="fantasy">{s("fantasy")}</option>
+          <option value="science fiction">{s("science fiction")}</option>
+          <option value="mystery & thriller">{s("mystery & thriller")}</option>
+          <option value="romance">{s("romance")}</option>
+          <option value="historical">{s("historical")}</option>
+          <option value="young adult">{s("young adult")}</option>
+          <option value="horror">{s("horror")}</option>
+          <option value="biography">{s("biography")}</option>
+          <option value="personal growth">{s("personal growth")}</option>
         </select>
         {/* available for */}
         {user!.role === "reader" ? (
           <>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Available For
+              {s("avilable")}
             </label>
             <div className="flex items-center space-x-2 mt-1 mb-2">
               <div className="flex items-center space-x-2">
@@ -258,7 +276,7 @@ export default function AddBookModal({ onClose, onAdd }: AddBookModalProps) {
                   htmlFor="sell"
                   className="text-sm font-medium text-gray-700"
                 >
-                  Sell
+                  {s("sell")}
                 </label>
               </div>
               <div className="flex items-center space-x-2">
@@ -275,92 +293,38 @@ export default function AddBookModal({ onClose, onAdd }: AddBookModalProps) {
                   htmlFor="swap"
                   className="text-sm font-medium text-gray-700"
                 >
-                  Exchange
+                  {s("exchange")}
                 </label>
               </div>
             </div>
             {availableFor.includes("sell") && (
               <input
-                title="price of the book"
+                title={t("pricebook")}
                 type="number"
                 className="w-full mb-2 p-2 border rounded"
-                placeholder="Price"
+                placeholder={s("price")}
                 value={price}
                 onChange={(e) => setPrice(Number(e.target.value))}
               />
             )}
           </>
-        { user!.role === 'reader' ? (
-        <>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          {s('avilable')}
-        </label>
-        <div className="flex items-center space-x-2 mt-1 mb-2">
-          <div className="flex items-center space-x-2">
-            <input
-              type="checkbox"
-              id="sell"
-              className="appearance-none w-4 h-4 border-2 border-gray-300 rounded-sm checked:bg-[#4A4947] checked:border-[#4A4947] focus:outline-none"
-              checked={availableFor.includes("sell")}
-              onChange={(e) => handleCheckboxChange("sell", e.target.checked)}
-            />
-            <label htmlFor="sell" className="text-sm font-medium text-gray-700">
-              {s('sell')}
-            </label>
-          </div>
-          <div className="flex items-center space-x-2">
-            <input
-              type="checkbox"
-              id="swap"
-              className="appearance-none w-4 h-4 border-2 border-gray-300 rounded-sm checked:bg-[#4A4947] checked:border-[#4A4947] focus:outline-none"
-              checked={availableFor.includes("swap")}
-              onChange={(e) => handleCheckboxChange("swap", e.target.checked)}
-            />
-            <label htmlFor="swap" className="text-sm font-medium text-gray-700">
-              {s('exchange')}
-            </label>
-          </div>
-        </div>
-        {availableFor.includes("sell") && (
-          <input
-            title={t('pricebook')}
-            type="number"
-            className="w-full mb-2 p-2 border rounded"
-            placeholder={s('price')}
-            value={price}
-            onChange={(e) => setPrice(Number(e.target.value))}
-          />
-        )}
-        </>
         ) : (
           <>
             <label
               htmlFor="price"
               className="text-sm font-medium text-gray-700"
             >
-              Price
+              {s("price")}
             </label>
             <input
               id="price"
-              title="price of the book"
+              title={t("pricebook")}
               type="number"
               className="w-full mb-2 p-2 border rounded"
-              placeholder="Price"
+              placeholder={s("price")}
               value={price}
               onChange={(e) => setPrice(Number(e.target.value))}
             />
-          <label htmlFor="price" className="text-sm font-medium text-gray-700">
-            {s('price')}
-          </label>
-          <input
-            id="price"
-            title={t('pricebook')}
-            type="number"
-            className="w-full mb-2 p-2 border rounded"
-            placeholder={s('price')}
-            value={price}
-            onChange={(e) => setPrice(Number(e.target.value))}
-          />
           </>
         )}
         {/* quantity */}
@@ -370,21 +334,13 @@ export default function AddBookModal({ onClose, onAdd }: AddBookModalProps) {
               htmlFor="quantity"
               className="block text-sm font-medium text-gray-700 mb-1"
             >
-              Quantity
+              {t("quantity")}
             </label>
             <input
               id="quantity"
               type="number"
               className="w-full mb-2 p-2 border rounded"
-              placeholder="Quantity"
-          <label htmlFor="quantity" className="block text-sm font-medium text-gray-700 mb-1">
-            {t('quantity')}
-          </label>
-          <input
-            id="quantity"
-            type="number"
-            className="w-full mb-2 p-2 border rounded"
-            placeholder={t('quantity')}
+              placeholder={t("quantity")}
               value={quantity}
               onChange={(e) => setQuantity(Number(e.target.value))}
             />
@@ -395,7 +351,7 @@ export default function AddBookModal({ onClose, onAdd }: AddBookModalProps) {
           htmlFor="file"
           className="block text-sm font-medium text-gray-700 mb-1"
         >
-          {t('upload')}
+          {t("upload")}
         </label>
         <input
           id="file"
@@ -415,7 +371,7 @@ export default function AddBookModal({ onClose, onAdd }: AddBookModalProps) {
           htmlFor="files"
           className="block text-sm font-medium text-gray-700 mb-1"
         >
-          {t('uploads')}
+          {t("uploads")}
         </label>
         <input
           id="files"
@@ -439,7 +395,7 @@ export default function AddBookModal({ onClose, onAdd }: AddBookModalProps) {
           className="bg-[#a8775a] text-white w-full py-2 rounded hover:bg-[#946a52]"
           disabled={loading}
         >
-          {loading ? t('adding') : t('addBook')}
+          {loading ? t("adding") : t("addBook")}
         </button>
       </div>
     </div>
