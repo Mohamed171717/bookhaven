@@ -6,7 +6,6 @@ import { useCart } from "@/context/CartContext";
 import { FaTrash } from "react-icons/fa";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-
 import toast from "react-hot-toast";
 import { useTranslations } from "next-intl";
 // import { useBooks } from '@/context/BooksContext';
@@ -101,6 +100,7 @@ const CartPage = () => {
                           <span>{item.quantity}</span>
                           <button
                             className="px-2 bg-gray-200 rounded text-lg"
+                            // disabled={item.quantity >= Book.quantity}
                             onClick={() =>
                               updateQuantity(item.bookId, item.quantity + 1)
                             }
@@ -141,39 +141,43 @@ const CartPage = () => {
                       height={60}
                       className="rounded-md flex-shrink-0"
                     />
+                    {/* title */}
                     <div className="flex-1">
                       <div className="font-medium text-sm md:text-base">
                         {item.title}
                       </div>
+                      {/* author */}
                       <div className="text-xs text-gray-500">
                         {t('author')} {item.author}
                       </div>
+                      {/* price */}
                       <div className="text-sm font-medium mt-1">
                         {item.price!.toFixed(2)} EGP
                       </div>
-
                       <div className="flex items-center justify-between mt-3">
-                        <div className="flex items-center gap-2">
-                          <button
-                            className="px-2 bg-gray-200 rounded text-sm"
-                            onClick={() =>
-                              updateQuantity(item.bookId, item.quantity - 1)
-                            }
-                            disabled={item.quantity <= 1}
-                          >
-                            −
-                          </button>
-                          <span className="text-sm">{item.quantity}</span>
-                          <button
-                            className="px-2 bg-gray-200 rounded text-sm"
-                            // disabled={item.quantity >= book.quantity}
-                            onClick={() =>
-                              updateQuantity(item.bookId, item.quantity + 1)
-                            }
-                          >
-                            +
-                          </button>
-                        </div>
+                        {/* quantity */}
+                          <div className="flex items-center gap-2">
+                            <button
+                              className="px-2 bg-gray-200 rounded text-sm"
+                              onClick={() =>
+                                updateQuantity(item.bookId, item.quantity - 1)
+                              }
+                              disabled={item.quantity <= 1}
+                            >
+                              −
+                            </button>
+                            <span className="text-sm">{item.quantity}</span>
+                            <button
+                              className="px-2 bg-gray-200 rounded text-sm"
+                              // disabled={item.quantity >= book.quantity}
+                              onClick={() =>
+                                updateQuantity(item.bookId, item.quantity + 1)
+                              }
+                            >
+                              +
+                            </button>
+                          </div>
+                        {/* total price */}
                         <div className="flex items-center gap-2">
                           <span className="text-sm font-medium">
                             {(item.price! * item.quantity).toFixed(2)} EGP
