@@ -38,7 +38,7 @@ export default function AuthPage() {
 
   // Regex patterns for validation
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{12,}$/;
+  const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d).{5,}$/;
   const nameRegex = /^[a-zA-Z\s]{2,50}$/;
 
   // Real-time validation functions
@@ -169,7 +169,7 @@ export default function AuthPage() {
         }
 
         toast.success('Logged in successfully!!');
-        router.push(`/`);
+        router.replace(`/`);
       } else {
         toast.error("User document not found.");
       }

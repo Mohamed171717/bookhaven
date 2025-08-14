@@ -172,13 +172,13 @@ export default function BookDetailsPage() {
         <div className="flex flex-col gap-2 lg:w-1/2">
           <h2 className="text-2xl font-semibold">{book.title}</h2>
           <p className="text-sm text-gray-500 font-semibold">
-            {t("author")} {book.author}
+            {t("author:")} {book.author}
           </p>
           <p className="text-sm text-gray-500 font-semibold">
-            {t("genre")} {book.genre}
+            {t("genre:")} {book.genre}
           </p>
           <p className="text-sm text-gray-500 font-semibold">
-            {t("condition")} {book.condition}
+            {t("condition:")} {book.condition}
           </p>
 
           {bookOwner?.role === "library" && (
@@ -242,6 +242,12 @@ export default function BookDetailsPage() {
         </div>
       </div>
       <div className="flex flex-col lg:flex-row gap-10 pb-16 container mx-auto px-20">
+        <ReviewSection
+          targetId={book.ownerId}
+          targetUser={bookOwner}
+          currentUserId={user?.uid}
+          type="user"
+        />
         {bookOwner?.role === "library" && (
           <ReviewSection
             targetId={book.id}
@@ -250,12 +256,6 @@ export default function BookDetailsPage() {
             type="book"
           />
         )}
-        <ReviewSection
-          targetId={book.ownerId}
-          targetUser={bookOwner}
-          currentUserId={user?.uid}
-          type="user"
-        />
       </div>
       {/* dialog request swap */}
       {/* <SwapRequestModal
