@@ -4,10 +4,11 @@
 import { useTranslations } from "next-intl";
 
 const priceOptions = [
-  { label: '0 EGP - 50 EGP', value: '0-50' },
+  { label: 'Untill 50 EGP', value: '0-50' },
   { label: '50 EGP - 100 EGP', value: '50-100' },
   { label: '100 EGP - 150 EGP', value: '100-150' },
   { label: '150 EGP - 200 EGP', value: '150-200' },
+  { label: 'More than 200 EGP', value: '200-200000' },
 ];
 
 interface Props {

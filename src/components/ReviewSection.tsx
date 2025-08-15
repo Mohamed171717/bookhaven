@@ -25,6 +25,7 @@ interface ReviewSectionProps {
   currentUserId: string | undefined; // Reviewer ID (current logged in user)
   type: "book" | "user";
   targetUser: UserType | undefined;
+  onRatingUpdate?: (newAverage: number, newTotal: number) => void;
 }
 
 export default function ReviewSection({
@@ -32,6 +33,7 @@ export default function ReviewSection({
   currentUserId,
   type,
   targetUser,
+  onRatingUpdate
 }: ReviewSectionProps) {
   const [rating, setRating] = useState(0);
   const [hoveredStar, setHoveredStar] = useState(0);
@@ -138,23 +140,43 @@ export default function ReviewSection({
       createdAt: Timestamp.now(),
     };
 
-    await submitReview(targetId, reviewData, type);
+    const { newAverage, newTotalRatings } = await submitReview(targetId, reviewData, type);
     toast.success("Review submitted!");
 
     setRating(0);
     setComment("");
     setHasReviewed(true);
 
-    // Refresh review list
-    const q = query(
-      collection(db, "reviews"),
-      where("targetId", "==", targetId)
-    );
-    const snapshot = await getDocs(q);
-    const data = snapshot.docs.map(
-      (doc) => ({ ...doc.data(), reviewId: doc.id } as ReviewWithUser)
-    );
-    setReviews(data);
+     // Get current reviewer info (instead of using targetUser)
+    let reviewerName = "You";
+    let reviewerPhoto = "/default-avatar.png";
+    const userDoc = await getDoc(doc(db, "users", currentUserId));
+    if (userDoc.exists()) {
+      const userData = userDoc.data() as UserType;
+      reviewerName = userData.name || reviewerName;
+      reviewerPhoto = userData.photoUrl || reviewerPhoto;
+    }
+
+    setReviews(prev => [
+      ...prev,
+      {
+        ...reviewData,
+        reviewerName,
+        reviewerPhoto,
+      }
+    ]);
+
+    // Update local targetUser or book rating without refetch
+    if (targetUser) {
+      targetUser.averageRating = newAverage;
+      targetUser.totalRatings = newTotalRatings;
+    }
+
+    if (onRatingUpdate) {
+      onRatingUpdate(newAverage, newTotalRatings);
+    }
+
+
   };
 
   // const avgRating = reviews.length

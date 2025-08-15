@@ -245,6 +245,9 @@ export default function BookDetailsPage() {
         <ReviewSection
           targetId={book.ownerId}
           targetUser={bookOwner}
+          onRatingUpdate={(avg, total) => {
+            setBookOwner(prev => prev ? { ...prev, averageRating: avg, totalRatings: total } : prev);
+          }}
           currentUserId={user?.uid}
           type="user"
         />
@@ -252,6 +255,9 @@ export default function BookDetailsPage() {
           <ReviewSection
             targetId={book.id}
             targetUser={bookOwner}
+            onRatingUpdate={(avg, total) => {
+              setBook(prev => prev ? { ...prev, averageRating: avg, totalRatings: total } : prev);
+            }}
             currentUserId={user?.uid}
             type="book"
           />

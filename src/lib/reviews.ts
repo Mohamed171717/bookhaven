@@ -1,6 +1,6 @@
 
 import { db } from './firebase';
-import { doc, getDoc, updateDoc, addDoc, Timestamp, collection } from 'firebase/firestore';
+import { doc, updateDoc, Timestamp, collection, getDoc, addDoc } from 'firebase/firestore';
 
 export interface Review {
   reviewId: string;
@@ -12,9 +12,9 @@ export interface Review {
 }
 
 export const submitReview = async (targetId: string, reviewData: Omit<Review, 'reviewId'>, type: 'book' | 'user') => {
-  const reviewRef = collection(db, 'reviews');
-
+  
   // 1. Add the review
+  const reviewRef = collection(db, 'reviews');
   await addDoc(reviewRef, reviewData);
 
   // 2. Decide which collection to update
@@ -27,12 +27,12 @@ export const submitReview = async (targetId: string, reviewData: Omit<Review, 'r
 
   // 3. Calculate new average
   const newTotalRatings = prevTotalRatings + 1;
-  const newAverage =
-    (prevAverage * prevTotalRatings + reviewData.rating) / newTotalRatings;
+  const newAverage = (prevAverage * prevTotalRatings + reviewData.rating) / newTotalRatings;
 
   // 4. Update book or user doc
   await updateDoc(targetRef, {
     averageRating: newAverage,
     totalRatings: newTotalRatings,
   });
+  return { newAverage, newTotalRatings };
 };

@@ -261,8 +261,8 @@ export default function AddBookModal({ onClose, onAdd }: AddBookModalProps) {
             <label className="block text-sm font-medium text-gray-700 mb-1">
               {s("avilable")}
             </label>
-            <div className="flex items-center space-x-2 mt-1 mb-2">
-              <div className="flex items-center space-x-2">
+            <div className="flex items-center gap-3 mt-1 mb-2">
+              <div className="flex items-center gap-1">
                 <input
                   type="checkbox"
                   id="sell"
@@ -279,7 +279,7 @@ export default function AddBookModal({ onClose, onAdd }: AddBookModalProps) {
                   {s("sell")}
                 </label>
               </div>
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center gap-1">
                 <input
                   type="checkbox"
                   id="swap"

@@ -140,8 +140,8 @@ export default function EditProfileModal({ onClose, onUpdate }: Props) {
         )}
 
         <div className="flex justify-end gap-3">
-          <button onClick={handleUpdate} className="px-4 py-2 rounded bg-btn-color text-gray-50 hover:bg-[#4A4947] transition text-sm">{t('save')}</button>
-          <button onClick={onClose} className="px-4 py-2 rounded text-gray-50 bg-[#d63d3d] hover:bg-[#b33333] text-sm">{t('cancel')}</button>
+          <button onClick={handleUpdate} className="px-4 py-2 rounded-full bg-btn-color text-gray-50 hover:bg-[#4A4947] transition text-sm">{t('save')}</button>
+          <button onClick={onClose} className="px-4 py-2 rounded-full text-gray-50 bg-[#d63d3d] hover:bg-[#b33333] text-sm">{t('cancel')}</button>
         </div>
       </div>
     </div>

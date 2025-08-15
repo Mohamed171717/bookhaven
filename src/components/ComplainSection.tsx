@@ -14,6 +14,8 @@ type ComplainType = "user" | "book";
 export default function ComplaintSection() {
   const t = useTranslations("HomePage");
   const { user } = useAuth();
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
   const [desc, setDesc] = useState("");
   const [complainType, setComplainType] = useState<ComplainType>("user");
   const [file, setFile] = useState<File | null>(null);
@@ -28,7 +30,7 @@ export default function ComplaintSection() {
     setLoading(true);
 
     try {
-      if (!desc || !file) {
+      if (!desc || !file || !name || !email) {
         toast.error("Please fill in all fields.");
         setLoading(false);
         return;
@@ -39,8 +41,8 @@ export default function ComplaintSection() {
 
       await addDoc(collection(db, "complains"), {
         userId: user?.uid,
-        name: user?.name,
-        email: user?.email,
+        name,
+        email,
         description: desc,
         complainType,
         image: imageUrl,
@@ -48,6 +50,8 @@ export default function ComplaintSection() {
       });
 
       toast.success("Complaint submitted successfully!");
+      setName("");
+      setEmail("");
       setDesc("");
       setFile(null);
     } catch (error) {
@@ -69,8 +73,29 @@ export default function ComplaintSection() {
 
         <form
           onSubmit={handleSubmit}
-          className="max-w-lg mx-auto bg-card-bg p-6 rounded-lg shadow-lg space-y-3 text-gray-800"
+          className="max-w-lg mx-auto bg-card-bg p-6 rounded-lg shadow-lg text-gray-800"
         >
+          {/* name*/}
+          <label className="text-md font-semibold text-gray-600">{t("name")}</label>
+          <input
+            type="text"
+            placeholder={t("namePlaceholder")}
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            required
+            className="w-full px-4 resize-none mb-4 py-3 border rounded-lg focus:outline-none"
+          />
+          {/* email */}
+          <label className="text-md font-semibold text-gray-600">{t("email")}</label>
+          <input
+            type="email"
+            placeholder={t("emailPlaceholder")}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            className="w-full px-4 resize-none py-3 mb-4 border rounded-lg focus:outline-none"
+          />
+          {/* desc */}
           <label className="text-md font-semibold text-gray-600">{t("complainPlaceholder")}</label>
           <textarea
             placeholder={t("descPlaceholder")}
@@ -78,9 +103,9 @@ export default function ComplaintSection() {
             onChange={(e) => setDesc(e.target.value)}
             required
             rows={4}
-            className="w-full px-4 resize-none py-3 border rounded-lg focus:outline-none"
+            className="w-full px-4 resize-none py-3 mb-4 border rounded-lg focus:outline-none"
           ></textarea>
-          <div style={{marginBottom: '12px'}} className="flex items-center space-x-4">
+          <div style={{marginBottom: '15px'}} className="flex items-center space-x-2">
             <label className="text-md py-2 font-semibold text-gray-600">
               {t("complaintType")}
             </label>
@@ -104,7 +129,7 @@ export default function ComplaintSection() {
                 setFile(selected);
               }
             }}
-            className="w-full px-4 pt-1 pb-3 mt-1 border rounded-lg focus:outline-none"
+            className="w-full px-4 py-2 mb-4 mt-1 border rounded-lg focus:outline-none"
           />
 
           <button

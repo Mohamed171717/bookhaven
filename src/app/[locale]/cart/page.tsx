@@ -8,13 +8,13 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { useTranslations } from "next-intl";
-// import { useBooks } from '@/context/BooksContext';
+import { useBooks } from '@/context/BooksContext';
 
 const CartPage = () => {
   const { cart, removeFromCart, updateQuantity, clearCart } = useCart();
   const t = useTranslations('CartPage');
   const router = useRouter();
-  // const { books } = useBooks();
+  const { books } = useBooks();
   const subTotal = cart.reduce(
     (sum, item) => sum + item.price! * item.quantity,
     0
@@ -66,8 +66,11 @@ const CartPage = () => {
                       </td>
                     </tr>
                   )}
-                  {cart.map((item) => (
-                    <tr key={item.bookId} className="border-b">
+                  {cart.map((item) => {
+                    const book = books.find(b => b.id == item.bookId);
+                    if (!book?.quantity) return null
+                      return(
+                      <tr key={item.bookId} className="border-b">
                       <td className="p-4 flex gap-4 items-center">
                         <Image
                           src={item.coverImage}
@@ -100,7 +103,7 @@ const CartPage = () => {
                           <span>{item.quantity}</span>
                           <button
                             className="px-2 bg-gray-200 rounded text-lg"
-                            // disabled={item.quantity >= Book.quantity}
+                            disabled={item.quantity >= book.quantity}
                             onClick={() =>
                               updateQuantity(item.bookId, item.quantity + 1)
                             }
@@ -121,14 +124,19 @@ const CartPage = () => {
                         </button>
                       </td>
                     </tr>
-                  ))}
+                    )
+                  }
+                  )}
                 </tbody>
               </table>
             </div>
 
             {/* Mobile Cart Items */}
             <div className="md:hidden space-y-4">
-              {cart.map((item) => (
+              {cart.map((item) => {
+                const book = books.find(b => b.id == item.bookId);
+                if (!book?.quantity) return null
+                return (
                 <div
                   key={item.bookId}
                   className="bg-gray-100 rounded-lg p-4 shadow-md"
@@ -169,7 +177,7 @@ const CartPage = () => {
                             <span className="text-sm">{item.quantity}</span>
                             <button
                               className="px-2 bg-gray-200 rounded text-sm"
-                              // disabled={item.quantity >= book.quantity}
+                              disabled={item.quantity >= book.quantity}
                               onClick={() =>
                                 updateQuantity(item.bookId, item.quantity + 1)
                               }
@@ -193,7 +201,7 @@ const CartPage = () => {
                     </div>
                   </div>
                 </div>
-              ))}
+              )})}
             </div>
 
             {/* Clear All Button */}
