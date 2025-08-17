@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from "react";
@@ -18,6 +17,7 @@ export default function ComplaintSection() {
   const [complainType, setComplainType] = useState<ComplainType>("user");
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
+  const [email, setEmail] = useState("");
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -35,12 +35,11 @@ export default function ComplaintSection() {
       }
       const imageUrl = await uploadImageToImageKit(file);
       if (!imageUrl) return alert("Failed to upload image");
-    
 
       await addDoc(collection(db, "complains"), {
         userId: user?.uid,
-        name: user?.name,
-        email: user?.email,
+        reporter: user?.email,
+        reportedTo: email,
         description: desc,
         complainType,
         image: imageUrl,
@@ -49,6 +48,7 @@ export default function ComplaintSection() {
 
       toast.success("Complaint submitted successfully!");
       setDesc("");
+      setEmail("");
       setFile(null);
     } catch (error) {
       console.error("Error submitting complaint:", error);
@@ -71,22 +71,44 @@ export default function ComplaintSection() {
           onSubmit={handleSubmit}
           className="max-w-lg mx-auto bg-card-bg p-6 rounded-lg shadow-lg space-y-3 text-gray-800"
         >
-          <label className="text-md font-semibold text-gray-600">{t("complainPlaceholder")}</label>
+          <label className="text-md font-semibold text-gray-600">
+            {t("complainPlaceholder")}
+          </label>
           <textarea
             placeholder={t("descPlaceholder")}
             value={desc}
             onChange={(e) => setDesc(e.target.value)}
             required
             rows={4}
-            className="w-full px-4 resize-none py-3 border rounded-lg focus:outline-none"
+            className="w-full px-4 resize-none py-3 border rounded-lg focus:outline-none mb-3"
           ></textarea>
-          <div style={{marginBottom: '12px'}} className="flex items-center space-x-4">
+          <label
+            htmlFor="email"
+            className="text-md font-semibold text-gray-600 mt-4"
+          >
+            Enter email the person you want to report
+          </label>
+          <input
+            placeholder="spammer@gmail.com"
+            className="w-full px-4 py-2 border rounded-lg focus:outline-none"
+            title="email"
+            type="email"
+            name=""
+            id="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <div
+            style={{ marginBottom: "12px" }}
+            className="flex items-center space-x-4"
+          >
             <label className="text-md py-2 font-semibold text-gray-600">
               {t("complaintType")}
             </label>
             <select
+              title="Complain Type"
               value={complainType}
-              style={{marginRight: '10px'}}
+              style={{ marginRight: "10px" }}
               onChange={(e) => setComplainType(e.target.value as ComplainType)}
               className="px-4 py-2 border rounded-lg focus:outline-none"
             >
@@ -94,8 +116,11 @@ export default function ComplaintSection() {
               <option value="book">{t("complaintTypeBook")}</option>
             </select>
           </div>
-          <label className="text-md font-semibold text-gray-600">{t('imagePlaceholder')}</label>
+          <label className="text-md font-semibold text-gray-600">
+            {t("imagePlaceholder")}
+          </label>
           <input
+            title="Image"
             type="file"
             accept="image/*"
             onChange={(e) => {

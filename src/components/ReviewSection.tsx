@@ -1,18 +1,25 @@
 "use client";
 
-import { useEffect, useState } from 'react';
-import { collection, query, where, getDocs, Timestamp, } from 'firebase/firestore';
-import { db } from '@/lib/firebase';
-import { Star } from 'lucide-react';
-import clsx from 'clsx';
-import { v4 as uuid } from 'uuid';
-import toast from 'react-hot-toast';
-import { Review, submitReview } from '@/lib/reviews';
-import { UserType } from '@/types/UserType';
-import Image from 'next/image';
-import { FaRegStar, FaStar } from 'react-icons/fa';
-import { useTranslations } from 'next-intl';
-import { CartItem } from '@/types/CartType';
+import { useEffect, useState } from "react";
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  Timestamp,
+} from "firebase/firestore";
+import { db } from "@/lib/firebase";
+import { Star } from "lucide-react";
+import clsx from "clsx";
+import { v4 as uuid } from "uuid";
+import toast from "react-hot-toast";
+import { Review, submitReview } from "@/lib/reviews";
+import { UserType } from "@/types/UserType";
+import Image from "next/image";
+import { FaRegStar, FaStar } from "react-icons/fa";
+import { useTranslations } from "next-intl";
+import { CartItem } from "@/types/CartType";
+import Link from "next/link";
 // import StartChatButton from './chat/StartChatButton';
 
 interface ReviewSectionProps {
@@ -34,7 +41,7 @@ export default function ReviewSection({
   const [reviews, setReviews] = useState<Review[]>([]);
   const [hasReviewed, setHasReviewed] = useState(false);
   const [hasPurchased, setHasPurchased] = useState(false);
-  const t = useTranslations('ShopPage');
+  const t = useTranslations("ShopPage");
 
   // Fetch reviews for this target
   useEffect(() => {
@@ -79,7 +86,6 @@ export default function ReviewSection({
     checkPurchase();
   }, [currentUserId, targetId, type]);
 
-
   // handle review request
   const handleSubmit = async () => {
     if (!currentUserId) return toast.error("Please login to submit a review.");
@@ -119,21 +125,29 @@ export default function ReviewSection({
     : 0;
 
   return (
-    <div className={`bg-card-bg border ${ type === 'book' ? 'flex-1' : 'flex-2 h-fit'} p-4 mt-6 rounded-2xl shadow space-y-4`}>
-      {type === 'user' && targetUser && (
-      <div className="space-y-6">
-        {/* User Info */}
-        <div className="flex justify-between items-center gap-3">
-          <div className='flex items-center gap-3'>
-            <Image
-              src={targetUser.photoUrl}
-              alt="User"
-              width={50}
-              height={50}
-              className="rounded-full w-12 h-12"
-              />
+    <div
+      className={`bg-card-bg border ${
+        type === "book" ? "flex-1" : "flex-2 h-fit"
+      } p-4 mt-6 rounded-2xl shadow space-y-4`}
+    >
+      {type === "user" && targetUser && (
+        <div className="space-y-6">
+          {/* User Info */}
+          <div className="flex justify-between items-center gap-3">
+            <div className="flex items-center gap-3">
+              <Link href={`/user/${targetUser.uid}`}>
+                <Image
+                  src={targetUser.photoUrl}
+                  alt="User"
+                  width={50}
+                  height={50}
+                  className="rounded-full w-12 h-12"
+                />
+              </Link>
               <div>
-                <p className="font-semibold">{targetUser.name}</p>
+                <Link href={`/user/${targetUser.uid}`}>
+                  <p className="font-semibold">{targetUser.name}</p>
+                </Link>
                 <p className="font-medium text-sm text-gray-500">
                   {targetUser.bio}
                 </p>
@@ -155,72 +169,72 @@ export default function ReviewSection({
             </div>
           </div>
 
-        {hasReviewed ? (
-          <p className="text-green-600 font-medium mr-48">{t('userReview')}</p>
-        ) : (
-          <>
-          { hasPurchased && (
-            <div className='flex justify-between items-center gap-3'>
-              <div className="flex gap-1 mr-32">
-                <p className='font-medium mr-1'>{t('rateOwner')}</p>
-                {[1, 2, 3, 4, 5].map((i) => (
-                  <Star
-                    key={i}
-                    className={clsx(
-                      'w-5 h-5 cursor-pointer transition',
-                      i <= (hoveredStar || rating)
-                        ? 'fill-yellow-400 text-yellow-500'
-                        : 'text-gray-500'
-                    )}
-                    onClick={() => setRating(i)}
-                    onMouseEnter={() => setHoveredStar(i)}
-                    onMouseLeave={() => setHoveredStar(0)}
-                  />
-                ))}
-              </div>
-              <div>
-                <button
-                  onClick={handleSubmit}
-                  disabled={currentUserId === targetId}
-                  className="bg-btn-color disabled:bg-[#b17457c0] text-[15px] hover:bg-[#a16950] text-gray-50 py-2 px-4 mr-1 rounded-full transition duration-300"
-                >
-                  {t('rate')}
-                </button>
-              </div>
-            </div>
-          )}
-          {!hasPurchased && (
-            <p className="text-gray-500 text-sm">
-              You can only review this user after purchasing his items.
+          {hasReviewed ? (
+            <p className="text-green-600 font-medium mr-48">
+              {t("userReview")}
             </p>
+          ) : (
+            <>
+              {hasPurchased && (
+                <div className="flex justify-between items-center gap-3">
+                  <div className="flex gap-1 mr-32">
+                    <p className="font-medium mr-1">{t("rateOwner")}</p>
+                    {[1, 2, 3, 4, 5].map((i) => (
+                      <Star
+                        key={i}
+                        className={clsx(
+                          "w-5 h-5 cursor-pointer transition",
+                          i <= (hoveredStar || rating)
+                            ? "fill-yellow-400 text-yellow-500"
+                            : "text-gray-500"
+                        )}
+                        onClick={() => setRating(i)}
+                        onMouseEnter={() => setHoveredStar(i)}
+                        onMouseLeave={() => setHoveredStar(0)}
+                      />
+                    ))}
+                  </div>
+                  <div>
+                    <button
+                      onClick={handleSubmit}
+                      disabled={currentUserId === targetId}
+                      className="bg-btn-color disabled:bg-[#b17457c0] text-[15px] hover:bg-[#a16950] text-gray-50 py-2 px-4 mr-1 rounded-full transition duration-300"
+                    >
+                      {t("rate")}
+                    </button>
+                  </div>
+                </div>
+              )}
+              {!hasPurchased && (
+                <p className="text-gray-500 text-sm">
+                  You can only review this user after purchasing his items.
+                </p>
+              )}
+            </>
           )}
-          </>
-        )}
-        {/* <StartChatButton currentUserId={currentUserId} otherUserId={targetId}/> */}
-      </div>
+          {/* <StartChatButton currentUserId={currentUserId} otherUserId={targetId}/> */}
+        </div>
       )}
 
       {type === "book" && (
         <div className="space-y-4">
           {/* Book Review Title */}
           <h3 className="text-xl font-semibold">
-            {t('leaveReview')} ({reviews.length})
+            {t("leaveReview")} ({reviews.length})
           </h3>
 
           <p className="text-yellow-600 font-medium">
-            {t('rating')} {avgRating.toFixed(1)} / 5.0
+            {t("rating")} {avgRating.toFixed(1)} / 5.0
           </p>
 
           {/* Review Form */}
           {hasReviewed ? (
-            <p className="text-green-600 font-medium">
-              {t('BookReview')}
-            </p>
-            ) : (
-              <>
-              { hasPurchased && (
+            <p className="text-green-600 font-medium">{t("BookReview")}</p>
+          ) : (
+            <>
+              {hasPurchased && (
                 <div className="space-y-2">
-                  <p className="font-medium">{t('leaveReview')}</p>
+                  <p className="font-medium">{t("leaveReview")}</p>
 
                   {/* Star Rating UI */}
                   <div className="flex gap-1">
@@ -245,7 +259,7 @@ export default function ReviewSection({
                     type="text"
                     value={comment}
                     onChange={(e) => setComment(e.target.value)}
-                    placeholder= {t('writeComment')}
+                    placeholder={t("writeComment")}
                     className="w-full p-2 border rounded-md"
                   />
 
@@ -254,7 +268,7 @@ export default function ReviewSection({
                     disabled={currentUserId === targetUser!.uid}
                     className="bg-btn-color disabled:bg-[#b17457c0] text-[15px] hover:bg-[#a16950] text-gray-50 py-2 px-4 rounded-full transition duration-300"
                   >
-                    {t('submitReview')}
+                    {t("submitReview")}
                   </button>
                 </div>
               )}
@@ -263,14 +277,16 @@ export default function ReviewSection({
                   You can only review this book after purchasing it.
                 </p>
               )}
-              </>
-            )
-          }
+            </>
+          )}
 
           {/* Review List */}
           <div className="mt-4 space-y-4">
             {reviews.map((r) => (
-              <div key={r.reviewId} className="border border-gray-300 p-3 rounded-md">
+              <div
+                key={r.reviewId}
+                className="border border-gray-300 p-3 rounded-md"
+              >
                 <div className="flex items-center gap-2">
                   {[1, 2, 3, 4, 5].map((i) => (
                     <Star
