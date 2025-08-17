@@ -43,8 +43,6 @@ export default function ReviewSection({
   const [hasPurchased, setHasPurchased] = useState(false);
   const t = useTranslations('ShopPage');
 
-
-
   // Fetch reviews for this target
   useEffect(() => {
     const fetchReviews = async () => {

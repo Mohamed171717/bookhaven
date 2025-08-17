@@ -10,6 +10,7 @@ import { useAuth } from "@/context/AuthContext";
 import toast from "react-hot-toast";
 import { BookType, Genre, Location } from "@/types/BookType";
 import { useTranslations } from "next-intl";
+import { FiUpload } from "react-icons/fi";
 
 interface AddBookModalProps {
   onClose: () => void;
@@ -135,7 +136,7 @@ export default function AddBookModal({ onClose, onAdd }: AddBookModalProps) {
         </label>
         <input
           name="title"
-          className="w-full mb-2 p-2 border rounded"
+          className="w-full mb-2 p-2 border rounded-lg"
           placeholder={t("exTitle")}
           value={title}
           onChange={(e) => setTitle(e.target.value)}
@@ -149,7 +150,7 @@ export default function AddBookModal({ onClose, onAdd }: AddBookModalProps) {
         </label>
         <input
           name="author"
-          className="w-full mb-2 p-2 border rounded"
+          className="w-full mb-2 p-2 border rounded-lg"
           placeholder={t("exAuthor")}
           value={author}
           onChange={(e) => setAuthor(e.target.value)}
@@ -163,7 +164,7 @@ export default function AddBookModal({ onClose, onAdd }: AddBookModalProps) {
         </label>
         <textarea
           name="description"
-          className="w-full mb-2 p-2 border rounded"
+          className="w-full mb-2 p-2 border rounded-lg"
           placeholder={t("preifDesc")}
           value={description}
           onChange={(e) => setDescription(e.target.value)}
@@ -180,7 +181,7 @@ export default function AddBookModal({ onClose, onAdd }: AddBookModalProps) {
             <select
               title="location"
               name="location"
-              className="w-full mb-2 p-2 border rounded"
+              className="w-full mb-2 p-2 border rounded-lg"
               value={location}
               onChange={(e) => setLocation(e.target.value as Location)}
             >
@@ -223,7 +224,7 @@ export default function AddBookModal({ onClose, onAdd }: AddBookModalProps) {
         <select
           title="type condition"
           name="condition"
-          className="w-full mb-2 p-2 border rounded"
+          className="w-full mb-2 p-2 border rounded-lg"
           value={condition}
           onChange={(e) => setCondition(e.target.value as "new" | "used")}
         >
@@ -240,7 +241,7 @@ export default function AddBookModal({ onClose, onAdd }: AddBookModalProps) {
         <select
           title="genre"
           name="genre"
-          className="w-full mb-2 p-2 border rounded"
+          className="w-full mb-2 p-2 border rounded-lg"
           value={genre}
           onChange={(e) => setGenre(e.target.value as Genre)}
         >
@@ -301,7 +302,7 @@ export default function AddBookModal({ onClose, onAdd }: AddBookModalProps) {
               <input
                 title={t("pricebook")}
                 type="number"
-                className="w-full mb-2 p-2 border rounded"
+                className="w-full mb-2 p-2 border rounded-lg"
                 placeholder={s("price")}
                 value={price}
                 onChange={(e) => setPrice(Number(e.target.value))}
@@ -320,7 +321,7 @@ export default function AddBookModal({ onClose, onAdd }: AddBookModalProps) {
               id="price"
               title={t("pricebook")}
               type="number"
-              className="w-full mb-2 p-2 border rounded"
+              className="w-full mb-2 p-2 border rounded-lg"
               placeholder={s("price")}
               value={price}
               onChange={(e) => setPrice(Number(e.target.value))}
@@ -339,7 +340,7 @@ export default function AddBookModal({ onClose, onAdd }: AddBookModalProps) {
             <input
               id="quantity"
               type="number"
-              className="w-full mb-2 p-2 border rounded"
+              className="w-full mb-2 p-2 border rounded-lg"
               placeholder={t("quantity")}
               value={quantity}
               onChange={(e) => setQuantity(Number(e.target.value))}
@@ -349,16 +350,17 @@ export default function AddBookModal({ onClose, onAdd }: AddBookModalProps) {
         {/* upload image */}
         <label
           htmlFor="file"
-          className="block text-sm font-medium text-gray-700 mb-1"
+          className="flex items-center w-full mb-3 mt-1 bg-white transition gap-2 px-4 py-2 border rounded-lg cursor-pointer hover:bg-gray-50"
         >
-          {t("upload")}
+          <FiUpload className="text-xl" />
+          <span>{file ? file.name : t("upload")}</span>
         </label>
         <input
           id="file"
           title="upload the book image"
           type="file"
           accept="image/*"
-          className="w-full mb-3 p-2 border rounded"
+          className="hidden"
           onChange={(e) => {
             const selected = e.target.files?.[0];
             if (selected) {
@@ -369,9 +371,10 @@ export default function AddBookModal({ onClose, onAdd }: AddBookModalProps) {
         {/* upload images */}
         <label
           htmlFor="files"
-          className="block text-sm font-medium text-gray-700 mb-1"
+          className="flex items-center w-full mb-3 mt-1 bg-white transition gap-2 px-4 py-2 border rounded-lg cursor-pointer hover:bg-gray-50"
         >
-          {t("uploads")}
+          <FiUpload className="text-xl" />
+          <span>{file ? file.name : t("uploads")}</span>
         </label>
         <input
           id="files"
@@ -379,7 +382,7 @@ export default function AddBookModal({ onClose, onAdd }: AddBookModalProps) {
           type="file"
           multiple
           accept="image/*"
-          className="w-full mb-3 p-2 border rounded"
+          className="hidden"
           onChange={(e) => {
             const selectedFiles = Array.from(e.target.files || []);
             if (selectedFiles.length > 4) {
@@ -392,7 +395,7 @@ export default function AddBookModal({ onClose, onAdd }: AddBookModalProps) {
 
         <button
           onClick={handleAddBook}
-          className="bg-[#a8775a] text-white w-full py-2 rounded hover:bg-[#946a52]"
+          className="bg-[#a8775a] text-white w-full py-2 rounded-lg hover:bg-[#946a52]"
           disabled={loading}
         >
           {loading ? t("adding") : t("addBook")}

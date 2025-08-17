@@ -8,6 +8,7 @@ import { db } from '@/lib/firebase';
 import { UserType } from '@/types/UserType';
 import { uploadImageToImageKit } from '@/app/[locale]/utils/imagekitUpload';
 import { useTranslations } from 'next-intl';
+import { FiUpload } from 'react-icons/fi';
 
 interface Props {
   onClose: () => void;
@@ -80,7 +81,7 @@ export default function EditProfileModal({ onClose, onUpdate }: Props) {
           placeholder={t('name')}
           value={name}
           onChange={e => setName(e.target.value)}
-          className="w-full border px-4 py-2 rounded mb-3"
+          className="w-full border px-4 py-2 rounded-lg mb-3"
         />
         {/* bio */}
         <label htmlFor="bio" className="block text-sm font-medium text-gray-700 mb-1">{t('bio')}</label>
@@ -102,16 +103,23 @@ export default function EditProfileModal({ onClose, onUpdate }: Props) {
               placeholder={t('address')}
               value={user!.address || ''}
               onChange={e => setAddress(e.target.value)}
-              className="w-full border px-4 py-2 rounded mb-3"
+              className="w-full border px-4 py-2 rounded-lg mb-3"
             />
           </>
         )}
         {/* uploud file */}
-        <label htmlFor="file" className="block text-sm font-medium text-gray-700 mb-1">{t('uploadProfile')}</label>
+        <label
+          htmlFor="file"
+          className="flex items-center w-full mb-3 mt-1 bg-white transition gap-2 px-4 py-2 border rounded-lg cursor-pointer hover:bg-gray-50"
+        >
+          <FiUpload className="text-xl" />
+          <span>{photoUrl ? photoUrl.name : t('uploadProfile')}</span>
+        </label>
         <input
+          id='file'
           type="file"
           accept="image/*"
-          className="w-full mb-3 p-2 border rounded"
+          className="hidden"
           onChange={(e) => {
             const selected = e.target.files?.[0];
             if (selected) {

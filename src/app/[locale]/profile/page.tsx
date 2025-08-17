@@ -308,11 +308,11 @@ export default function ProfilePage() {
               {t("tran")}
             </h3>
 
-            <h4 className='font-medium mb-5'>All books you ordered</h4>
+            <h4 className='font-medium mb-5'>{t('order')}</h4>
             { orderLoading ? (
               <p className="text-gray-500 text-center">{t("orderLoading")}</p>
             ) : filterOrder.length === 0 ? (
-                <p className='text-center'>No orders found.</p>
+                <p className='text-center'>{t('noOrder')}</p>
             ) : (
               <>
                 {filterOrder.map((order) => (
@@ -366,7 +366,7 @@ export default function ProfilePage() {
               </>
             )}
 
-            <h4 className='font-medium my-5'>All books that had been sold</h4>
+            <h4 className='font-medium my-5'>{t('sold')}</h4>
             {orderLoading ? (
               <p className="text-gray-500 text-center">{t("orderLoading")}</p>
             ) : myBooks.length === 0 ? (

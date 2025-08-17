@@ -31,6 +31,7 @@ export default function ChatPage() {
   const [typingText, setTypingText] = useState("");
   const [welcomeIndex, setWelcomeIndex] = useState(0);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
+  const typingIndexRef = useRef(0);
   const { user } = useAuth();
   const t = useTranslations('ChatPage')
 
@@ -49,22 +50,28 @@ export default function ChatPage() {
     return () => unsub();
   }, [user]);
 
-  // settime for typing bot
+  // typing bot
   useEffect(() => {
-    if (!loadingBot && messages.length > 0) {
-      const lastMsg = messages[messages.length - 1];
-      if (lastMsg.sender === "bot") {
-        let i = 0;
-        setTypingText("");
-        const interval = setInterval(() => {
-          setTypingText((prev) => prev + lastMsg.text[i]);
-          i++;
-          if (i >= lastMsg.text.length) clearInterval(interval);
-        }, 20);
-        return () => clearInterval(interval);
-      }
+    if (messages.length === 0) return;
+
+    const lastMsg = messages[messages.length - 1];
+    if (lastMsg.sender === "bot") {
+      setTypingText("");
+      typingIndexRef.current = 0;
+
+      const interval = setInterval(() => {
+        typingIndexRef.current += 1;
+        setTypingText(lastMsg.text.slice(0, typingIndexRef.current));
+
+        if (typingIndexRef.current >= lastMsg.text.length) {
+          clearInterval(interval);
+          setLoadingBot(false);
+        }
+      }, 40);
+
+      return () => clearInterval(interval);
     }
-  }, [loadingBot, messages]);
+  }, [messages]);
 
   // welcome message
   const welcomeFullText = t('welcome');

@@ -93,7 +93,10 @@
     "orderLoading": "Loading Orders...",
     "noOrders": "No Orders Available",
     "status": "Status",
-    "total": "Total"
+    "total": "Total",
+    "order": "All books you ordered",
+    "noOrder": "No orders found.",
+    "sold": "All books that had been sold"
 
   },
   "ShopPage": {

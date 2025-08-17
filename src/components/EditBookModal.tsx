@@ -8,6 +8,7 @@ import { uploadImageToImageKit } from "@/app/[locale]/utils/imagekitUpload";
 import { db } from '@/lib/firebase';
 import { toast } from 'react-hot-toast';
 import { useTranslations } from 'next-intl';
+import { FiUpload } from 'react-icons/fi';
 
 interface EditBookModalProps {
   book: BookType;
@@ -71,24 +72,31 @@ export default function EditBookModal({ book, onClose, onUpdate }: EditBookModal
         <div className="space-y-3">
           {/* title */}
           <label htmlFor="title" className="block text-sm font-medium text-gray-700">{t('title')}</label>
-          <input value={title} onChange={(e) => setTitle(e.target.value)} className="w-full p-2 border rounded" placeholder={t('title')} />
+          <input value={title} onChange={(e) => setTitle(e.target.value)} className="w-full p-2 border rounded-lg" placeholder={t('title')} />
           {/* author */}
           <label htmlFor="author" className="block text-sm font-medium text-gray-700">{t('author')}</label>
-          <input value={author} onChange={(e) => setAuthor(e.target.value)} className="w-full p-2 border rounded" placeholder={t('author')} />
+          <input value={author} onChange={(e) => setAuthor(e.target.value)} className="w-full p-2 border rounded-lg" placeholder={t('author')} />
           {/* genre */}
           <label htmlFor="genre" className="block text-sm font-medium text-gray-700">{t('genre')}</label>
-          <select value={genre} onChange={(e) => setGenre(e.target.value as Genre)} className="w-full p-2 border rounded">
+          <select value={genre} onChange={(e) => setGenre(e.target.value as Genre)} className="w-full p-2 border rounded-lg">
             {genres.map((g) => <option key={g} value={g}>{g}</option>)}
           </select>
           {/* description */}
           <label htmlFor="description" className="block text-sm font-medium text-gray-700">{t('description')}</label>
-          <textarea value={description} onChange={(e) => setDescription(e.target.value)} className="w-full p-2 border rounded resize-none" rows={3} placeholder={t('description')} />
+          <textarea value={description} onChange={(e) => setDescription(e.target.value)} className="w-full p-2 border rounded-lg resize-none" rows={3} placeholder={t('description')} />
           {/* uploud file */}
-          <label htmlFor="file" className="block text-sm font-medium text-gray-700 mb-1">{t('upload')}</label>
+          <label
+            htmlFor="file"
+            className="flex items-center w-full mb-3 mt-1 bg-white transition gap-2 px-4 py-2 border rounded-lg cursor-pointer hover:bg-gray-50"
+          >
+            <FiUpload className="text-xl" />
+            <span>{file ? file.name : t('upload')}</span>
+          </label>
           <input
+            id='file'
             type="file"
             accept="image/*"
-            className="w-full mb-3 p-2 border rounded"
+            className="hidden"
             onChange={(e) => {
               const selected = e.target.files?.[0];
               if (selected) {
@@ -97,7 +105,7 @@ export default function EditBookModal({ book, onClose, onUpdate }: EditBookModal
             }}
           />
 
-          <button onClick={handleSave} className="bg-[#B17457] text-white w-full py-2 rounded hover:bg-[#4A4947] transition mt-2">
+          <button onClick={handleSave} className="bg-[#B17457] text-white w-full py-2 rounded-lg hover:bg-[#4A4947] transition mt-2">
             {t('save')}
           </button>
         </div>

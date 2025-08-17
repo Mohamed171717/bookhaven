@@ -8,6 +8,7 @@ import { useTranslations } from "next-intl";
 import toast from "react-hot-toast";
 import { uploadImageToImageKit } from "@/app/[locale]/utils/imagekitUpload";
 import { useAuth } from "@/context/AuthContext";
+import { FiUpload } from "react-icons/fi";
 
 type ComplainType = "user" | "book";
 
@@ -119,8 +120,16 @@ export default function ComplaintSection() {
               <option value="book">{t("complaintTypeBook")}</option>
             </select>
           </div>
-          <label className="text-md font-semibold text-gray-600">{t('imagePlaceholder')}</label>
+          {/* <label className="text-md font-semibold text-gray-600">{t('imagePlaceholder')}</label> */}
+          <label
+            htmlFor="fileInput"
+            className="flex items-center w-full mb-4 mt-1 bg-white transition gap-2 px-4 py-2 border rounded-lg cursor-pointer hover:bg-gray-50"
+          >
+            <FiUpload className="text-xl" />
+            <span>{file ? file.name : t('imagePlaceholder')}</span>
+          </label>
           <input
+            id="fileInput"
             type="file"
             accept="image/*"
             onChange={(e) => {
@@ -129,7 +138,8 @@ export default function ComplaintSection() {
                 setFile(selected);
               }
             }}
-            className="w-full px-4 py-2 mb-4 mt-1 border rounded-lg focus:outline-none"
+            // className="w-full px-4 py-2 mb-4 mt-1 border rounded-lg focus:outline-none"
+            className="hidden"
           />
 
           <button
