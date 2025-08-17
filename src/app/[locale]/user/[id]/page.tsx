@@ -22,6 +22,7 @@ import { UserType } from "@/types/UserType";
 import toast from "react-hot-toast";
 import Masonry from "react-masonry-css";
 import { motion } from "framer-motion";
+import Link from "next/link";
 
 export default function UserProfilePage() {
   const { id } = useParams();
@@ -32,7 +33,7 @@ export default function UserProfilePage() {
   const [loading, setLoading] = useState(true);
 
   const breakpointColumnsObj = {
-    default: 3,
+    default: 2,
     1280: 2,
     768: 1,
   };
@@ -184,48 +185,47 @@ export default function UserProfilePage() {
 
           {/* Content */}
           {activeTab === "books" ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-10 px-8">
               {books.length === 0 ? (
                 <p className="text-gray-500 col-span-full text-center">
                   No books available
                 </p>
               ) : (
                 books.map((book) => (
-                  <div
-                    key={book.id}
-                    className="bg-card-bg border rounded-lg shadow-md"
-                  >
-                    <Image
-                      src={book.coverImage}
-                      width={600}
-                      height={48}
-                      alt={book.title}
-                      className="rounded-t w-full h-[220px] md:h-[280px] mb-4 object-cover"
-                    />
-                    <div className="p-3 md:p-4">
-                      <h4 className="font-semibold text-gray-800 text-sm md:text-base mb-2 overflow-hidden">
-                        {book.title.length >= 25
-                          ? `${book.title.slice(0, 25)}...`
-                          : book.title}
-                      </h4>
-                      <p className="text-sm md:text-base text-gray-500 mb-3">
-                        {book.author}
-                      </p>
-                      {book.availableFor.includes("sell") && (
-                        <div className="text-[#a8775a] text-sm md:text-base font-semibold mb-3">
-                          E£{book.price}
+                  <Link href={`/shop/${book.id}`} key={book.id}>
+                    <div className="bg-card-bg border rounded-lg shadow-md">
+                      <Image
+                        src={book.coverImage}
+                        width={600}
+                        height={48}
+                        alt={book.title}
+                        className="rounded-t w-full h-[220px] md:h-[280px] mb-4 object-cover"
+                      />
+                      <div className="p-3 md:p-4">
+                        <h4 className="font-semibold text-gray-800 text-sm md:text-base mb-2 overflow-hidden">
+                          {book.title.length >= 25
+                            ? `${book.title.slice(0, 25)}...`
+                            : book.title}
+                        </h4>
+                        <p className="text-sm md:text-base text-gray-500 mb-3">
+                          {book.author}
+                        </p>
+                        {book.availableFor.includes("sell") && (
+                          <div className="text-[#a8775a] text-sm md:text-base font-semibold mb-3">
+                            E£{book.price}
+                          </div>
+                        )}
+                        <div className="flex justify-between items-center">
+                          <span className="bg-green-100 px-3 py-1 rounded text-sm font-medium">
+                            {book.condition}
+                          </span>
+                          <span className="text-gray-500 text-sm">
+                            {book.availableFor.join(" / ")}
+                          </span>
                         </div>
-                      )}
-                      <div className="flex justify-between items-center">
-                        <span className="bg-green-100 px-3 py-1 rounded text-sm font-medium">
-                          {book.condition}
-                        </span>
-                        <span className="text-gray-500 text-sm">
-                          {book.availableFor.join(" / ")}
-                        </span>
                       </div>
                     </div>
-                  </div>
+                  </Link>
                 ))
               )}
             </div>

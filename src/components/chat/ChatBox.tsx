@@ -17,6 +17,7 @@ import {
 import { db } from "@/lib/firebase";
 import { UserType } from "@/types/UserType";
 import Image from "next/image";
+import Link from "next/link";
 // import { Transaction } from "@/types/TransactionType";
 
 interface ChatBoxProps {
@@ -34,13 +35,17 @@ interface Message {
   type: string;
 }
 
-export function ChatBox({ chatId, currentUserId, otherUserId, onClose }: ChatBoxProps) {
+export function ChatBox({
+  chatId,
+  currentUserId,
+  otherUserId,
+  onClose,
+}: ChatBoxProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [otherUser, setOtherUser] = useState<UserType>();
   // const [transaction, setTransaction] = useState<Transaction>();
-
 
   useEffect(() => {
     const q = query(
@@ -80,7 +85,7 @@ export function ChatBox({ chatId, currentUserId, otherUserId, onClose }: ChatBox
     //       setTransaction({ ...docSnap.data(), transactionId: docSnap.id } as Transaction);
     //     }
     //   } catch (err) {
-    //     console.error("Error fetching transaction:", err); 
+    //     console.error("Error fetching transaction:", err);
     //   }
     // };
     // fetchTransaction();
@@ -182,15 +187,19 @@ export function ChatBox({ chatId, currentUserId, otherUserId, onClose }: ChatBox
       <div className="bg-[#B17457] text-white px-4 py-2 flex justify-between items-center rounded-t-xl">
         <div className="flex items-center gap-2">
           {otherUser && (
-            <Image
-              src={otherUser.photoUrl}
-              alt="Avatar"
-              width={100}
-              height={100}
-              className="w-6 h-6 rounded-full"
-            />
+            <Link href={`/user/${otherUser?.uid}`}>
+              <Image
+                src={otherUser.photoUrl}
+                alt="Avatar"
+                width={100}
+                height={100}
+                className="w-6 h-6 rounded-full"
+              />
+            </Link>
           )}
-          <span className="font-medium">{otherUser?.name}</span>
+          <Link href={`/user/${otherUser?.uid}`}>
+            <span className="font-medium">{otherUser?.name}</span>
+          </Link>
         </div>
         <button onClick={onClose} className="text-white text-sm">
           ✕
@@ -200,11 +209,11 @@ export function ChatBox({ chatId, currentUserId, otherUserId, onClose }: ChatBox
       {/* transaction */}
       {/* {transaction && (
         <div className="bg-[#FFF3E6] text-[#4A4947] px-3 py-2 text-xs border-b border-[#D8D2C2]"> */}
-          {/* <p className="text-sm mb-2"><strong>Swap request</strong></p> */}
-          {/* <p>You offered book<code>{transaction.swapWithBookId}</code></p>
+      {/* <p className="text-sm mb-2"><strong>Swap request</strong></p> */}
+      {/* <p>You offered book<code>{transaction.swapWithBookId}</code></p>
           <p>In exchange for book<code>{transaction.bookId}</code></p> */}
-          {/* <p><strong>Status:</strong> <span className="capitalize">{transaction.status}</span></p> */}
-          {/* {(isRequester || isResponder) && (
+      {/* <p><strong>Status:</strong> <span className="capitalize">{transaction.status}</span></p> */}
+      {/* {(isRequester || isResponder) && (
             <div className="mt-2 flex gap-2">
               {!transaction[isRequester ? 'requesterConfirmed' : 'responderConfirmed'] && (
                 <>
@@ -227,7 +236,7 @@ export function ChatBox({ chatId, currentUserId, otherUserId, onClose }: ChatBox
               )}
             </div>
           )} */}
-        {/* </div>
+      {/* </div>
       )} */}
 
       <div className="flex-1 overflow-y-auto px-3 py-2 space-y-2 max-h-72">

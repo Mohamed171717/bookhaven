@@ -1,18 +1,26 @@
 "use client";
 
-import { useEffect, useState } from 'react';
-import { collection, query, where, getDocs, doc, Timestamp, getDoc } from 'firebase/firestore';
-import { db } from '@/lib/firebase';
-import { Star } from 'lucide-react';
-import clsx from 'clsx';
-import { v4 as uuid } from 'uuid';
-import toast from 'react-hot-toast';
-import { Review, submitReview } from '@/lib/reviews';
-import { UserType } from '@/types/UserType';
-import Image from 'next/image';
-import { FaRegStar, FaStar } from 'react-icons/fa';
-import { useTranslations } from 'next-intl';
-import { CartItem } from '@/types/CartType';
+import { useEffect, useState } from "react";
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  doc,
+  Timestamp,
+  getDoc,
+} from "firebase/firestore";
+import { db } from "@/lib/firebase";
+import { Star } from "lucide-react";
+import clsx from "clsx";
+import { v4 as uuid } from "uuid";
+import toast from "react-hot-toast";
+import { Review, submitReview } from "@/lib/reviews";
+import { UserType } from "@/types/UserType";
+import Image from "next/image";
+import { FaRegStar, FaStar } from "react-icons/fa";
+import { useTranslations } from "next-intl";
+import { CartItem } from "@/types/CartType";
 // import StartChatButton from './chat/StartChatButton';
 
 interface ReviewWithUser extends Review {
@@ -33,7 +41,7 @@ export default function ReviewSection({
   currentUserId,
   type,
   targetUser,
-  onRatingUpdate
+  onRatingUpdate,
 }: ReviewSectionProps) {
   const [rating, setRating] = useState(0);
   const [hoveredStar, setHoveredStar] = useState(0);
@@ -41,7 +49,7 @@ export default function ReviewSection({
   const [reviews, setReviews] = useState<ReviewWithUser[]>([]);
   const [hasReviewed, setHasReviewed] = useState(false);
   const [hasPurchased, setHasPurchased] = useState(false);
-  const t = useTranslations('ShopPage');
+  const t = useTranslations("ShopPage");
 
   // Fetch reviews for this target
   useEffect(() => {
@@ -85,9 +93,6 @@ export default function ReviewSection({
     fetchReviews();
   }, [targetId, currentUserId]);
 
-
-
-
   // check if the user has purchased
   useEffect(() => {
     if (!currentUserId) return;
@@ -101,27 +106,25 @@ export default function ReviewSection({
 
       let purchased = false;
 
-      
-    snapshot.forEach((doc) => {
-      const order = doc.data();
+      snapshot.forEach((doc) => {
+        const order = doc.data();
 
-      if (type === "book") {
-        if (order.items?.some((item: CartItem) => item.bookId === targetId)) {
-          purchased = true;
+        if (type === "book") {
+          if (order.items?.some((item: CartItem) => item.bookId === targetId)) {
+            purchased = true;
+          }
+          // } else if (type === "user") {
+          //   if (order.items?.some((item: CartItem) => item.user === targetId)) {
+          //     purchased = true;
+          //   }
         }
-      // } else if (type === "user") {
-      //   if (order.items?.some((item: CartItem) => item.user === targetId)) {
-      //     purchased = true;
-      //   }
-      }
-    });
+      });
 
       setHasPurchased(purchased);
     };
 
     checkPurchase();
   }, [currentUserId, targetId, type]);
-
 
   // handle review request
   const handleSubmit = async () => {
@@ -138,14 +141,18 @@ export default function ReviewSection({
       createdAt: Timestamp.now(),
     };
 
-    const { newAverage, newTotalRatings } = await submitReview(targetId, reviewData, type);
+    const { newAverage, newTotalRatings } = await submitReview(
+      targetId,
+      reviewData,
+      type
+    );
     toast.success("Review submitted!");
 
     setRating(0);
     setComment("");
     setHasReviewed(true);
 
-     // Get current reviewer info (instead of using targetUser)
+    // Get current reviewer info (instead of using targetUser)
     let reviewerName = "You";
     let reviewerPhoto = "/default-avatar.png";
     const userDoc = await getDoc(doc(db, "users", currentUserId));
@@ -155,13 +162,13 @@ export default function ReviewSection({
       reviewerPhoto = userData.photoUrl || reviewerPhoto;
     }
 
-    setReviews(prev => [
+    setReviews((prev) => [
       ...prev,
       {
         ...reviewData,
         reviewerName,
         reviewerPhoto,
-      }
+      },
     ]);
 
     // Update local targetUser or book rating without refetch
@@ -173,8 +180,6 @@ export default function ReviewSection({
     if (onRatingUpdate) {
       onRatingUpdate(newAverage, newTotalRatings);
     }
-
-
   };
 
   // const avgRating = reviews.length
@@ -182,21 +187,22 @@ export default function ReviewSection({
   //   : 0;
 
   return (
-    <div className={`bg-card-bg border ${ type === 'book' ? 'flex-1' : 'flex-2 h-fit'} p-4 mt-6 rounded-2xl shadow space-y-4`}>
-
+    <div
+      className={`bg-card-bg border ${
+        type === "book" ? "flex-1" : "flex-2 h-fit"
+      } p-4 mt-6 rounded-2xl shadow space-y-4`}
+    >
       {/* review books */}
       {type === "book" && (
         <div className="space-y-4">
           {/* Review Form */}
           {hasReviewed ? (
-            <p className="text-green-600 font-medium">
-              {t('BookReview')}
-            </p>
-            ) : (
-              <>
-              { hasPurchased && (
+            <p className="text-green-600 font-medium">{t("BookReview")}</p>
+          ) : (
+            <>
+              {hasPurchased && (
                 <div className="space-y-2">
-                  <p className="font-medium">{t('leaveReview')}</p>
+                  <p className="font-medium">{t("leaveReview")}</p>
                   {/* Star Rating UI */}
                   <div className="flex gap-1">
                     {[1, 2, 3, 4, 5].map((i) => (
@@ -220,7 +226,7 @@ export default function ReviewSection({
                     type="text"
                     value={comment}
                     onChange={(e) => setComment(e.target.value)}
-                    placeholder= {t('writeComment')}
+                    placeholder={t("writeComment")}
                     className="w-full p-2 border rounded-md"
                   />
 
@@ -229,7 +235,7 @@ export default function ReviewSection({
                     disabled={currentUserId === targetUser!.uid}
                     className="bg-btn-color disabled:bg-[#b17457c0] text-[15px] hover:bg-[#a16950] text-gray-50 py-2 px-4 rounded-full transition duration-300"
                   >
-                    {t('submitReview')}
+                    {t("submitReview")}
                   </button>
                 </div>
               )}
@@ -238,17 +244,19 @@ export default function ReviewSection({
                   You can only review this book after purchasing it.
                 </p>
               )}
-              </>
-            )
-          }
+            </>
+          )}
 
           <h3 className="text-xl font-semibold">
-            {t('allReview')} ({reviews.length})
+            {t("allReview")} ({reviews.length})
           </h3>
           {/* Review List */}
           <div className="mt-4 space-y-4">
             {reviews.map((r) => (
-              <div key={r.reviewId} className="border space-y-3 border-gray-300 p-3 rounded-md">
+              <div
+                key={r.reviewId}
+                className="border space-y-3 border-gray-300 p-3 rounded-md"
+              >
                 <div className="flex items-center gap-3 mb-2">
                   <Image
                     src={r.reviewerPhoto}
@@ -287,17 +295,17 @@ export default function ReviewSection({
       )}
 
       {/* review users */}
-      {type === 'user' && targetUser && (
-      <div className="space-y-6">
-        {/* User Info */}
-        <div className="flex justify-between items-center gap-3">
-          <div className='flex items-center gap-3'>
-            <Image
-              src={targetUser.photoUrl}
-              alt="User"
-              width={50}
-              height={50}
-              className="rounded-full w-12 h-12"
+      {type === "user" && targetUser && (
+        <div className="space-y-6">
+          {/* User Info */}
+          <div className="flex justify-between items-center gap-3">
+            <div className="flex items-center gap-3">
+              <Image
+                src={targetUser.photoUrl}
+                alt="User"
+                width={50}
+                height={50}
+                className="rounded-full w-12 h-12"
               />
               <div>
                 <p className="font-semibold">{targetUser.name}</p>
@@ -322,22 +330,24 @@ export default function ReviewSection({
             </div>
           </div>
 
-        {hasReviewed ? (
-          <p className="text-green-600 font-medium mr-48">{t('userReview')}</p>
-        ) : (
-          // <>
-          // { hasPurchased && (
-            <div className='flex justify-between items-center gap-3'>
+          {hasReviewed ? (
+            <p className="text-green-600 font-medium mr-48">
+              {t("userReview")}
+            </p>
+          ) : (
+            // <>
+            // { hasPurchased && (
+            <div className="flex justify-between items-center gap-3">
               <div className="flex gap-1 mr-32">
-                <p className='font-medium mr-1'>{t('rateOwner')}</p>
+                <p className="font-medium mr-1">{t("rateOwner")}</p>
                 {[1, 2, 3, 4, 5].map((i) => (
                   <Star
                     key={i}
                     className={clsx(
-                      'w-5 h-5 cursor-pointer transition',
+                      "w-5 h-5 cursor-pointer transition",
                       i <= (hoveredStar || rating)
-                        ? 'fill-yellow-400 text-yellow-500'
-                        : 'text-gray-500'
+                        ? "fill-yellow-400 text-yellow-500"
+                        : "text-gray-500"
                     )}
                     onClick={() => setRating(i)}
                     onMouseEnter={() => setHoveredStar(i)}
@@ -351,7 +361,7 @@ export default function ReviewSection({
                   disabled={currentUserId === targetId}
                   className="bg-btn-color disabled:bg-[#b17457c0] text-[15px] hover:bg-[#a16950] text-gray-50 py-2 px-4 mr-1 rounded-full transition duration-300"
                 >
-                  {t('rate')}
+                  {t("rate")}
                 </button>
               </div>
             </div>
@@ -363,10 +373,9 @@ export default function ReviewSection({
           )} */}
           {/* </>
         )} */}
-        {/* <StartChatButton currentUserId={currentUserId} otherUserId={targetId}/> */}
-      </div>
+          {/* <StartChatButton currentUserId={currentUserId} otherUserId={targetId}/> */}
+        </div>
       )}
-
     </div>
   );
 }

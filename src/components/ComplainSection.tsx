@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from "react";
@@ -21,6 +20,7 @@ export default function ComplaintSection() {
   const [complainType, setComplainType] = useState<ComplainType>("user");
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
+  const [email, setEmail] = useState("");
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -38,10 +38,11 @@ export default function ComplaintSection() {
       }
       const imageUrl = await uploadImageToImageKit(file);
       if (!imageUrl) return alert("Failed to upload image");
-    
 
       await addDoc(collection(db, "complains"), {
         userId: user?.uid,
+        reporter: user?.email,
+        reportedTo: email,
         reporter: user?.email,
         reportedTo: email,
         description: desc,
@@ -53,6 +54,7 @@ export default function ComplaintSection() {
       toast.success("Complaint submitted successfully!");
       setEmail("");
       setDesc("");
+      setEmail("");
       setFile(null);
     } catch (error) {
       console.error("Error submitting complaint:", error);
@@ -86,7 +88,9 @@ export default function ComplaintSection() {
             className="w-full px-4 resize-none mb-4 py-3 border rounded-lg focus:outline-none"
           /> */}
           {/* email */}
-          <label className="text-md font-semibold text-gray-600">{t("email")}</label>
+          <label className="text-md font-semibold text-gray-600">
+            {t("email")}
+          </label>
           <input
             type="email"
             placeholder={t("emailPlaceholder")}
@@ -96,7 +100,9 @@ export default function ComplaintSection() {
             className="w-full px-4 resize-none py-3 mb-4 border rounded-lg focus:outline-none"
           />
           {/* desc */}
-          <label className="text-md font-semibold text-gray-600">{t("complainPlaceholder")}</label>
+          <label className="text-md font-semibold text-gray-600">
+            {t("complainPlaceholder")}
+          </label>
           <textarea
             placeholder={t("descPlaceholder")}
             value={desc}
@@ -105,13 +111,17 @@ export default function ComplaintSection() {
             rows={4}
             className="w-full px-4 resize-none py-3 mb-4 border rounded-lg focus:outline-none"
           ></textarea>
-          <div style={{marginBottom: '15px'}} className="flex items-center space-x-2">
+          <div
+            style={{ marginBottom: "15px" }}
+            className="flex items-center space-x-2"
+          >
             <label className="text-md py-2 font-semibold text-gray-600">
               {t("complaintType")}
             </label>
             <select
+              title="Complain Type"
               value={complainType}
-              style={{marginRight: '10px'}}
+              style={{ marginRight: "10px" }}
               onChange={(e) => setComplainType(e.target.value as ComplainType)}
               className="px-4 py-2 border rounded-lg focus:outline-none"
             >
@@ -125,7 +135,7 @@ export default function ComplaintSection() {
             className="flex items-center w-full mb-4 mt-1 bg-white transition gap-2 px-4 py-2 border rounded-lg cursor-pointer hover:bg-gray-50"
           >
             <FiUpload className="text-xl" />
-            <span>{file ? file.name : t('imagePlaceholder')}</span>
+            <span>{file ? file.name : t("imagePlaceholder")}</span>
           </label>
           <input
             id="fileInput"
