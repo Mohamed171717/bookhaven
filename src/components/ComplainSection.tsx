@@ -15,7 +15,7 @@ type ComplainType = "user" | "book";
 export default function ComplaintSection() {
   const t = useTranslations("HomePage");
   const { user } = useAuth();
-  const [name, setName] = useState("");
+  // const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [desc, setDesc] = useState("");
   const [complainType, setComplainType] = useState<ComplainType>("user");
@@ -31,7 +31,7 @@ export default function ComplaintSection() {
     setLoading(true);
 
     try {
-      if (!desc || !file || !name || !email) {
+      if (!desc || !file || !email) {
         toast.error("Please fill in all fields.");
         setLoading(false);
         return;
@@ -42,8 +42,8 @@ export default function ComplaintSection() {
 
       await addDoc(collection(db, "complains"), {
         userId: user?.uid,
-        name,
-        email,
+        reporter: user?.email,
+        reportedTo: email,
         description: desc,
         complainType,
         image: imageUrl,
@@ -51,7 +51,6 @@ export default function ComplaintSection() {
       });
 
       toast.success("Complaint submitted successfully!");
-      setName("");
       setEmail("");
       setDesc("");
       setFile(null);
@@ -76,7 +75,7 @@ export default function ComplaintSection() {
           onSubmit={handleSubmit}
           className="max-w-lg mx-auto bg-card-bg p-6 rounded-lg shadow-lg text-gray-800"
         >
-          {/* name*/}
+          {/* name
           <label className="text-md font-semibold text-gray-600">{t("name")}</label>
           <input
             type="text"
@@ -85,7 +84,7 @@ export default function ComplaintSection() {
             onChange={(e) => setName(e.target.value)}
             required
             className="w-full px-4 resize-none mb-4 py-3 border rounded-lg focus:outline-none"
-          />
+          /> */}
           {/* email */}
           <label className="text-md font-semibold text-gray-600">{t("email")}</label>
           <input

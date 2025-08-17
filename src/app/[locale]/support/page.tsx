@@ -108,7 +108,8 @@ export default function ChatPage() {
 
     const data = await res.json();
     const botReply = data.reply;
-
+    console.log(`----------------- ${botReply}`);
+    
     await addDoc(collection(db, "users", user.uid, "chatMessages"), {
       text: botReply,
       sender: "bot",
