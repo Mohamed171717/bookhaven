@@ -30,7 +30,7 @@ const PostCreator = ({ onPostCreated }: PostCreatorProps) => {
   const [content, setContent] = useState("");
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
-  const t = useTranslations('CommunityPage');
+  const t = useTranslations("CommunityPage");
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -108,55 +108,55 @@ const PostCreator = ({ onPostCreated }: PostCreatorProps) => {
   return (
     <>
       {/* Trigger Box */}
-      <div className="bg-[#f1f1f1] rounded-xl shadow-md p-4 mb-6 flex gap-3 items-center border border-[#D8D2C2]">
-        <div className="relative">
-          <Image
-            src={user?.photoUrl || "/user-default.jpg"}
-            alt="user"
-            width={48}
-            height={48}
-            className="rounded-full border-2 border-[#B17457]"
-          />
-          <div className="absolute -bottom-1 -right-1 bg-[#B17457] rounded-full p-1">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 20 20"
-              fill="#FAF7F0"
-              className="w-3 h-3"
-            >
-              <path
-                fillRule="evenodd"
-                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a.75.75 0 000 1.5h.253a.25.25 0 01.244.304l-.459 2.066A1.75 1.75 0 0010.747 15H11a.75.75 0 000-1.5h-.253a.25.25 0 01-.244-.304l.459-2.066A1.75 1.75 0 009.253 9H9z"
-                clipRule="evenodd"
-              />
-            </svg>
+      {!user?.isBanned && (
+        <div className="bg-[#f1f1f1] rounded-xl shadow-md p-4 mb-6 flex gap-3 items-center border border-[#D8D2C2]">
+          <div className="relative">
+            <Image
+              src={user?.photoUrl || "/user-default.jpg"}
+              alt="user"
+              width={48}
+              height={48}
+              className="rounded-full border-2 border-[#B17457]"
+            />
+            <div className="absolute -bottom-1 -right-1 bg-[#B17457] rounded-full p-1">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20"
+                fill="#FAF7F0"
+                className="w-3 h-3"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a.75.75 0 000 1.5h.253a.25.25 0 01.244.304l-.459 2.066A1.75 1.75 0 0010.747 15H11a.75.75 0 000-1.5h-.253a.25.25 0 01-.244-.304l.459-2.066A1.75 1.75 0 009.253 9H9z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </div>
+          </div>
+          <div
+            onClick={() => setIsOpen(true)}
+            className="cursor-pointer text-[#4A4947] bg-white px-5 py-3 rounded-full w-full text-left hover:bg-[#FAF7F0] transition-colors duration-200 border border-[#D8D2C2] focus-within:ring-2 focus-within:ring-[#B17457] focus-within:border-transparent"
+          >
+            <div className="flex items-center justify-between">
+              <span className="text-sm sm:text-base">{t("think")}</span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="#B17457"
+                className="w-5 h-5"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"
+                />
+              </svg>
+            </div>
           </div>
         </div>
-        <div
-          onClick={() => setIsOpen(true)}
-          className="cursor-pointer text-[#4A4947] bg-white px-5 py-3 rounded-full w-full text-left hover:bg-[#FAF7F0] transition-colors duration-200 border border-[#D8D2C2] focus-within:ring-2 focus-within:ring-[#B17457] focus-within:border-transparent"
-        >
-          <div className="flex items-center justify-between">
-            <span className="text-sm sm:text-base">
-              {t('think')}
-            </span>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="#B17457"
-              className="w-5 h-5"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"
-              />
-            </svg>
-          </div>
-        </div>
-      </div>
+      )}
 
       {/* Modal */}
       <Dialog open={isOpen} onClose={closeDialog} className="relative z-50">
@@ -165,7 +165,7 @@ const PostCreator = ({ onPostCreated }: PostCreatorProps) => {
         <div className="fixed inset-0 flex items-center justify-center p-4">
           <Dialog.Panel className="w-full max-w-xl rounded-xl bg-[#FAF7F0] p-6 shadow-xl relative">
             <Dialog.Title className="text-2xl font-semibold text-[#4A4947] mb-4">
-              {t('share')}
+              {t("share")}
             </Dialog.Title>
 
             {/* Post Form */}
@@ -173,7 +173,7 @@ const PostCreator = ({ onPostCreated }: PostCreatorProps) => {
               {/* Content */}
               <div>
                 <label className="block text-[#4A4947] font-medium mb-1">
-                  {t('thoughts')}
+                  {t("thoughts")}
                 </label>
                 <textarea
                   rows={5}
@@ -183,15 +183,13 @@ const PostCreator = ({ onPostCreated }: PostCreatorProps) => {
                   value={content}
                   onChange={(e) => setContent(e.target.value)}
                 />
-                <p className="text-sm text-[#4A4947] mt-1">
-                  {t('max')}
-                </p>
+                <p className="text-sm text-[#4A4947] mt-1">{t("max")}</p>
               </div>
 
               {/* Image Upload */}
               <div>
                 <label className="block text-[#4A4947] font-medium mb-1">
-                  {t('image')}
+                  {t("image")}
                 </label>
                 {imagePreview ? (
                   <div className="relative group">
@@ -235,9 +233,7 @@ const PostCreator = ({ onPostCreated }: PostCreatorProps) => {
                       onChange={handleImageChange}
                       className="hidden"
                     />
-                    <span className="text-[#4A4947]">
-                      {t('click')}
-                    </span>
+                    <span className="text-[#4A4947]">{t("click")}</span>
                   </label>
                 )}
               </div>

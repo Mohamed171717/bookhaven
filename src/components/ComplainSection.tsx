@@ -20,7 +20,6 @@ export default function ComplaintSection() {
   const [complainType, setComplainType] = useState<ComplainType>("user");
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
-  const [email, setEmail] = useState("");
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -43,8 +42,6 @@ export default function ComplaintSection() {
         userId: user?.uid,
         reporter: user?.email,
         reportedTo: email,
-        reporter: user?.email,
-        reportedTo: email,
         description: desc,
         complainType,
         image: imageUrl,
@@ -54,7 +51,6 @@ export default function ComplaintSection() {
       toast.success("Complaint submitted successfully!");
       setEmail("");
       setDesc("");
-      setEmail("");
       setFile(null);
     } catch (error) {
       console.error("Error submitting complaint:", error);
