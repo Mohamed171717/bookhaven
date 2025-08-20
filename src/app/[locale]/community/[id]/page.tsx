@@ -13,7 +13,8 @@ interface Props {
 }
 
 export default async function PostPage({ params }: Props) {
-  const postId = params.id;
+  const { id } = params;
+  const postId = id;
   const t = await getTranslations('CommunityPage')
   const postRef = doc(db, "posts", postId);
   const postSnap = await getDoc(postRef);
