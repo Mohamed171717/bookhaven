@@ -9,7 +9,7 @@ import CommentSection from "../CommentSection";
 import { getTranslations } from "next-intl/server";
 
 interface Props {
-  params: { id: string };
+  params: { locale: string; id: string };
 }
 
 export default async function PostPage({ params }: Props) {
