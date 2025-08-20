@@ -7,6 +7,10 @@ import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
 import { HiFilter } from 'react-icons/hi'
 import { useTranslations } from 'next-intl'
+import { useAuth } from '@/context/AuthContext'
+import { auth } from '@/lib/firebase'
+import { signOut } from 'firebase/auth'
+import toast from 'react-hot-toast'
 
 export default function ShopPage() {
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
@@ -17,6 +21,18 @@ export default function ShopPage() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const booksPerPage = 6;
   const t = useTranslations('ShopPage');
+  const { user } = useAuth();
+
+  useEffect(() => {
+    const out = async () => {
+      if (user?.isBanned === true ) {
+        await signOut(auth);
+        toast.error('Your account has been banned.');
+        return; // Stop further execution
+      }
+    }
+    out();
+  },[user])
 
   useEffect(() => {
     setCurrentPage(1);

@@ -49,13 +49,14 @@ export default function EditBookModal({ book, onClose, onUpdate }: EditBookModal
         author,
         genre,
         description,
+        approval: "pending", 
         coverImage: imageUrl,
         updatedAt: new Date(),
       };
 
       await updateDoc(bookRef, updatedData);
       toast.success('Book updated successfully');
-      onUpdate({ ...book, ...updatedData });
+      onUpdate({ ...book, ...updatedData as BookType });
       onClose();
     } catch (err) {
       toast.error('Failed to update book');

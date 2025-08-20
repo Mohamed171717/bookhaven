@@ -9,18 +9,34 @@ import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { useTranslations } from "next-intl";
 import { useBooks } from '@/context/BooksContext';
+import { useEffect } from "react";
+import { auth } from "@/lib/firebase";
+import { signOut } from "firebase/auth";
+import { useAuth } from "@/context/AuthContext";
 
 const CartPage = () => {
   const { cart, removeFromCart, updateQuantity, clearCart } = useCart();
   const t = useTranslations('CartPage');
   const router = useRouter();
   const { books } = useBooks();
+  const { user } = useAuth();
   const subTotal = cart.reduce(
     (sum, item) => sum + item.price! * item.quantity,
     0
   );
   const shiping = 5.0;
   const total = subTotal + shiping;
+
+  useEffect(() => {
+    const out = async () => {
+      if (user?.isBanned === true ) {
+        await signOut(auth);
+        toast.error('Your account has been banned.');
+        return; // Stop further execution
+      }
+    }
+    out();
+  },[user])
 
   const handleCheckout = () => {
     if (cart.length === 0) {
@@ -68,7 +84,6 @@ const CartPage = () => {
                   )}
                   {cart.map((item) => {
                     const book = books.find(b => b.id == item.bookId);
-                    if (!book?.quantity) return null
                       return(
                       <tr key={item.bookId} className="border-b">
                       <td className="p-4 flex gap-4 items-center">
@@ -103,7 +118,7 @@ const CartPage = () => {
                           <span>{item.quantity}</span>
                           <button
                             className="px-2 bg-gray-200 rounded text-lg"
-                            disabled={item.quantity >= book.quantity}
+                            disabled={item.quantity >= book!.quantity!}
                             onClick={() =>
                               updateQuantity(item.bookId, item.quantity + 1)
                             }

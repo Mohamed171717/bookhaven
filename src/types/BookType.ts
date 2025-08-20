@@ -30,7 +30,7 @@ export type Genre =
     "Romance" | "Historical" | "Young Adult" | "Horror" |
     "Biography" | "Personal Growth";
 
-export type Location = 
+export type Location = "" |
     "Cairo" | "Giza" | "Alexandria" | "Dakahlia" | "Beheira" | 
     "Fayoum" | "Gharbia" | "Ismailia" | "Monufia" | "Minya" | 
     "Qalyubia" | "Suez" | "Aswan" | "Assiut" | "Damietta" | 

@@ -13,6 +13,9 @@ import { useRouter } from "next/navigation";
 import { BookType } from "@/types/BookType";
 import LanguageSwitcher from "./languageSwitcher";
 import { useTranslations } from "next-intl";
+import { signOut } from "firebase/auth";
+import { auth } from "@/lib/firebase";
+import toast from "react-hot-toast";
 
 export default function Header() {
   const { user, loading } = useAuth();
@@ -26,6 +29,18 @@ export default function Header() {
   const [showSearchResults, setShowSearchResults] = useState(false);
   const [filteredBooks, setFilteredBooks] = useState<BookType[]>([]);
   const searchRef = useRef<HTMLDivElement>(null);
+
+
+  useEffect(() => {
+    const out = async () => {
+      if (user?.isBanned === true ) {
+        await signOut(auth);
+        toast.error('Your account has been banned.');
+        return; // Stop further execution
+      }
+    }
+    out();
+  },[user]) 
 
   // Filter books based on search query
   useEffect(() => {
@@ -162,7 +177,7 @@ export default function Header() {
                       </p>
                       {book.price ? (
                         <p className="text-xs font-medium text-primary-color">
-                          ${book.price.toFixed(2)}
+                          {book.price.toFixed(2)} EGP
                         </p>
                       ) : (<p></p>)}
                     </div>
@@ -315,7 +330,7 @@ export default function Header() {
                   className="block w-full text-center py-2 px-4 rounded-md text-sm font-medium bg-primary-color text-white hover:bg-gray-700 transition"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
-                  Login
+                  {l('login')}
                 </Link>
               </div>
             )}

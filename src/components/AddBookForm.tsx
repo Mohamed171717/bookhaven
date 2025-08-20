@@ -245,16 +245,16 @@ export default function AddBookModal({ onClose, onAdd }: AddBookModalProps) {
           value={genre}
           onChange={(e) => setGenre(e.target.value as Genre)}
         >
-          <option value="fiction">{s("fiction")}</option>
-          <option value="fantasy">{s("fantasy")}</option>
-          <option value="science fiction">{s("science fiction")}</option>
-          <option value="mystery & thriller">{s("mystery & thriller")}</option>
-          <option value="romance">{s("romance")}</option>
-          <option value="historical">{s("historical")}</option>
-          <option value="young adult">{s("young adult")}</option>
-          <option value="horror">{s("horror")}</option>
-          <option value="biography">{s("biography")}</option>
-          <option value="personal growth">{s("personal growth")}</option>
+          <option value="Fiction">{s("fiction")}</option>
+          <option value="Fantasy">{s("fantasy")}</option>
+          <option value="Science Fiction">{s("science fiction")}</option>
+          <option value="Mystery & Thriller">{s("mystery & thriller")}</option>
+          <option value="Romance">{s("romance")}</option>
+          <option value="Historical">{s("historical")}</option>
+          <option value="Young Adult">{s("young adult")}</option>
+          <option value="Horror">{s("horror")}</option>
+          <option value="Biography">{s("biography")}</option>
+          <option value="Personal Growth">{s("personal growth")}</option>
         </select>
         {/* available for */}
         {user!.role === "reader" ? (
@@ -374,7 +374,11 @@ export default function AddBookModal({ onClose, onAdd }: AddBookModalProps) {
           className="flex items-center w-full mb-3 mt-1 bg-white transition gap-2 px-4 py-2 border rounded-lg cursor-pointer hover:bg-gray-50"
         >
           <FiUpload className="text-xl" />
-          <span>{file ? file.name : t("uploads")}</span>
+          <span>
+            {files && files.length > 0 
+              ? `${files.length} file(s) selected` 
+              : t("uploads")}
+          </span>
         </label>
         <input
           id="files"

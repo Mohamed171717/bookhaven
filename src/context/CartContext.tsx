@@ -64,7 +64,8 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   }, [cart, user?.uid]);
 
   const addToCart = (item: CartItem) => {
-    if(!user) return (toast.error('Please login to add to cart.'))
+    if(!user) return (toast.error('Please login to add to cart.'));
+    if(item.quantity === 0) return;
     setCart((prev) => {
       const existing = prev.find((i) => i.bookId === item.bookId)
       if (existing) {

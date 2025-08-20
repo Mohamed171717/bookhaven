@@ -2,7 +2,7 @@
 "use client";
 
 import { useState, useEffect, useRef, FormEvent } from "react";
-import { db } from "@/lib/firebase";
+import { auth, db } from "@/lib/firebase";
 import {
   collection,
   addDoc,
@@ -16,6 +16,7 @@ import { SmallFooter } from "@/components/layout/Footer";
 import { useAuth } from "@/context/AuthContext";
 import toast from "react-hot-toast";
 import { useTranslations } from "next-intl";
+import { signOut } from "firebase/auth";
 
 interface Message {
   id?: string;
@@ -34,6 +35,17 @@ export default function ChatPage() {
   const typingIndexRef = useRef(0);
   const { user } = useAuth();
   const t = useTranslations('ChatPage')
+
+  useEffect(() => {
+    const out = async () => {
+      if (user?.isBanned === true ) {
+        await signOut(auth);
+        toast.error('Your account has been banned.');
+        return; // Stop further execution
+      }
+    }
+    out();
+  },[user])
 
   // display messages
   useEffect(() => {

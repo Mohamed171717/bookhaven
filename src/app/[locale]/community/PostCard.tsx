@@ -306,7 +306,7 @@ export default function PostCard({ post, showComment, onPostDeleted }: props) {
               showComment && `max-h-[400px]`
             }`}
           >
-            <Link href={`/community/${post.postId}`}>
+            <Link href={!user ? `/auth` : `/community/${post.postId}`}>
               <Image
                 src={livePost.imageURL}
                 alt="post"
@@ -364,7 +364,7 @@ export default function PostCard({ post, showComment, onPostDeleted }: props) {
           {/* Comment */}
           {showComment && (
             <Link
-              href={`/community/${post.postId}`}
+              href={!user ? `/auth` : `/community/${post.postId}`}
               className="flex items-center gap-2 group"
             >
               <div className="p-1.5 rounded-full group-hover:bg-[#D8D2C2]/50 transition-colors">

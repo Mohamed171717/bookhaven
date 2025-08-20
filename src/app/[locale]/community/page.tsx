@@ -15,9 +15,12 @@ import {
   DocumentSnapshot,
   DocumentData,
 } from "firebase/firestore";
-import { db } from "@/lib/firebase";
+import { auth, db } from "@/lib/firebase";
 import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
+import { useAuth } from "@/context/AuthContext";
+import { signOut } from "firebase/auth";
+import toast from "react-hot-toast";
 // import { useAuth } from "@/context/AuthContext";
 
 const POSTS_PER_PAGE_INITIAL = 6;
@@ -35,12 +38,24 @@ export default function BlogPage() {
   const [fetchedPostIds, setFetchedPostIds] = useState<Set<string>>(new Set());
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
   const t = useTranslations('CommunityPage');
+  const { user } = useAuth();
 
   const breakpointColumnsObj = {
     default: 2,
     1024: 2,
     1023: 1,
   };
+
+  useEffect(() => {
+    const out = async () => {
+      if (user?.isBanned === true ) {
+        await signOut(auth);
+        toast.error('Your account has been banned.');
+        return; // Stop further execution
+      }
+    }
+    out();
+  },[user])
 
   const fetchPosts = useCallback(
     async (initial = false) => {

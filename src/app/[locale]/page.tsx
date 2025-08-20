@@ -7,7 +7,7 @@ import Footer from "@/components/layout/Footer";
 import Header from "@/components/layout/Header";
 import Hero from "@/components/layout/Hero";
 import { useBooks } from "@/context/BooksContext";
-import { db } from "@/lib/firebase";
+import { auth, db } from "@/lib/firebase";
 import { PostType } from "@/types/PostType";
 import { useEffect, useState } from "react";
 import PostCard from "./community/PostCard";
@@ -15,6 +15,8 @@ import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { useAuth } from "@/context/AuthContext";
 import ComplaintSection from "@/components/ComplainSection";
+import { signOut } from "firebase/auth";
+import toast from "react-hot-toast";
 
 
 export default function HomePage() {
@@ -22,6 +24,17 @@ export default function HomePage() {
   const { user } = useAuth();
   const [posts, setPosts] = useState<PostType[]>([]);
   const t = useTranslations("HomePage");
+
+  useEffect(() => {
+    const out = async () => {
+      if (user?.isBanned === true ) {
+        await signOut(auth);
+        toast.error('Your account has been banned.');
+        return; // Stop further execution
+      }
+    }
+    out();
+  },[user])
 
   useEffect(() => {
     const q = query(collection(db, "posts"), orderBy("createdAt", "desc"));

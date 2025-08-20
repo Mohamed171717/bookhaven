@@ -2,23 +2,49 @@
 
 import Header from "@/components/layout/Header";
 import { useCart } from "@/context/CartContext";
+import { db } from "@/lib/firebase";
 import { CartItem } from "@/types/CartType";
 import { ShippingInfoType } from "@/types/TransactionType";
+import { doc, increment, updateDoc } from "firebase/firestore";
 import { CheckCircleIcon } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
+// import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 // import { IoCheckmarkDoneCircle } from "react-icons/io5";
 
 export default function PaymentSuccessPage() {
   const { cart, clearCart } = useCart();
+  const router = useRouter();
   const [boughtBooks, setBoughtBooks] = useState<CartItem[]>(cart);
   const [shippingInfo, setShippingInfo] = useState<ShippingInfoType | null>(
     null
   );
 
+  // const paymrntSuccess = () => {
+  //   router.replace('/')
+  // }
+
   useEffect(() => {
     setBoughtBooks(cart);
+
+    const updateQuantities = async () => {
+      try {
+        for (const item of cart) {
+          const bookRef = doc(db, "books", item.bookId);
+
+          await updateDoc(bookRef, {
+            quantity: increment(-item.quantity), // reduce quantity
+            updatedAt: new Date(),
+          });
+        }
+      } catch (err) {
+        console.error("Failed to update book quantities:", err);
+      }
+    };
+
+    updateQuantities();
+
     clearCart();
     const storedInfo = localStorage.getItem("shippingInfoUser");
     if (storedInfo) {
@@ -85,7 +111,7 @@ export default function PaymentSuccessPage() {
                       Qty: {item.quantity}
                     </span>
                     <p className="text-gray-500 text-sm mt-1">
-                      {item.price.toFixed(2)} EGP per unit
+                      {item.price.toFixed(2)} EGP
                     </p>
                   </div>
                 </div>
@@ -140,12 +166,14 @@ export default function PaymentSuccessPage() {
 
           {/* Actions */}
           <div className="flex flex-col items-center gap-3">
-            <Link
-              href="/"
+            <button
+              onClick={() => {
+                router.replace("/");
+              }}
               className="bg-[#b6784b] text-white px-6 py-2 rounded-lg shadow hover:bg-[#a76a3d]"
             >
               Back to Home
-            </Link>
+            </button>
             {/* <button className="text-[#b6784b] hover:underline">
               View Order Details
             </button> */}

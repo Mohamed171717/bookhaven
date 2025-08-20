@@ -20,7 +20,7 @@ import {
   where,
   deleteDoc,
 } from "firebase/firestore";
-import { db } from "@/lib/firebase";
+import { auth, db } from "@/lib/firebase";
 import { BookType } from "@/types/BookType";
 import EditBookModal from "@/components/EditBookModal";
 // import { useTransactionContext } from '@/context/TransactionContext';
@@ -30,6 +30,7 @@ import { useTranslations } from "next-intl";
 import { useOrders } from "@/context/OrderContext";
 import { Notification } from "@/types/NotificationType";
 import { formatDistanceToNow } from "date-fns";
+import { signOut } from "firebase/auth";
 // import { Transaction } from '@/types/TransactionType';
 
 export default function ProfilePage() {
@@ -48,6 +49,17 @@ export default function ProfilePage() {
   const [notifications, setNotifications] = useState<Notification[]>([]);
 
   const t = useTranslations("ProfilePage");
+
+  useEffect(() => {
+    const out = async () => {
+      if (user?.isBanned === true ) {
+        await signOut(auth);
+        toast.error('Your account has been banned.');
+        return; // Stop further execution
+      }
+    }
+    out();
+  },[user])
 
   useEffect(() => {
     if (!user?.uid) return;

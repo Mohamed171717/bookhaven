@@ -36,7 +36,19 @@
     "complaintTypeUser": "User Issue",
     "complaintTypeBook": "Book Issue",
     "loginRequired": "You must be logged in to submit a complaint.",
-    "joincommunity": "Join"
+    "joincommunity": "Join",
+    "com": "Your community for discovering,",
+    "trade": "trading, and sharing stories.",
+    "link": "Quick Links",
+    "profile": "Profile",
+    "rights": "© 2025 IBook. All rights reserved.",
+    "contact": "Connect With Us",
+    "Customer Service": "Customer Service",
+    "cust": "Customer Service",
+    "store": "About Our Store",
+    "work": "How It Works",
+    "pay": "Payment Options",
+    "sup": "Support Center"
   },
   "LoginPage": {
     "login": "Login",
@@ -174,7 +186,7 @@
   },
   "ChatPage": {
     "welcome": "Hello, my name is mr.book can I help you?",
-    "mrBook": "mrBook",
+    "mrBook": "MR.Book",
     "message": "Type your message...",
     "send": "Send"
   },

@@ -37,7 +37,18 @@
     "complaintTypeUser": "مشكلة مستخدم",
     "complaintTypeBook": "مشكلة كتاب",
     "loginRequired": "يجب أن تكون مسجلاً الدخول لتقديم شكوى.",
-    "joincommunity": "انضم"
+    "joincommunity": "انضم",
+    "com": "مجتمعك لاكتشاف",
+    "trade": "تبادل ومشاركة القصص.",
+    "link": "روابط سريعة",
+    "profile": "الملف الشخصي",
+    "rights": "© 2025 IBook. جميع الحقوق محفوظة.",
+    "contact": "تواصل معنا",
+    "cust": "خدمة العملاء",
+    "store": "عن متجرنا",
+    "work": "كيف يعمل",
+    "pay": "خيارات الدفع",
+    "sup": "مركز الدعم"
     
   },
   "LoginPage": {

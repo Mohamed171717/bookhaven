@@ -28,7 +28,8 @@ export const BooksProvider = ({ children }: { children: React.ReactNode }) => {
           ...doc.data(),
         })) as BookType[];
 
-        setBooks(allBooks);
+        const filteredBooks = allBooks.filter(book => book.approval === 'approved' && book.isDeleted === false && book.quantity! > 0);
+        setBooks(filteredBooks);
       } catch (error) {
         console.error('Error fetching books:', error);
       } finally {
