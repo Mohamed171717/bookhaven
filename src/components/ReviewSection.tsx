@@ -241,7 +241,7 @@ export default function ReviewSection({
               )}
               {!hasPurchased && (
                 <p className="text-gray-500 text-sm">
-                  You can only review this book after purchasing it.
+                  {t("can")}
                 </p>
               )}
             </>

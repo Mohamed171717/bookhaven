@@ -21,10 +21,6 @@ export default function PaymentSuccessPage() {
     null
   );
 
-  // const paymrntSuccess = () => {
-  //   router.replace('/')
-  // }
-
   useEffect(() => {
     setBoughtBooks(cart);
 
@@ -66,7 +62,7 @@ export default function PaymentSuccessPage() {
   return (
     <>
       <Header />
-      <div className="min-h-screen py-12 px-4 flex justify-center pt-[110px] 2xl:pt-[140px]">
+      <div className="min-h-screen py-12 px-4 flex justify-center pt-[130px]">
         <div className="max-w-2xl w-full">
           {/* Success Icon & Title */}
           <div className="text-center mb-8">

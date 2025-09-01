@@ -7,5 +7,5 @@ export interface Notification {
   type: "book_sold" | "book_request" | "book_approved" | "book_rejected";
   senderId?: string;
   message: string;
-  timestamp: Timestamp;
+  timestamp?: Timestamp;
 }

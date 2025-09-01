@@ -139,6 +139,7 @@ export default function BookDetailsPage() {
     return <div className="text-center py-20">{t("loadingBooksDetails")}</div>;
   }
 
+
   return (
     <>
       <Header />
@@ -179,6 +180,12 @@ export default function BookDetailsPage() {
           </p>
           <p className="text-sm text-gray-500 font-semibold">
             {t("condition:")} {book.condition}
+          </p>
+          <p className="text-sm text-gray-500 font-semibold">
+            {t("quantity:")} {book.quantity}
+          </p>
+          <p className="text-sm text-gray-500 font-semibold">
+            {t("location:")} {book.location}
           </p>
 
           {bookOwner?.role === "library" && (

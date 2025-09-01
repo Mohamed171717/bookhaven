@@ -17,6 +17,7 @@ import { useAuth } from "@/context/AuthContext";
 import toast from "react-hot-toast";
 import { useTranslations } from "next-intl";
 import { signOut } from "firebase/auth";
+import Image from "next/image";
 
 interface Message {
   id?: string;
@@ -142,7 +143,11 @@ export default function ChatPage() {
     <Header/>
     <div className="pt-[120px] chat-height lg:pt-[140px] pb-10 container mx-auto px-4 md:px-8 lg:px-20">
       <div className="flex flex-col h-[68vh] messages-container max-w-3xl lg:max-w-5xl mx-auto bg-color-bg rounded-lg overflow-hidden">
-        <h1 className="text-2xl font-bold mb-2 text-start">{t('mrBook')}</h1>
+        <div className="flex  items-center mb-2">
+          <Image src='/chatbot.png' width={70} height={70} alt="chatbot image"/>
+          <h1 className="text-2xl font-bold text-start">
+          {t('mrBook')}</h1>
+        </div>
         <div className={`${ messages.length > 0 || "flex items-center justify-center"} flex-1 overflow-y-auto py-6 px-6 md:px-20 lg:px-40 space-y-4`}>
           {messages.length > 0 ? messages.map((msg) => (
             <div

@@ -7,7 +7,11 @@ import CommentCard from "./CommentCard";
 import CommentInput from "./CommentInput";
 import { CommentType } from "@/types/PostType";
 
-export default function CommentSection({ postId }: { postId: string }) {
+type CommentSectionProps = {
+  postId: string;
+};
+
+export default function CommentSection({ postId }: CommentSectionProps) {
   const [comments, setComments] = useState<CommentType[]>([]);
 
   useEffect(() => {

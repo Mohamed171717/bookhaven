@@ -1,28 +1,47 @@
+"use client";
 
-import { getDoc, doc } from "firebase/firestore";
-import { notFound } from "next/navigation";
+import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { PostType } from "@/types/PostType";
 import Header from "@/components/layout/Header";
 import PostCard from "../PostCard";
 import CommentSection from "../CommentSection";
-import { getTranslations } from "next-intl/server";
+import { useParams } from "next/navigation";
+import { useTranslations } from "next-intl";
+import { useEffect, useState } from "react";
 
-interface Props {
-  params: { locale: string; id: string };
-}
+export default function PostPage() {
+  const { id } = useParams();
+  const postId = id;  
+  const t = useTranslations("CommunityPage");
+  const [ post, setPost ] = useState<PostType>();
 
-export default async function PostPage({ params }: Props) {
-  const { id, locale } = params;
-  const postId = id;
+  useEffect(() => {
+    const fetchPost = async () => {
+      try {
+        const q = query(collection(db, "posts"), where("postId", "==", postId));
+        const postSnap = await getDocs(q);
+        
+        // if (!postSnap.empty) {
+          const doc = postSnap.docs[0];
+          const postData = doc.data() as PostType;
+          console.log("Post ID from URL:", postData);
+          setPost(postData);
+        // }
+      } catch (err) {
+        console.error("Error fetching post:", err);
+      }
+    };
+    if (postId) fetchPost();
+  },[postId]);
 
-  const t = await getTranslations({ locale, namespace: "CommunityPage" });
-  const postRef = doc(db, "posts", postId);
-  const postSnap = await getDoc(postRef);
-
-  if (!postSnap.exists()) return notFound();
-
-  const post = { ...(postSnap.data() as PostType), postId };
+  if (!post) {
+    return (
+      <>
+      <h2 className="text-center mt-[25%]">Loading Post...</h2>
+      </>
+    );
+  }
 
   return (
     <>
@@ -37,7 +56,7 @@ export default async function PostPage({ params }: Props) {
           <div className="bg-[#FAF7F0] border border-[#D8D2C2] rounded-2xl p-4 h-fit shadow">
             <h2 className="text-lg font-semibold mb-3">{t('all')}</h2>
 
-            <CommentSection postId={postId} />
+            <CommentSection postId={post.postId} />
           </div>
         </div>
       </div>

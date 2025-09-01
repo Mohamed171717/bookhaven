@@ -44,7 +44,7 @@ export default function PostCard({ post, showComment, onPostDeleted }: props) {
     photoUrl: string;
     uid: string;
   } | null>(null);
-
+  
   const isOwner = user?.uid === livePost.userId;
 
   // 🔄 Real-time sync for post

@@ -4,11 +4,11 @@ import React, { useState } from "react";
 import { Dialog } from "@headlessui/react";
 //==
 import {
-  addDoc,
   collection,
   doc,
   getDoc,
   serverTimestamp,
+  setDoc,
 } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { uploadImageToImageKit } from "@/app/[locale]/utils/imagekitUpload";
@@ -59,8 +59,10 @@ const PostCreator = ({ onPostCreated }: PostCreatorProps) => {
       }
 
       // Create post in Firestore
-      const newPostRef = await addDoc(collection(db, "posts"), {
+      const newPostRef = doc(collection(db, "posts"));
+      await setDoc(newPostRef, {
         userId: user?.uid,
+        postId: newPostRef.id,
         content,
         imageURL: imageUrl || null,
         createdAt: serverTimestamp(),

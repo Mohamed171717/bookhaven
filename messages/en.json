@@ -4,7 +4,7 @@
     "home": "Home",
     "shop": "Books",
     "community": "Community",
-    "support": "Support",
+    "support": "Guide",
     "searchPlaceholder": "Search books...",
     "chat": "Recent Chats",
     "explore": "Explore Books",
@@ -160,7 +160,10 @@
     "bookReview": "Book Review",
     "rate": "Rate",
     "rating": "Rating",
-    "writeComment": "Write your comment (optional)..."
+    "writeComment": "Write your comment (optional)...",
+    "location:": "Location:",
+    "quantity:" : "Quantity:",
+    "can": "You can only review this book after purchasing it."
   },
   "CommunityPage": {
     "noPosts": "No posts yet. Be the first to share something!",
@@ -174,6 +177,8 @@
     "click": "Click to upload image",
     "edit": "Edit Post",
     "delete": "Delete Post",
+    "editComment": "Edit",
+    "deleteComment": "Delete",
     "read": "Read More",
     "comments": "Comments",
     "update": "Update",

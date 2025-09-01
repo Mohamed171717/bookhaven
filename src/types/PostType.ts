@@ -13,6 +13,7 @@ export interface PostType {
   updatedAt?: Timestamp;
 }
 
+
 export interface CommentType {
   id: string;
   userId: string;

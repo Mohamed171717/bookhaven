@@ -6,11 +6,8 @@ import { useCart } from "@/context/CartContext";
 import Image from "next/image";
 import toast from "react-hot-toast";
 import { useState } from "react";
-// import { useRouter } from "next/navigation";
 import LanguageSwitcher from "@/components/layout/languageSwitcher";
 import { egyptLocations } from "./egyptLocations";
-// import { pay } from "../utils/paymob";
-import { createPaymentIntention } from "@/app/api/paymob/route";
 import { useAuth } from "@/context/AuthContext";
 import { ShippingInfoType } from "@/types/TransactionType";
 import { useTranslations } from "next-intl";
@@ -106,12 +103,30 @@ const Checkout = () => {
         "shippingInfoUser",
         JSON.stringify(shippingInfoUser)
       );
-      await createPaymentIntention(formData, user?.uid, cart);
+      // Create payment intention and get checkout URL
+      const res = await fetch("/api/paymob", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          paymentData: formData,
+          userId: user?.uid,
+          books: cart,
+        }),
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        window.location.href = data.checkoutUrl;
+      } else {
+        toast.error("Payment failed: " + data.error);
+      }
+      // end
     } catch (err) {
       toast.error("Payment failed, please try again" + err);
     } finally {
       setLoading(false);
     }
+
   };
 
   return (

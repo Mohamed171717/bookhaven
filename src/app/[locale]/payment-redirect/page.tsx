@@ -8,7 +8,7 @@ import { useAuth } from "@/context/AuthContext";
 import { v4 as uuid } from "uuid";
 import { getBookOwner } from "../utils/gettingOwner";
 import { addNotification } from "../utils/addingNotification";
-// import { Notification } from "@/types/NotificationType";
+import { Notification } from "@/types/NotificationType";
 
 export default function PaymentRedirect() {
   // const [status, setStatus] = useState<string>("");
@@ -52,11 +52,11 @@ export default function PaymentRedirect() {
     cart.map(async (item) => {
       const owner = await getBookOwner(item.bookId);
       if (owner) {
-        const notification = {
+        const notification: Notification = {
           id: uuid(),
           reciverId: owner.uid,
           title: "Sale Notification",
-          type: "book_selled" as const,
+          type: "book_sold" as const,
           message: `${user.name} has bought Your book "${item.title}" ${
             item.quantity > 1 ? `(${item.quantity} copies)` : ""
           }`,
