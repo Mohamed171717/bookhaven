@@ -298,7 +298,7 @@ export default function ReviewSection({
       {type === "user" && targetUser && (
         <div className="space-y-6">
           {/* User Info */}
-          <div className="flex justify-between items-center gap-3">
+          <div className="flex justify-between flex-col sm:flex-row items-center gap-3">
             <div className="flex items-center gap-3">
               <Image
                 src={targetUser.photoUrl}
@@ -337,8 +337,8 @@ export default function ReviewSection({
           ) : (
             // <>
             // { hasPurchased && (
-            <div className="flex justify-between items-center gap-3">
-              <div className="flex gap-1 mr-32">
+            <div className="flex justify-between flex-col sm:flex-row items-center gap-3">
+              <div className="flex gap-1 mr-2 sm:mr-32">
                 <p className="font-medium mr-1">{t("rateOwner")}</p>
                 {[1, 2, 3, 4, 5].map((i) => (
                   <Star

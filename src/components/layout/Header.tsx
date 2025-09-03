@@ -95,7 +95,7 @@ export default function Header() {
   };
 
   return (
-    <header style={{width: '100%', position: 'fixed'}} className="bg-white z-30 px-4 py-6 shadow-lg">
+    <header style={{width: '100%', position: 'fixed'}} className="bg-white z-30 px-4 py-2 md:py-4 xl:py-6 shadow-lg">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         {/* Left: Logo + Nav */}
         <div className="flex items-baseline gap-4 md:gap-16">
@@ -206,7 +206,7 @@ export default function Header() {
                   src={user.photoUrl || "/user-default.jpg"}
                   alt="User Avatar"
                   style={{ border: "1px solid gray" }}
-                  className="rounded-full md:w-10 md:h-10"
+                  className="rounded-full w-8 h-8 md:w-10 md:h-10"
                 />
               </Link>
             </div>
@@ -303,37 +303,47 @@ export default function Header() {
               >
                 {t('shop')}
               </Link>
-              <Link 
-                href="/community" 
-                className="block py-2 text-lg font-medium text-gray-700 hover:text-gray-900 transition-colors"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                {t('community')}
-              </Link>
-              <Link 
-                href="/support" 
-                className="block py-2 text-lg font-medium text-gray-700 hover:text-gray-900 transition-colors"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                {t('support')}
-              </Link>
+              {/* old */}
+              { user ? (
+              <>
+                <Link 
+                  href="/community" 
+                  className="block py-2 text-lg font-medium text-gray-700 hover:text-gray-900 transition-colors"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  {t('community')}
+                </Link>
+                <Link 
+                  href="/support" 
+                  className="block py-2 text-lg font-medium text-gray-700 hover:text-gray-900 transition-colors"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  {t('support')}
+                </Link>
+              </>
+              ) : (
+                <>
+                  <Link 
+                    href="/auth" 
+                    className="block py-2 text-lg font-medium text-gray-700 hover:text-gray-900 transition-colors"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    {t('community')}
+                  </Link>
+                  <Link 
+                    href="/auth" 
+                    className="block py-2 text-lg font-medium text-gray-700 hover:text-gray-900 transition-colors"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    {t('support')}
+                  </Link>
+                </>
+              )}
               <div className="hover:text-gray-900 transition-colors">
                 <LanguageSwitcher />
               </div>
             </nav>
-
-            {/* Mobile Auth Section */}
-            {!user && (
-              <div className="pt-4 border-t border-gray-200">
-                <Link
-                  href="/auth"
-                  className="block w-full text-center py-2 px-4 rounded-md text-sm font-medium bg-primary-color text-white hover:bg-gray-700 transition"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  {l('login')}
-                </Link>
-              </div>
-            )}
+            
           </div>
         </div>
       )}

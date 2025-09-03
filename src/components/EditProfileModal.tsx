@@ -71,7 +71,7 @@ export default function EditProfileModal({ onClose, onUpdate }: Props) {
 
   return (
     <div style={{margin: 0}} className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center">
-      <div className="bg-white rounded-lg p-6 w-full max-w-2xl">
+      <div className="bg-white rounded-lg p-6 w-[90%] max-w-2xl">
         <h2 className="text-xl font-bold mb-4">{t('editProfile')}</h2>
         {/* name */}
         <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">{t('name')}</label>

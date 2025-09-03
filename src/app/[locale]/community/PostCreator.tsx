@@ -111,7 +111,7 @@ const PostCreator = ({ onPostCreated }: PostCreatorProps) => {
     <>
       {/* Trigger Box */}
       {!user?.isBanned && (
-        <div className="bg-[#f1f1f1] rounded-xl shadow-md p-4 mb-6 flex gap-3 items-center border border-[#D8D2C2]">
+        <div className="bg-[#f1f1f1] rounded-xl shadow-md mx-3 md:mx-1 p-4 mb-6 flex gap-3 items-center border border-[#D8D2C2]">
           <div className="relative">
             <Image
               src={user?.photoUrl || "/user-default.jpg"}

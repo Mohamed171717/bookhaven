@@ -151,7 +151,7 @@ export default function PostCard({ post, showComment, onPostDeleted }: props) {
   }, [livePost.content]);
 
   return (
-    <div className="animated-border-card p-1 rounded-xl mb-6">
+    <div className="animated-border-card px-3 md:px-1 md:py-1 rounded-xl mb-6">
       <div className="bg-[#f1f1f1]  rounded-xl shadow-lg p-5 border border-[#dddbd4] ">
         {/* Header */}
         <div className="flex items-center gap-3 mb-3">

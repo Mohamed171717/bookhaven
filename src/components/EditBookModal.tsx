@@ -66,7 +66,7 @@ export default function EditBookModal({ book, onClose, onUpdate }: EditBookModal
 
   return (
     <div className="fixed inset-0 bg-black/20 z-50 flex items-center justify-center">
-      <div className="bg-white p-6 pt-10 rounded-xl w-full max-w-2xl shadow-xl relative">
+      <div className="bg-white p-6 pt-10 rounded-xl w-[90%] max-w-2xl shadow-xl relative">
         <button onClick={onClose} className="absolute top-2 right-3 text-gray-500 hover:text-[#b63333] text-3xl transition">×</button>
         <h2 className="text-lg font-bold mb-4">{t('editBook')}</h2>
 

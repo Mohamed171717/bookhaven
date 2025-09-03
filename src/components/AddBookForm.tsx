@@ -119,7 +119,7 @@ export default function AddBookModal({ onClose, onAdd }: AddBookModalProps) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-      <div className="bg-white p-6 pt-10 rounded-lg max-w-2xl w-full shadow-md relative">
+      <div className="bg-white p-6 pt-10 rounded-lg w-[90%] max-w-2xl shadow-md relative">
         <button
           onClick={onClose}
           className="absolute top-2 right-3 text-gray-500 hover:text-[#b63333] text-3xl transition"

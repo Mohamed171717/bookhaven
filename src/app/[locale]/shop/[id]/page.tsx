@@ -143,7 +143,7 @@ export default function BookDetailsPage() {
   return (
     <>
       <Header />
-      <div className="flex flex-col lg:flex-row gap-10 fix-height pt-[155px] pb-10 container mx-auto px-20">
+      <div className="flex flex-col lg:flex-row gap-10 fix-height pt-[155px] pb-10 container mx-auto px-10 lg:px-20">
         {/* Left Section - Images */}
         <div className="flex flex-row gap-4">
           <div className="flex flex-col gap-2 overflow-y-auto">
@@ -248,7 +248,7 @@ export default function BookDetailsPage() {
           </div>
         </div>
       </div>
-      <div className="flex flex-col lg:flex-row gap-10 pb-16 container mx-auto px-20">
+      <div className="flex flex-col lg:flex-row gap-10 pb-16 container mx-auto px-10 lg:px-20">
         <ReviewSection
           targetId={book.ownerId}
           targetUser={bookOwner}

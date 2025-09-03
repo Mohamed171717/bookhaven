@@ -135,7 +135,7 @@ export function AbsoluteLanguageSwitcher() {
   return (
     <>
       {/* Language Switcher */}
-      <div className="absolute top-10 left-16 rounded bg-card-bg border" ref={languageRef}>
+      <div className="absolute z-50 top-10 left-16 rounded bg-card-bg border" ref={languageRef}>
         <button
           onClick={() => setIsLanguageDropdownOpen(!isLanguageDropdownOpen)}
           className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors"
