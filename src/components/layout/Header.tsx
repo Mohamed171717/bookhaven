@@ -95,7 +95,7 @@ export default function Header() {
   };
 
   return (
-    <header style={{width: '100%', position: 'fixed'}} className="bg-white z-30 px-4 py-2 md:py-4 xl:py-6 shadow-lg">
+    <header style={{width: '100%', position: 'fixed'}} className="bg-white z-30 px-4 py-2 md:py-4 shadow-lg">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         {/* Left: Logo + Nav */}
         <div className="flex items-baseline gap-4 md:gap-16">
