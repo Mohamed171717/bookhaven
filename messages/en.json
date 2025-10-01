@@ -1,4 +1,3 @@
-
 {
   "HomePage": {
     "home": "Home",
@@ -109,7 +108,6 @@
     "order": "All books you ordered",
     "noOrder": "No orders found.",
     "sold": "All books that had been sold"
-
   },
   "ShopPage": {
     "shop": "Shop Books",
@@ -162,7 +160,7 @@
     "rating": "Rating",
     "writeComment": "Write your comment (optional)...",
     "location:": "Location:",
-    "quantity:" : "Quantity:",
+    "quantity:": "Quantity:",
     "can": "You can only review this book after purchasing it."
   },
   "CommunityPage": {
@@ -187,7 +185,8 @@
     "writeComment": "Write Comment...",
     "all": "All Comments",
     "save": "Save",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "report": "Report"
   },
   "ChatPage": {
     "welcome": "Hello, my name is mr.book can I help you?",
@@ -229,7 +228,5 @@
     "exCity": "Street name, building number...",
     "exNote": "note about delivery",
     "selectgov": "Select Government"
-
-
   }
 }

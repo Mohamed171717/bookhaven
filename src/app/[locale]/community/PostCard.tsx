@@ -13,6 +13,8 @@ import {
   arrayRemove,
   getDocs,
   getDoc,
+  addDoc,
+  serverTimestamp,
 } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { useAuth } from "@/context/AuthContext";
@@ -21,6 +23,7 @@ import Link from "next/link";
 import { PostType } from "@/types/PostType";
 import PostEdit from "./PostEdit";
 import { useTranslations } from "next-intl";
+import PromptDialog from "@/components/PromptDialog";
 
 interface props {
   post: PostType;
@@ -29,6 +32,7 @@ interface props {
 }
 
 export default function PostCard({ post, showComment, onPostDeleted }: props) {
+  const [isOpen, setIsOpen] = useState(false);
   const { user } = useAuth();
   const [livePost, setLivePost] = useState<PostType>(post);
   const [liked, setLiked] = useState(false);
@@ -44,7 +48,7 @@ export default function PostCard({ post, showComment, onPostDeleted }: props) {
     photoUrl: string;
     uid: string;
   } | null>(null);
-  
+
   const isOwner = user?.uid === livePost.userId;
 
   // 🔄 Real-time sync for post
@@ -140,6 +144,37 @@ export default function PostCard({ post, showComment, onPostDeleted }: props) {
     await deleteDoc(doc(db, "posts", post.postId));
     toast.success("Post deleted");
     // No need to call onPostDeleted here because onSnapshot will detect deletion.
+  };
+
+  const getOwnerEmail = async () => {
+    try {
+      const userDoc = await getDoc(doc(db, "users", post.userId));
+      if (userDoc.exists()) {
+        const data = userDoc.data();
+        return data.email;
+      }
+    } catch (error) {
+      console.error("Error fetching owner email:", error);
+    }
+    return null;
+  };
+
+  const handleReport = async (text: string) => {
+    await addDoc(collection(db, "complains"), {
+      userId: user?.uid,
+      reporter: user?.email,
+      reportedTo: await getOwnerEmail(),
+      reportedToId: post.userId,
+      complainType: "post",
+      description: text,
+      postId: post.postId,
+      image: post.imageURL,
+      content: post.content,
+      createdAt: serverTimestamp(),
+    });
+
+    setIsOpen(false);
+    toast.success("Post reported");
   };
 
   // overflowing text
@@ -319,53 +354,83 @@ export default function PostCard({ post, showComment, onPostDeleted }: props) {
         )}
 
         {/* Actions */}
-        <div className="flex items-center gap-6 pt-3 border-t border-[#D8D2C2]">
-          {/* Like */}
-          <button
-            onClick={toggleLike}
-            className="flex items-center gap-2 group"
-          >
-            <div className="p-1.5 rounded-full group-hover:bg-[#D8D2C2]/50 transition-colors">
-              {liked ? (
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="#B17457"
-                  className="w-5 h-5"
-                >
-                  <path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z" />
-                </svg>
-              ) : (
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="#4A4947"
-                  className="w-5 h-5 group-hover:stroke-[#B17457] transition-colors"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"
-                  />
-                </svg>
-              )}
-            </div>
-            <span
-              className={`text-sm ${
-                liked ? "text-[#B17457] font-medium" : "text-[#4A4947]"
-              }`}
-            >
-              {livePost.likes?.length || 0}
-            </span>
-          </button>
-
-          {/* Comment */}
-          {showComment && (
-            <Link
-              href={!user ? `/auth` : `/community/${post.postId}`}
+        <div className="flex items-center justify-between w-full pt-3 border-t border-[#D8D2C2]">
+          <div className="flex gap-6 items-center">
+            {/* Like */}
+            <button
+              onClick={toggleLike}
               className="flex items-center gap-2 group"
+            >
+              <div className="p-1.5 rounded-full group-hover:bg-[#D8D2C2]/50 transition-colors">
+                {liked ? (
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="#B17457"
+                    className="w-5 h-5"
+                  >
+                    <path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z" />
+                  </svg>
+                ) : (
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="#4A4947"
+                    className="w-5 h-5 group-hover:stroke-[#B17457] transition-colors"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"
+                    />
+                  </svg>
+                )}
+              </div>
+              <span
+                className={`text-sm ${
+                  liked ? "text-[#B17457] font-medium" : "text-[#4A4947]"
+                }`}
+              >
+                {livePost.likes?.length || 0}
+              </span>
+            </button>
+
+            {/* Comment */}
+            {showComment && (
+              <Link
+                href={!user ? `/auth` : `/community/${post.postId}`}
+                className="flex items-center gap-2 group"
+              >
+                <div className="p-1.5 rounded-full group-hover:bg-[#D8D2C2]/50 transition-colors">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="#4A4947"
+                    className="w-5 h-5 group-hover:stroke-[#B17457] transition-colors"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.432.447.74 1.04.586 1.641a4.483 4.483 0 01-.923 1.785A5.969 5.969 0 006 21c1.282 0 2.47-.402 3.445-1.087.81.22 1.668.337 2.555.337z"
+                    />
+                  </svg>
+                </div>
+                <span className="text-sm text-[#4A4947] group-hover:text-[#B17457] transition-colors">
+                  {commentCount} {t("comments")}
+                </span>
+              </Link>
+            )}
+          </div>
+
+          {/* Report */}
+          {!isOwner && (
+            <button
+              className="flex items-center gap-2 group"
+              onClick={() => setIsOpen(true)}
             >
               <div className="p-1.5 rounded-full group-hover:bg-[#D8D2C2]/50 transition-colors">
                 <svg
@@ -379,17 +444,27 @@ export default function PostCard({ post, showComment, onPostDeleted }: props) {
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.432.447.74 1.04.586 1.641a4.483 4.483 0 01-.923 1.785A5.969 5.969 0 006 21c1.282 0 2.47-.402 3.445-1.087.81.22 1.668.337 2.555.337z"
+                    d="M18.364 18.364A9 9 0 0 0 5.636 5.636m12.728 12.728A9 9 0 0 1 5.636 5.636m12.728 12.728L5.636 5.636"
                   />
                 </svg>
               </div>
               <span className="text-sm text-[#4A4947] group-hover:text-[#B17457] transition-colors">
-                {commentCount} {t("comments")}
+                {t("report")}
               </span>
-            </Link>
+            </button>
           )}
         </div>
       </div>
+      <PromptDialog
+        open={isOpen}
+        title="Feedback"
+        message="Please enter your feedback below:"
+        placeholder="Why do you want to report this post?"
+        confirmText="Send"
+        cancelText="Cancel"
+        onConfirm={handleReport}
+        onCancel={() => setIsOpen(false)}
+      />
     </div>
   );
 }
