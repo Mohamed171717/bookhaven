@@ -3,14 +3,6 @@
 
 import { useTranslations } from "next-intl";
 
-const priceOptions = [
-  { label: 'Untill 50 EGP', value: '0-50' },
-  { label: '50 EGP - 100 EGP', value: '50-100' },
-  { label: '100 EGP - 150 EGP', value: '100-150' },
-  { label: '150 EGP - 200 EGP', value: '150-200' },
-  { label: 'More than 200 EGP', value: '200-200000' },
-];
-
 interface Props {
   selectedGenres: string[];
   selectedAvilable: string[];
@@ -36,9 +28,16 @@ export default function ShopFilterSidebar(
   const t = useTranslations('ShopPage');
 
   const genreOptions = [
-    t('fiction'), t('fantasy'), t('science fiction'), t('mystery & thriller'),
-    t('romance'), t('historical'), t('young adult'), t('horror'),
-    t('biography'), t('personal growth'),
+    { label: t('fiction'), value: 'Fiction' },
+    { label: t('fantasy'), value: 'Fantasy' },
+    { label: t('science fiction'), value: 'Science Fiction' },
+    { label: t('mystery & thriller'), value: 'Mystery & Thriller' },
+    { label: t('romance'), value: 'Romance' },
+    { label: t('historical'), value: 'Historical' },
+    { label: t('young adult'), value: 'Young Adult' },
+    { label: t('horror'), value: 'Horror' },
+    { label: t('biography'), value: 'Biography' },
+    { label: t('personal growth'), value: 'Personal Growth' },
   ];
 
   const availableOptions = [
@@ -49,6 +48,14 @@ export default function ShopFilterSidebar(
   const conditions = [
     { label: t('new'), value: 'new' },
     { label: t('used'), value: 'used' },
+  ];
+
+  const priceOptions = [
+    { label: t('untill'), value: '0-50' },
+    { label: '50 EGP - 100 EGP', value: '50-100' },
+    { label: '100 EGP - 150 EGP', value: '100-150' },
+    { label: '150 EGP - 200 EGP', value: '150-200' },
+    { label: t('moreThan'), value: '200-200000' },
   ];
 
 
@@ -85,15 +92,15 @@ export default function ShopFilterSidebar(
         {/* Genre Filter */}
         <div>
           <h4 className="font-semibold text-md mb-2">{t('genres')}</h4>
-          {genreOptions.map((genre) => (
-            <label key={genre} className="block text-md mb-1">
+          {genreOptions.map(({label, value}) => (
+            <label key={value} className="block text-md mb-1">
               <input
                 type="checkbox"
                 className='appearance-none mx-2 mb-[-2px] w-4 h-4 border-2 border-gray-500 rounded-sm checked:bg-[#4A4947] checked:border-[#4A4947] focus:outline-none'
-                checked={selectedGenres.includes(genre)}
-                onChange={() => handleGenreChange(genre)}
+                checked={selectedGenres.includes(value)}
+                onChange={() => handleGenreChange(value)}
               />
-              {genre}
+              {label}
             </label>
           ))}
         </div>
