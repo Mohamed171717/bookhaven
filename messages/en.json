@@ -161,7 +161,9 @@
     "writeComment": "Write your comment (optional)...",
     "location:": "Location:",
     "quantity:": "Quantity:",
-    "can": "You can only review this book after purchasing it."
+    "can": "You can only review this book after purchasing it.",
+    "untill": "Untill 50 EGP",
+    "moreThan": "More than 200 EGP"
   },
   "CommunityPage": {
     "noPosts": "No posts yet. Be the first to share something!",
