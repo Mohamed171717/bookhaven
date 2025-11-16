@@ -19,8 +19,8 @@ import toast from "react-hot-toast";
 
 export default function Header() {
   const { user, loading } = useAuth();
-  const t = useTranslations('HomePage');
-  const l = useTranslations('LoginPage');
+  const t = useTranslations("HomePage");
+  const l = useTranslations("LoginPage");
   const { cart } = useCart();
   const { books } = useBooks();
   const router = useRouter();
@@ -30,17 +30,16 @@ export default function Header() {
   const [filteredBooks, setFilteredBooks] = useState<BookType[]>([]);
   const searchRef = useRef<HTMLDivElement>(null);
 
-
   useEffect(() => {
     const out = async () => {
-      if (user?.isBanned === true ) {
+      if (user?.isBanned === true) {
         await signOut(auth);
-        toast.error('Your account has been banned.');
+        toast.error("Your account has been banned.");
         return; // Stop further execution
       }
-    }
+    };
     out();
-  },[user]) 
+  }, [user]);
 
   // Filter books based on search query
   useEffect(() => {
@@ -51,9 +50,10 @@ export default function Header() {
     }
 
     const filtered = books
-      .filter(book => 
-        book.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        book.author.toLowerCase().includes(searchQuery.toLowerCase())
+      .filter(
+        (book) =>
+          book.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          book.author.toLowerCase().includes(searchQuery.toLowerCase())
       )
       .slice(0, 5); // Limit to 5 results
 
@@ -64,7 +64,10 @@ export default function Header() {
   // Close search results when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
+      if (
+        searchRef.current &&
+        !searchRef.current.contains(event.target as Node)
+      ) {
         setShowSearchResults(false);
       }
     };
@@ -95,38 +98,65 @@ export default function Header() {
   };
 
   return (
-    <header style={{width: '100%', position: 'fixed'}} className="bg-white z-30 px-4 py-2 md:py-4 xl:py-6 shadow-lg">
+    <header
+      style={{ width: "100%", position: "fixed" }}
+      className="bg-white z-30 px-4 py-2 md:py-4 shadow-lg"
+    >
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         {/* Left: Logo + Nav */}
         <div className="flex items-baseline gap-4 md:gap-16">
-          <Link href="/" className="text-2xl md:text-3xl font-bold primary-color">
-            <Image src={"/logo.png"} alt="Book Haven Logo" width={120} height={120} className="inline-block mr-2" />
+          <Link
+            href="/"
+            className="text-2xl md:text-3xl font-bold primary-color"
+          >
+            <Image
+              src={"/logo.png"}
+              alt="Book Haven Logo"
+              width={120}
+              height={120}
+              className="inline-block mr-2"
+            />
           </Link>
           {/* Desktop Navigation - Only show on 2xl screens and above (1440px) */}
           <nav className="hidden 2xl:flex gap-5 items-baseline text-xl font-medium text-gray-700">
             <Link href="/" className="hover:text-gray-900 transition-colors">
-              {t('home')}
+              {t("home")}
             </Link>
-            <Link href="/shop" className="hover:text-gray-900 transition-colors">
-              {t('shop')}
+            <Link
+              href="/shop"
+              className="hover:text-gray-900 transition-colors"
+            >
+              {t("shop")}
             </Link>
-            { user ? (
+            {user ? (
               <>
-              <Link href="/community" className="hover:text-gray-900 transition-colors">
-                {t('community')}
-              </Link>
-              <Link href="/support" className="hover:text-gray-900 transition-colors">
-                {t('support')}
-              </Link>
+                <Link
+                  href="/community"
+                  className="hover:text-gray-900 transition-colors"
+                >
+                  {t("community")}
+                </Link>
+                <Link
+                  href="/support"
+                  className="hover:text-gray-900 transition-colors"
+                >
+                  {t("support")}
+                </Link>
               </>
             ) : (
               <>
-              <Link href="/auth" className="hover:text-gray-900 transition-colors">
-                {t('community')}
-              </Link>
-              <Link href="/auth" className="hover:text-gray-900 transition-colors">
-                {t('support')}
-              </Link>
+                <Link
+                  href="/auth"
+                  className="hover:text-gray-900 transition-colors"
+                >
+                  {t("community")}
+                </Link>
+                <Link
+                  href="/auth"
+                  className="hover:text-gray-900 transition-colors"
+                >
+                  {t("support")}
+                </Link>
               </>
             )}
             <div className="hover:text-gray-900 transition-colors">
@@ -142,16 +172,20 @@ export default function Header() {
             <form onSubmit={handleSearchSubmit}>
               <input
                 type="text"
-                placeholder={t('searchPlaceholder') || "Search books..."}
+                placeholder={t("searchPlaceholder") || "Search books..."}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="pl-4 pr-10 py-1 md:py-2 rounded-full bg-card-bg border placeholder-gray-600 text-sm md:text-lg text-gray-800 outline-none w-32 sm:w-48 md:w-80"
               />
-              <button type="submit" className="absolute right-4 top-1/2 transform -translate-y-1/2 text-lg text-gray-700">
+              <button
+                title="Search"
+                type="submit"
+                className="absolute right-4 top-1/2 transform -translate-y-1/2 text-lg text-gray-700"
+              >
                 <CiSearch />
               </button>
             </form>
-            
+
             {/* Search Results Dropdown */}
             {showSearchResults && (
               <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-80 overflow-y-auto">
@@ -179,14 +213,16 @@ export default function Header() {
                         <p className="text-xs font-medium text-primary-color">
                           {book.price.toFixed(2)} EGP
                         </p>
-                      ) : (<p></p>)}
+                      ) : (
+                        <p></p>
+                      )}
                     </div>
                   </div>
                 ))}
               </div>
             )}
           </div>
-          
+
           {/* login or profile */}
           {user ? (
             <div className="flex items-center gap-2 md:gap-4">
@@ -199,7 +235,7 @@ export default function Header() {
                 )}
               </Link>
               <ChatIcon />
-              <Link href={`/profile`}>  
+              <Link href={`/profile`}>
                 <Image
                   width={50}
                   height={50}
@@ -215,7 +251,7 @@ export default function Header() {
               href="/auth"
               className="px-4 py-1 md:py-2 rounded-full border text-gray-50 bg-primary-color hover:bg-[#b17457] transition"
             >
-              {l('login')}
+              {l("login")}
             </Link>
           )}
 
@@ -239,20 +275,24 @@ export default function Header() {
         <div className="2xl:hidden absolute top-full left-0 right-0 bg-white shadow-lg border-t border-gray-200">
           <div className="px-4 py-4 space-y-4">
             {/* Mobile Search */}
-            <div className="relative" ref={searchRef}>
+            <div className="relative block sm:hidden" ref={searchRef}>
               <form onSubmit={handleSearchSubmit}>
                 <input
                   type="text"
-                  placeholder={t('searchPlaceholder')}
+                  placeholder={t("searchPlaceholder")}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="w-full pl-4 pr-10 py-3 rounded-full bg-gray-100 placeholder-gray-600 text-gray-800 outline-none"
                 />
-                <button type="submit" className="absolute right-4 top-1/2 transform -translate-y-1/2 text-lg text-gray-700">
+                <button
+                  title="Search"
+                  type="submit"
+                  className="absolute right-4 top-1/2 transform -translate-y-1/2 text-lg text-gray-700"
+                >
                   <CiSearch />
                 </button>
               </form>
-              
+
               {/* Mobile Search Results */}
               {showSearchResults && (
                 <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-60 overflow-y-auto">
@@ -289,53 +329,53 @@ export default function Header() {
             </div>
             {/* Mobile Navigation Links */}
             <nav className="space-y-3">
-              <Link 
-                href="/" 
+              <Link
+                href="/"
                 className="block py-2 text-lg font-medium text-gray-700 hover:text-gray-900 transition-colors"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
-                {t('home')}
+                {t("home")}
               </Link>
-              <Link 
-                href="/shop" 
+              <Link
+                href="/shop"
                 className="block py-2 text-lg font-medium text-gray-700 hover:text-gray-900 transition-colors"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
-                {t('shop')}
+                {t("shop")}
               </Link>
               {/* old */}
-              { user ? (
-              <>
-                <Link 
-                  href="/community" 
-                  className="block py-2 text-lg font-medium text-gray-700 hover:text-gray-900 transition-colors"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  {t('community')}
-                </Link>
-                <Link 
-                  href="/support" 
-                  className="block py-2 text-lg font-medium text-gray-700 hover:text-gray-900 transition-colors"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  {t('support')}
-                </Link>
-              </>
+              {user ? (
+                <>
+                  <Link
+                    href="/community"
+                    className="block py-2 text-lg font-medium text-gray-700 hover:text-gray-900 transition-colors"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    {t("community")}
+                  </Link>
+                  <Link
+                    href="/support"
+                    className="block py-2 text-lg font-medium text-gray-700 hover:text-gray-900 transition-colors"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    {t("support")}
+                  </Link>
+                </>
               ) : (
                 <>
-                  <Link 
-                    href="/auth" 
+                  <Link
+                    href="/auth"
                     className="block py-2 text-lg font-medium text-gray-700 hover:text-gray-900 transition-colors"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
-                    {t('community')}
+                    {t("community")}
                   </Link>
-                  <Link 
-                    href="/auth" 
+                  <Link
+                    href="/auth"
                     className="block py-2 text-lg font-medium text-gray-700 hover:text-gray-900 transition-colors"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
-                    {t('support')}
+                    {t("support")}
                   </Link>
                 </>
               )}
@@ -343,7 +383,6 @@ export default function Header() {
                 <LanguageSwitcher />
               </div>
             </nav>
-            
           </div>
         </div>
       )}
