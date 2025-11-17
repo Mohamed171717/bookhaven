@@ -9,7 +9,7 @@ import { v4 as uuid } from "uuid";
 import { useAuth } from "@/context/AuthContext";
 import toast from "react-hot-toast";
 import { BookType, Genre, Location } from "@/types/BookType";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { FiUpload } from "react-icons/fi";
 
 interface AddBookModalProps {
@@ -35,6 +35,7 @@ export default function AddBookModal({ onClose, onAdd }: AddBookModalProps) {
   const [loading, setLoading] = useState(false);
   const t = useTranslations("ProfilePage");
   const s = useTranslations("ShopPage");
+  const locale = useLocale();
 
   const handleCheckboxChange = (option: "sell" | "swap", checked: boolean) => {
     if (checked) {
@@ -122,7 +123,7 @@ export default function AddBookModal({ onClose, onAdd }: AddBookModalProps) {
       <div className="bg-white p-6 pt-10 rounded-lg w-[90%] max-w-2xl shadow-md relative">
         <button
           onClick={onClose}
-          className="absolute top-2 right-3 text-gray-500 hover:text-[#b63333] text-3xl transition"
+          className={`absolute top-2 ${ locale === 'en' ? 'right-3' : 'left-3'} text-gray-500 hover:text-[#b63333] text-3xl transition`}
         >
           ×
         </button>

@@ -8,7 +8,7 @@ import { db } from "@/lib/firebase";
 import Image from "next/image";
 import toast from "react-hot-toast";
 import { PostType } from "@/types/PostType";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 interface EditPostModalProps {
   isOpen: boolean;
@@ -28,6 +28,7 @@ export default function EditPostModal({
   );
   const [loading, setLoading] = useState(false);
   const t = useTranslations('CommunityPage');
+  const locale = useLocale();
 
   useEffect(() => {
     if (isOpen) {
@@ -174,7 +175,7 @@ export default function EditPostModal({
           {/* Close Button */}
           <button
             onClick={onClose}
-            className="absolute top-3 right-4 text-[#4A4947] text-2xl"
+            className={`absolute ${ locale === 'en' ? 'right-4' : 'left-4'} top-3  text-[#4A4947] text-2xl`}
           >
             ×
           </button>

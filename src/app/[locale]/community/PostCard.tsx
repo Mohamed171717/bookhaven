@@ -22,7 +22,7 @@ import toast from "react-hot-toast";
 import Link from "next/link";
 import { PostType } from "@/types/PostType";
 import PostEdit from "./PostEdit";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import PromptDialog from "@/components/PromptDialog";
 
 interface props {
@@ -34,6 +34,7 @@ interface props {
 export default function PostCard({ post, showComment, onPostDeleted }: props) {
   const [isOpen, setIsOpen] = useState(false);
   const { user } = useAuth();
+  const locale = useLocale();
   const [livePost, setLivePost] = useState<PostType>(post);
   const [liked, setLiked] = useState(false);
   const [commentCount, setCommentCount] = useState<number>(0);
@@ -186,8 +187,8 @@ export default function PostCard({ post, showComment, onPostDeleted }: props) {
   }, [livePost.content]);
 
   return (
-    <div className="animated-border-card px-3 md:px-1 md:py-1 rounded-xl mb-6">
-      <div className="bg-[#f1f1f1]  rounded-xl shadow-lg p-5 border border-[#dddbd4] ">
+    <div className="animated-border-card md:px-1 md:py-1 rounded-xl mb-6">
+      <div className="bg-[#f1f1f1] rounded-xl shadow-lg p-5 border border-[#dddbd4] ">
         {/* Header */}
         <div className="flex items-center gap-3 mb-3">
           <div className="relative ">
@@ -200,7 +201,7 @@ export default function PostCard({ post, showComment, onPostDeleted }: props) {
               style={{ aspectRatio: "1 / 1" }}
             />
             {isOwner && (
-              <div className="absolute -bottom-1 -right-1 bg-[#B17457] rounded-full p-1">
+              <div className="absolute -bottom-1 -right-1 bg-[#B17457] rounded-full">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
@@ -230,7 +231,7 @@ export default function PostCard({ post, showComment, onPostDeleted }: props) {
             </p>
           </div>
           {isOwner && (
-            <div className="ml-auto relative" ref={menuRef}>
+            <div className={`${ locale === 'en' ? 'ml-auto' : 'mr-auto'} relative`} ref={menuRef}>
               <button
                 onClick={() => setShowMenu(!showMenu)}
                 className="text-[#4A4947] hover:text-[#B17457] transition-colors"
@@ -261,7 +262,7 @@ export default function PostCard({ post, showComment, onPostDeleted }: props) {
               )}
 
               {showMenu && (
-                <div className="absolute right-0 mt-1 w-40 bg-white border border-[#D8D2C2] rounded-lg shadow-lg z-50 overflow-hidden">
+                <div className={`absolute ${ locale === 'en' ? 'right-0' : 'left-0'} mt-1 w-40 bg-white border border-[#D8D2C2] rounded-lg shadow-lg z-50 overflow-hidden`}>
                   <button
                     className="w-full px-4 py-2 text-left flex items-center gap-2 text-[#4A4947] text-sm hover:bg-[#FAF7F0] transition-colors"
                     onClick={() => {
@@ -359,9 +360,9 @@ export default function PostCard({ post, showComment, onPostDeleted }: props) {
             {/* Like */}
             <button
               onClick={toggleLike}
-              className="flex items-center gap-2 group"
+              className="flex items-center gap-1 group"
             >
-              <div className="p-1.5 rounded-full group-hover:bg-[#D8D2C2]/50 transition-colors">
+              <div className="rounded-full group-hover:bg-[#D8D2C2]/50 transition-colors">
                 {liked ? (
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -401,9 +402,9 @@ export default function PostCard({ post, showComment, onPostDeleted }: props) {
             {showComment && (
               <Link
                 href={!user ? `/auth` : `/community/${post.postId}`}
-                className="flex items-center gap-2 group"
+                className="flex items-center gap-1 group"
               >
-                <div className="p-1.5 rounded-full group-hover:bg-[#D8D2C2]/50 transition-colors">
+                <div className="rounded-full group-hover:bg-[#D8D2C2]/50 transition-colors">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -429,10 +430,10 @@ export default function PostCard({ post, showComment, onPostDeleted }: props) {
           {/* Report */}
           {!isOwner && (
             <button
-              className="flex items-center gap-2 group"
+              className="flex items-center gap-1 group"
               onClick={() => setIsOpen(true)}
             >
-              <div className="p-1.5 rounded-full group-hover:bg-[#D8D2C2]/50 transition-colors">
+              <div className="rounded-full group-hover:bg-[#D8D2C2]/50 transition-colors">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -457,11 +458,11 @@ export default function PostCard({ post, showComment, onPostDeleted }: props) {
       </div>
       <PromptDialog
         open={isOpen}
-        title="Feedback"
-        message="Please enter your feedback below:"
-        placeholder="Why do you want to report this post?"
-        confirmText="Send"
-        cancelText="Cancel"
+        title= {t('feed')}
+        message= {t('message')}
+        placeholder= {t('why')}
+        confirmText= {t('send')}
+        cancelText= {t('cancel')}
         onConfirm={handleReport}
         onCancel={() => setIsOpen(false)}
       />

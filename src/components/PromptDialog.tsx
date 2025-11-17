@@ -32,7 +32,7 @@ const PromptDialog: React.FC<PromptDialogProps> = ({
 
   return (
     <div className="absolute inset-0 z-50 flex items-center justify-center bg-[#4A4947]/50">
-      <div className="bg-[#FAF7F0] rounded-2xl shadow-xl max-w-sm w-full p-6">
+      <div className="bg-[#FAF7F0] rounded-2xl shadow-xl max-w-[240px] md:max-w-[260px] w-full p-4">
         {/* Title */}
         <h2 className="text-lg font-semibold text-[#4A4947] mb-2">{title}</h2>
 

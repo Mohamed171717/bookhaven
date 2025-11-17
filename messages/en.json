@@ -188,7 +188,11 @@
     "all": "All Comments",
     "save": "Save",
     "cancel": "Cancel",
-    "report": "Report"
+    "report": "Report",
+    "feed": "Feedback",
+    "message": "Please enter your feedback below:",
+    "why": "Why do you want to report this post?",
+    "send": "Send Report"
   },
   "ChatPage": {
     "welcome": "Hello, my name is mr.book can I help you?",

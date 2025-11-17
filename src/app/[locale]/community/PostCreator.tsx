@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Dialog } from "@headlessui/react";
+// import { Dialog } from "@headlessui/react";
 //==
 import {
   collection,
@@ -16,7 +16,7 @@ import { useAuth } from "@/context/AuthContext";
 import Image from "next/image";
 import toast from "react-hot-toast";
 import { PostType } from "@/types/PostType";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 interface PostCreatorProps {
   onPostCreated?: (post: PostType) => void;
@@ -29,6 +29,7 @@ const PostCreator = ({ onPostCreated }: PostCreatorProps) => {
 
   const [content, setContent] = useState("");
   const { user } = useAuth();
+  const locale = useLocale();
   const [loading, setLoading] = useState(false);
   const t = useTranslations("CommunityPage");
 
@@ -111,7 +112,7 @@ const PostCreator = ({ onPostCreated }: PostCreatorProps) => {
     <>
       {/* Trigger Box */}
       {!user?.isBanned && (
-        <div className="bg-[#f1f1f1] rounded-xl shadow-md mx-3 md:mx-1 p-4 mb-6 flex gap-3 items-center border border-[#D8D2C2]">
+        <div className="bg-[#f1f1f1] rounded-xl shadow-md mx-1 md:mx-1 p-4 mb-6 flex gap-3 items-center border border-[#D8D2C2]">
           <div className="relative">
             <Image
               src={user?.photoUrl || "/user-default.jpg"}
@@ -120,7 +121,7 @@ const PostCreator = ({ onPostCreated }: PostCreatorProps) => {
               height={48}
               className="rounded-full border-2 border-[#B17457]"
             />
-            <div className="absolute -bottom-1 -right-1 bg-[#B17457] rounded-full p-1">
+            <div className={`absolute -bottom-1 ${ locale === 'en' ? '-right-1' : '-left-1'} bg-[#B17457] rounded-full p-1`}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 20 20"
@@ -161,18 +162,16 @@ const PostCreator = ({ onPostCreated }: PostCreatorProps) => {
       )}
 
       {/* Modal */}
-      <Dialog open={isOpen} onClose={closeDialog} className="relative z-50">
+      {/* <Dialog open={isOpen} onClose={closeDialog} className="relative z-50">
         <div className="fixed inset-0 bg-black/40" aria-hidden="true" />
 
         <div className="fixed inset-0 flex items-center justify-center p-4">
-          <Dialog.Panel className="w-full max-w-xl rounded-xl bg-[#FAF7F0] p-6 shadow-xl relative">
-            <Dialog.Title className="text-2xl font-semibold text-[#4A4947] mb-4">
+          <div className="w-[85%] max-w-2xl rounded-xl bg-[#FAF7F0] p-6 shadow-xl relative">
+            <div className="text-2xl font-semibold text-[#4A4947] mb-4">
               {t("share")}
-            </Dialog.Title>
+            </div>
 
-            {/* Post Form */}
-            <form className="space-y-4" onSubmit={handleSubmit}>
-              {/* Content */}
+            <form className="space-y-2" onSubmit={handleSubmit}>
               <div>
                 <label className="block text-[#4A4947] font-medium mb-1">
                   {t("thoughts")}
@@ -180,7 +179,7 @@ const PostCreator = ({ onPostCreated }: PostCreatorProps) => {
                 <textarea
                   rows={5}
                   maxLength={800}
-                  placeholder="Write your post here..."
+                  placeholder={t('think')}
                   className="w-full border border-[#D8D2C2] rounded-md p-2 bg-white resize-none"
                   value={content}
                   onChange={(e) => setContent(e.target.value)}
@@ -188,7 +187,6 @@ const PostCreator = ({ onPostCreated }: PostCreatorProps) => {
                 <p className="text-sm text-[#4A4947] mt-1">{t("max")}</p>
               </div>
 
-              {/* Image Upload */}
               <div>
                 <label className="block text-[#4A4947] font-medium mb-1">
                   {t("image")}
@@ -209,7 +207,7 @@ const PostCreator = ({ onPostCreated }: PostCreatorProps) => {
                         setImage(null);
                         setImagePreview(null);
                       }}
-                      className="absolute top-2 right-2 bg-[#D8D2C2] hover:brightness-90 px-2 py-1 text-sm rounded  transition"
+                      className={`absolute top-2 ${ locale === 'en' ? 'right-2' : 'left-2' } bg-[#D8D2C2] hover:brightness-90 px-2 py-1 text-sm rounded  transition`}
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -240,7 +238,101 @@ const PostCreator = ({ onPostCreated }: PostCreatorProps) => {
                 )}
               </div>
 
-              {/* Submit Button */}
+              <div className="flex justify-end">
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="bg-[#B17457] text-white font-semibold py-2 px-6 rounded-full hover:bg-[#a1674d] transition disabled:opacity-50"
+                >
+                  {loading ? "Posting..." : "Post"}
+                </button>
+              </div>
+            </form>
+
+            <button
+              onClick={closeDialog}
+              className={`absolute top-3 ${ locale === 'en' ? 'right-4' : 'left-4' } text-[#4A4947] text-2xl`}
+            >
+              ×
+            </button>
+          </div>
+        </div>
+      </Dialog> */}
+
+      {/* Normal DIV Popup */}
+      {isOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          {/* Backdrop */}
+          <div
+            className="fixed inset-0 bg-black/40"
+            onClick={closeDialog}
+          />
+
+          {/* Popup Box */}
+          <div className="relative w-[85%] max-w-2xl rounded-xl bg-[#FAF7F0] p-6 shadow-xl z-50">
+            <div className="text-2xl font-semibold text-[#4A4947] mb-4">
+              {t("share")}
+            </div>
+
+            {/* Post Form */}
+            <form className="space-y-2" onSubmit={handleSubmit}>
+              {/* Content */}
+              <div>
+                <label className="block text-[#4A4947] font-medium mb-1">
+                  {t("thoughts")}
+                </label>
+                <textarea
+                  rows={5}
+                  maxLength={800}
+                  placeholder={t("think")}
+                  className="w-full border border-[#D8D2C2] rounded-md p-2 bg-white resize-none"
+                  value={content}
+                  onChange={(e) => setContent(e.target.value)}
+                />
+                <p className="text-sm text-[#4A4947] mt-1">{t("max")}</p>
+              </div>
+
+              {/* Image Upload */}
+              <div>
+                <label className="block text-[#4A4947] font-medium mb-1">
+                  {t("image")}
+                </label>
+                {imagePreview ? (
+                  <div className="relative group">
+                    <Image
+                      width={600}
+                      height={600}
+                      src={imagePreview}
+                      alt="Preview"
+                      className="w-1/2 m-auto h-52 object-cover rounded-md mb-2"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setImage(null);
+                        setImagePreview(null);
+                      }}
+                      className={`absolute top-2 ${
+                        locale === "en" ? "right-2" : "left-2"
+                      } bg-[#D8D2C2] hover:brightness-90 px-2 py-1 text-sm rounded`}
+                    >
+                      ✕
+                    </button>
+                  </div>
+                ) : (
+                  <label className="block w-full border-2 border-dashed border-[#D8D2C2] rounded-md p-4 text-center cursor-pointer hover:bg-[#eeeae2] transition">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageChange}
+                      className="hidden"
+                    />
+                    <span className="text-[#4A4947]">{t("click")}</span>
+                  </label>
+                )}
+              </div>
+
+              {/* Submit */}
               <div className="flex justify-end">
                 <button
                   type="submit"
@@ -255,13 +347,16 @@ const PostCreator = ({ onPostCreated }: PostCreatorProps) => {
             {/* Close Button */}
             <button
               onClick={closeDialog}
-              className="absolute top-3 right-4 text-[#4A4947] text-2xl"
+              className={`absolute top-3 ${
+                locale === "en" ? "right-4" : "left-4"
+              } text-[#4A4947] text-2xl`}
             >
               ×
             </button>
-          </Dialog.Panel>
+          </div>
         </div>
-      </Dialog>
+      )}
+
     </>
   );
 };

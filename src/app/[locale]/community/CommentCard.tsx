@@ -16,7 +16,7 @@ import { useState, useRef, useEffect } from "react";
 import { db } from "@/lib/firebase";
 import toast from "react-hot-toast";
 import { CommentType } from "@/types/PostType";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import Link from "next/link";
 import PromptDialog from "@/components/PromptDialog";
 
@@ -28,6 +28,7 @@ export default function CommentCard({
   postId: string;
 }) {
   const { user } = useAuth();
+  const locale = useLocale();
   const isOwner = user?.uid === comment.userId;
   const [isOpen, setIsOpen] = useState(false);
   const [showReportMenu, setShowReportMenu] = useState(false);
@@ -185,7 +186,7 @@ export default function CommentCard({
         </div>
 
         {!isOwner && (
-          <div className="absolute top-0 right-3" ref={reportMenuRef}>
+          <div className={`absolute top-0 ${ locale === 'en' ? 'right-3' : 'left-3'}`} ref={reportMenuRef}>
             <button
               onClick={() => setShowReportMenu(!showReportMenu)}
               className="text-[#4A4947] hover:text-gray-800"
@@ -208,7 +209,7 @@ export default function CommentCard({
             </button>
 
             {showReportMenu && (
-              <div className="absolute right-0 mt-1 w-28 bg-white border border-gray-200 shadow-lg rounded z-50">
+              <div className={`absolute ${ locale === 'en' ? 'right-0' : 'left-0'} mt-1 w-28 bg-white border border-gray-200 shadow-lg rounded z-50`}>
                 <button
                   className="flex items-end gap-1 w-full text-left px-3 py-2 text-sm hover:bg-gray-100"
                   onClick={() => setIsOpen(true)}
@@ -313,11 +314,11 @@ export default function CommentCard({
 
       <PromptDialog
         open={isOpen}
-        title="Feedback"
-        message="Please enter your feedback below:"
-        placeholder="Type your feedback..."
-        confirmText="Send"
-        cancelText="Cancel"
+        title= {t('feed')}
+        message= {t('message')}
+        placeholder= {t('why')}
+        confirmText= {t('send')}
+        cancelText= {t('cancel')}
         onConfirm={handleReport}
         onCancel={() => setIsOpen(false)}
       />

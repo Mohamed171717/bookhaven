@@ -13,7 +13,7 @@ import {
 import { db } from "@/lib/firebase";
 import Image from "next/image";
 import { ChatBox } from "./ChatBox";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 type Props = {
   chats: Chat[];
@@ -28,6 +28,7 @@ export function ChatListModal({ chats, currentUserId, onSelectChat, onClose }: P
   const [isChatOpen, setIsChatOpen] = useState(false);
   const chatRef = useRef<HTMLDivElement>(null);
   const t = useTranslations("HomePage");
+  const locale = useLocale();
 
   useEffect(() => {
     const fetchOtherUsers = async () => {
@@ -93,7 +94,7 @@ export function ChatListModal({ chats, currentUserId, onSelectChat, onClose }: P
 
   return ( 
     <>
-    <div ref={chatRef} className="w-64 absolute right-0 mt-2 z-50 bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
+    <div ref={chatRef} className={`w-48 md:w-64 absolute ${ locale === 'en' ? 'right-0' : 'left-0'} mt-2 z-50 bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden`}>
       <div className="p-2 border-b font-semibold text-[#4A4947] bg-card-bg">
         {t('chat')}
       </div>

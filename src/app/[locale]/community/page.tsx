@@ -146,11 +146,9 @@ export default function BlogPage() {
     }
 
     return (
-      <Masonry
-        breakpointCols={breakpointColumnsObj}
-        className="my-masonry-grid"
-        columnClassName="my-masonry-grid_column"
-      >
+      <>
+      {/* Grid for small screens */}
+      <div className="grid grid-cols-1 sm:hidden gap-4">
         {uniquePosts.map(
           (post, index) =>
             post.content && (
@@ -164,15 +162,43 @@ export default function BlogPage() {
                   post={post}
                   showComment={true}
                   onPostDeleted={(deletedPostId) =>
-                    setPosts((prev) =>
-                      prev.filter((p) => p.postId !== deletedPostId)
-                    )
+                    setPosts((prev) => prev.filter((p) => p.postId !== deletedPostId))
                   }
                 />
               </motion.div>
             )
         )}
-      </Masonry>
+      </div>
+
+      {/* Masonry for md+ screens */}
+      <div className="hidden sm:block">
+        <Masonry
+          breakpointCols={breakpointColumnsObj}
+          className="my-masonry-grid"
+          columnClassName="my-masonry-grid_column"
+        >
+          {uniquePosts.map(
+            (post, index) =>
+              post.content && (
+                <motion.div
+                  key={post.postId}
+                  initial={{ opacity: 0, translateY: 20 }}
+                  animate={{ opacity: 1, translateY: 0 }}
+                  transition={{ duration: 0.4, delay: index * 0.05 }}
+                >
+                  <PostCard
+                    post={post}
+                    showComment={true}
+                    onPostDeleted={(deletedPostId) =>
+                      setPosts((prev) => prev.filter((p) => p.postId !== deletedPostId))
+                    }
+                  />
+                </motion.div>
+              )
+          )}
+        </Masonry>
+      </div>
+    </>
     );
   };
 
@@ -185,8 +211,8 @@ export default function BlogPage() {
   return (
     <>
       <Header />
-      <div className="fix-height pt-[155px] pb-10 sm:px-8 md:px-16 lg:px-24 py-4">
-        <div className="max-w-5xl xl:max-w-6xl 2xl:max-w-7xl mx-auto">
+      <div className="fix-height pt-[155px] pb-10 px-1 py-4">
+        <div className="w-[90%] md:w-[70%] lg:w-[60%] mx-auto">
           <PostCreator onPostCreated={handleNewPost} />
           {renderPosts()}
           {loading && (

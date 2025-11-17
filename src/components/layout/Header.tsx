@@ -100,7 +100,7 @@ export default function Header() {
   return (
     <header
       style={{ width: "100%", position: "fixed" }}
-      className="bg-white z-30 px-4 py-2 md:py-4 shadow-lg"
+      className="bg-white z-30 px-4 py-2 shadow-lg"
     >
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         {/* Left: Logo + Nav */}
